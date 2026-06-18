@@ -1531,6 +1531,15 @@ class AppController {
     const authSectionTitle = document.getElementById('auth-section-title');
     const authUserSection = document.getElementById('auth-user-section');
 
+    // Hide connection settings if defaults are hardcoded in code
+    const configSection = document.getElementById('auth-config-section');
+    if (configSection && window.supabaseMgr && window.supabaseMgr.defaultUrl && window.supabaseMgr.defaultAnonKey) {
+      configSection.style.display = 'none';
+      if (authSectionTitle) {
+        authSectionTitle.textContent = 'Account Login';
+      }
+    }
+
     const updateAuthUI = (user) => {
       const isConfigured = window.supabaseMgr && window.supabaseMgr.isConfigured();
       if (!isConfigured) {
