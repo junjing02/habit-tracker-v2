@@ -195,18 +195,13 @@ body {
   transition: background var(--transition-speed), color var(--transition-speed);
 }
 
-/* Main Container Layout */
 .app-container {
   max-width: 1280px;
   margin: 0 auto;
   padding: 24px 16px;
-  display: none; /* Hide app content by default until authenticated */
+  display: flex;
   flex-direction: column;
   gap: 24px;
-}
-
-body.logged-in .app-container {
-  display: flex; /* Show only when authenticated */
 }
 
 /* Header UI Elements */
