@@ -1981,64 +1981,241 @@ body {
   background-color: rgba(255, 255, 255, 0.08);
 }
 
-/* --- Mobile Device Optimizations --- */
+/* --- Premium Mobile Redesign --- */
 @media (max-width: 600px) {
-  /* Prevent horizontal view tabs overflow by making container swipable */
-  .views-container {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    max-width: 100%;
-    width: 100%;
-    display: flex;
-    scrollbar-width: none; /* Hide scrollbars for cleaner look on Firefox */
-  }
-  .views-container::-webkit-scrollbar {
-    display: none; /* Hide scrollbars for Chrome/Safari/Safari iOS */
+  /* 1. Sticky Bottom Nav Padding on Body */
+  body {
+    padding-bottom: 76px !important;
   }
   
-  .view-tab {
-    flex-shrink: 0;
-    padding: 8px 12px;
-    font-size: 0.8rem;
+  .app-container {
+    padding: 12px 10px;
+    gap: 16px;
   }
 
-  /* Stack header controls */
+  /* 2. Header Layout Optimization */
+  .header {
+    gap: 12px;
+  }
+  
   .header-top {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-    text-align: center;
-  }
-  .brand-section {
-    justify-content: center;
-  }
-  .game-widgets-container {
-    justify-content: center;
-    width: 100%;
-  }
-  
-  /* Stack toolbar action buttons */
-  .nav-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-  }
-  .toolbar-actions {
-    width: 100%;
-  }
-  #btn-add-habit {
-    width: 100%;
-    justify-content: center;
-  }
-  
-  /* Layout adjustments for dashboard widgets on mobile screen widths */
-  .summary-card {
+    display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 16px;
+    width: 100%;
+    gap: 8px;
+    border-bottom: 1px solid var(--panel-border);
+    padding-bottom: 12px;
   }
-  .circular-progress-container {
+  
+  .brand-section {
+    gap: 8px;
+  }
+  
+  .logo-icon {
+    font-size: 1.6rem;
+  }
+  
+  .app-title {
+    font-size: 1.6rem;
+  }
+
+  /* Compact top status row on mobile */
+  .game-widgets-container {
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  
+  .header-status-pill {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+    border-radius: var(--border-radius-sm);
+  }
+  
+  .sound-panel-btn {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+  }
+
+  /* Hide header views tab switcher container on mobile and dock at bottom */
+  .nav-row {
+    border: none;
+    padding: 0;
     margin: 0;
+  }
+  
+  .toolbar-actions {
+    display: flex;
+    width: 100%;
+    margin-bottom: 4px;
+  }
+  
+  #btn-add-habit {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    border-radius: var(--border-radius-md);
+  }
+
+  /* 3. Sticky Bottom Navigation Bar (transforms views-container) */
+  .views-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--panel-bg);
+    background-image: var(--bg-gradient);
+    border-top: 1px solid var(--panel-border);
+    border-radius: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 8px 0;
+    z-index: 1000;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(16px);
+  }
+  
+  .view-tab {
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.65rem;
+    padding: 6px 0;
+    justify-content: center;
+    align-items: center;
+    background: transparent !important;
+    border-radius: 0;
+    color: var(--text-muted);
+    box-shadow: none !important;
+  }
+  
+  .view-tab svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .view-tab.active {
+    color: var(--color-primary);
+  }
+  
+  .view-tab.active svg {
+    filter: drop-shadow(0 0 4px var(--color-primary-glow));
+  }
+
+  /* 4. Touch checklist optimizations */
+  .today-habit-card {
+    padding: 12px 14px;
+    min-height: 62px;
+  }
+  
+  .checkbox-check {
+    width: 32px;
+    height: 32px;
+  }
+  
+  /* 5. Clean matrix views (Sticky first column) */
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--panel-border);
+  }
+  
+  .matrix-table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  
+  .matrix-table th:first-child,
+  .matrix-table td:first-child {
+    position: sticky;
+    left: 0;
+    background: var(--panel-bg);
+    background-image: var(--bg-gradient);
+    z-index: 5;
+    border-right: 2px solid var(--panel-border);
+    box-shadow: 4px 0 8px rgba(0, 0, 0, 0.15);
+    min-width: 90px;
+    max-width: 110px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .matrix-table th:first-child {
+    background: var(--overlay-bg-th);
+  }
+
+  /* 6. Calendar enhancements on Mobile */
+  #calendar-days-grid {
+    gap: 4px !important;
+  }
+  
+  .calendar-day-cell {
+    min-height: 54px !important;
+    padding: 4px !important;
+  }
+  
+  .calendar-day-number {
+    font-size: 0.75rem;
+  }
+  
+  .calendar-day-badge {
+    font-size: 0.65rem !important;
+    padding: 2px 4px !important;
+    border-radius: 4px;
+  }
+
+  /* 7. Permanent action triggers in manager dashboard (No-Hover Fix) */
+  #manager-table tbody tr .row-actions {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+  
+  #manager-table td, #manager-table th {
+    padding: 10px 6px;
+  }
+  
+  .row-action-btn {
+    padding: 6px;
+    font-size: 1rem;
+  }
+
+  /* 8. Bottom drawer modals style on mobile */
+  .modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  
+  .modal-content {
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+    margin-bottom: 0;
+    max-height: 85vh;
+    width: 100%;
+    transform: translateY(100%);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .modal-overlay.open .modal-content {
+    transform: translateY(0);
+  }
+  
+  .modal-header {
+    padding: 16px 20px;
+  }
+  
+  .modal-body {
+    padding: 16px 20px;
+  }
+  
+  .modal-actions {
+    padding: 16px 20px;
   }
 }
