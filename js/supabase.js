@@ -7,8 +7,8 @@ class SupabaseManager {
   constructor() {
     // Hardcode your production Supabase URL and Anon Key here if desired.
     // If left as empty strings, the app will read them from localStorage (configured via the UI).
-    this.defaultUrl = '';
-    this.defaultAnonKey = '';
+    this.defaultUrl = 'https://xtyadxnbnyuieugewawi.supabase.co';
+    this.defaultAnonKey = 'sb_publishable_XG9x4u-j6-DcC8FdM5Hhbg_AVnUJ_g0';
 
     this.client = null;
     this.url = '';
