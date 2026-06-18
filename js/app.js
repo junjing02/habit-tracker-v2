@@ -218,6 +218,41 @@ class AppController {
   }
 
   initEvents() {
+    // 0. Capturing event listener to prompt login when guest clicks anything interactive
+    document.addEventListener('click', (e) => {
+      // If logged in, let it proceed
+      if (window.supabaseMgr && window.supabaseMgr.isAuthenticated()) {
+        return;
+      }
+
+      const target = e.target;
+      const isInteractive = target.closest(
+        '.view-tab, #btn-add-habit, .checkbox-check, .matrix-checkbox, .btn-note-action, .matrix-note-indicator, .today-btn, .date-btn, .calendar-day-cell, #btn-add-habit-today, #btn-toggle-sound, #theme-selector, #cloud-sync-pill, #btn-quick-add-submit, #btn-manager-add-habit, #btn-add-habit-footer, #btn-matrix-prev, #btn-matrix-next, #btn-matrix-today, #btn-cal-prev, #btn-cal-next, #btn-cal-today'
+      );
+      
+      const isInsideAuthModal = target.closest('#auth-modal');
+
+      if (isInteractive && !isInsideAuthModal) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        // Open auth modal
+        const authModal = document.getElementById('auth-modal');
+        if (authModal) {
+          authModal.classList.add('open');
+          const authStatusMessage = document.getElementById('auth-status-message');
+          if (authStatusMessage) {
+            authStatusMessage.textContent = '☁️ Please log in or sign up to start tracking your habits.';
+            authStatusMessage.style.color = 'var(--text-main)';
+          }
+        }
+        
+        if (this.sound) {
+          this.sound.playClick();
+        }
+      }
+    }, true); // Capture phase!
+
     // 1. Navigation Tab Switching
     document.querySelectorAll('.view-tab').forEach(tab => {
       tab.addEventListener('click', (e) => {
@@ -454,12 +489,13 @@ class AppController {
   }
 
   renderHeader() {
+    const isAuthenticated = window.supabaseMgr && window.supabaseMgr.isAuthenticated();
     const profile = window.db.profile;
-    this.streakVal.textContent = `${profile.currentStreak || 0} Days`;
+    this.streakVal.textContent = `${isAuthenticated ? (profile.currentStreak || 0) : 0} Days`;
 
     // Overall Progress Ring
     const dateStr = window.db.getFormattedDate(this.currentDate);
-    const dayRate = window.db.getDayCompletionRate(dateStr);
+    const dayRate = isAuthenticated ? window.db.getDayCompletionRate(dateStr) : 0;
     const completedPct = Math.round(dayRate * 100);
 
     this.overallProgressPct.textContent = `${completedPct}%`;
@@ -475,15 +511,16 @@ class AppController {
     const dayEnd = new Date(dateStr + "T23:59:59").getTime();
     const activeHabits = window.db.getActiveHabits().filter(h => h.createdAt <= dayEnd);
     let completedCount = 0;
-    const dayRecords = dayRecords => dayRecords = window.db.history[dateStr] || {};
-    const dayRecordsData = window.db.history[dateStr] || {};
-    activeHabits.forEach(h => {
-      const rec = dayRecordsData[h.id];
-      const completed = rec && typeof rec === 'object' ? rec.completed : Boolean(rec);
-      if (completed) {
-        completedCount++;
-      }
-    });
+    if (isAuthenticated) {
+      const dayRecordsData = window.db.history[dateStr] || {};
+      activeHabits.forEach(h => {
+        const rec = dayRecordsData[h.id];
+        const completed = rec && typeof rec === 'object' ? rec.completed : Boolean(rec);
+        if (completed) {
+          completedCount++;
+        }
+      });
+    }
 
     this.overallProgressDesc.textContent = `${completedCount} of ${activeHabits.length} habits completed`;
     
@@ -493,8 +530,9 @@ class AppController {
 
   // Dashboard Checklist
   renderDashboard() {
+    const isAuthenticated = window.supabaseMgr && window.supabaseMgr.isAuthenticated();
     const dateStr = window.db.getFormattedDate(this.currentDate);
-    const dayRecords = window.db.history[dateStr] || {};
+    const dayRecords = isAuthenticated ? (window.db.history[dateStr] || {}) : {};
     
     // Filter active habits that existed on the selected date
     const targetDateEnd = new Date(dateStr + "T23:59:59").getTime();
@@ -1330,6 +1368,9 @@ class AppController {
   }
 
   calculateWeeklyCompletionRate() {
+    if (window.supabaseMgr && !window.supabaseMgr.isAuthenticated()) {
+      return 0;
+    }
     let ratesSum = 0;
     for (let i = 0; i < 7; i++) {
       const d = new Date(this.currentDate);
@@ -1552,20 +1593,16 @@ class AppController {
         loggedInProfile.style.display = 'none';
         window.db.notifySyncStatus('Offline');
         if (blocker) {
-          blocker.style.display = 'block';
+          blocker.style.display = 'none';
         }
         this.switchView('dashboard');
-        // Auto-open modal to prompt credentials setup
-        if (authModal) {
-          authModal.classList.add('open');
-        }
         return;
       }
-
+ 
       authUserSection.style.opacity = '1';
       authUserSection.style.pointerEvents = 'auto';
       authSectionTitle.textContent = 'Account Login';
-
+ 
       if (user) {
         loginForm.style.display = 'none';
         loggedInProfile.style.display = 'flex';
@@ -1581,16 +1618,11 @@ class AppController {
         loggedInProfile.style.display = 'none';
         window.db.notifySyncStatus('Offline');
         
-        // Show blocker to lock app
+        // Hide blocker so they can view the dashboard template
         if (blocker) {
-          blocker.style.display = 'block';
+          blocker.style.display = 'none';
         }
         this.switchView('dashboard');
-        
-        // Auto-open modal to prompt login
-        if (authModal) {
-          authModal.classList.add('open');
-        }
       }
     };
 
@@ -1653,6 +1685,32 @@ class AppController {
             authStatusMessage.textContent = '❌ Failed to initialize Supabase. Check key/URL.';
             authStatusMessage.style.color = 'var(--color-danger)';
           }
+        } catch (err) {
+          authStatusMessage.textContent = `❌ Error: ${err.message}`;
+          authStatusMessage.style.color = 'var(--color-danger)';
+        }
+      });
+    }
+
+    // Forgot Password Click
+    const btnForgotPassword = document.getElementById('btn-forgot-password');
+    if (btnForgotPassword) {
+      btnForgotPassword.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const email = authEmailInput.value.trim();
+        if (!email) {
+          authStatusMessage.textContent = '❌ Please enter your email address first.';
+          authStatusMessage.style.color = 'var(--color-danger)';
+          return;
+        }
+
+        authStatusMessage.textContent = 'Sending reset link...';
+        authStatusMessage.style.color = 'var(--text-muted)';
+
+        try {
+          await window.supabaseMgr.resetPassword(email);
+          authStatusMessage.textContent = '✅ Password reset email sent!';
+          authStatusMessage.style.color = 'var(--color-primary)';
         } catch (err) {
           authStatusMessage.textContent = `❌ Error: ${err.message}`;
           authStatusMessage.style.color = 'var(--color-danger)';

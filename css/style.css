@@ -2350,3 +2350,127 @@ body {
     padding: 24px 20px;
   }
 }
+
+/* Custom Mobile Scaling for Matrix and Calendar views to fit on one screen */
+@media (max-width: 600px) {
+  /* 1. Matrix View Sizing */
+  .matrix-table {
+    table-layout: fixed !important;
+    width: 100% !important;
+  }
+  
+  .matrix-table th, .matrix-table td {
+    padding: 6px 2px !important;
+    box-sizing: border-box;
+    font-size: 0.72rem !important;
+  }
+
+  .matrix-table th:first-child,
+  .matrix-table td:first-child {
+    position: static !important; /* Remove sticky to fit layout on one screen */
+    width: 85px !important;
+    min-width: 85px !important;
+    max-width: 85px !important;
+    white-space: normal !important; /* Allow wrapping habit name */
+    padding-left: 4px !important;
+    border-right: 1px solid var(--panel-border) !important;
+    box-shadow: none !important;
+  }
+
+  /* Target day columns (2nd to 8th columns) */
+  .matrix-table th:not(:first-child):not(:last-child),
+  .matrix-table td:not(:first-child):not(:last-child) {
+    width: auto !important;
+    text-align: center !important;
+    padding: 6px 1px !important;
+  }
+
+  /* Target progress column (last column) */
+  .matrix-table th:last-child,
+  .matrix-table td:last-child {
+    width: 45px !important;
+    min-width: 45px !important;
+    max-width: 45px !important;
+    padding-right: 4px !important;
+  }
+  
+  /* Replace text 'Progress' header with '%' to fit column */
+  .matrix-table th.text-center:last-child {
+    font-size: 0 !important;
+  }
+  .matrix-table th.text-center:last-child::after {
+    content: '%' !important;
+    font-size: 0.75rem !important;
+  }
+
+  /* Compact row progress bar on mobile */
+  .row-progress-bar-container {
+    width: 28px !important;
+    margin: 2px auto 0 auto !important;
+  }
+
+  /* Compact content wrapper */
+  .matrix-cell-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px !important;
+  }
+
+  /* Small note indicators on mobile */
+  .matrix-note-indicator {
+    font-size: 0.7rem !important;
+    margin-top: 1px !important;
+  }
+
+  /* 2. Calendar View Sizing */
+  .calendar-grid-container {
+    padding: 8px !important;
+  }
+
+  .calendar-weekdays {
+    font-size: 0.7rem !important;
+    margin-bottom: 8px !important;
+    padding-bottom: 4px !important;
+  }
+
+  #calendar-days-grid {
+    gap: 4px !important;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .calendar-day-cell {
+    min-height: 48px !important;
+    padding: 2px !important;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .calendar-day-cell > div {
+    flex-direction: column !important; /* Stack vertically on mobile */
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 2px !important;
+    width: 100% !important;
+  }
+
+  .calendar-day-num {
+    font-size: 0.75rem !important;
+    margin-bottom: 2px;
+  }
+
+  .calendar-day-badge {
+    font-size: 0.55rem !important;
+    padding: 1px 4px !important;
+    border-radius: 6px !important;
+    margin-top: 2px !important;
+    line-height: 1 !important;
+    display: inline-block !important;
+  }
+}
+

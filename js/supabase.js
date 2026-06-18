@@ -156,6 +156,18 @@ class SupabaseManager {
     
     this.currentUser = null;
   }
+
+  // Send reset password email
+  async resetPassword(email) {
+    if (!this.isConfigured()) throw new Error("Supabase is not configured.");
+    
+    const { data, error } = await this.client.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin
+    });
+    
+    if (error) throw error;
+    return data;
+  }
 }
 
 const supabaseMgr = new SupabaseManager();

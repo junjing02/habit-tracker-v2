@@ -136,10 +136,42 @@ class HabitDatabase {
         this.notifySyncStatus("Uploading data...");
         await this.uploadLocalDataToCloud(userId);
       } else {
-        // Cloud has data: download and overwrite local storage (cloud is single source of truth)
-        console.log("Downloading cloud data...");
+        // Cloud has data: merge local data that is missing in cloud
+        console.log("Merging local data with cloud data...");
         
-        // Map cloud habits
+        // 1. Merge habits
+        const cloudHabitsMap = new Map(cloudHabits.map(h => [h.id, h]));
+        const missingLocalHabits = this.habits.filter(h => !cloudHabitsMap.has(h.id));
+        
+        if (missingLocalHabits.length > 0) {
+          console.log(`Uploading ${missingLocalHabits.length} missing local habits to cloud...`);
+          const habitsToInsert = missingLocalHabits.map(h => ({
+            id: h.id,
+            user_id: userId,
+            name: h.name,
+            emoji: h.emoji,
+            created_at: h.createdAt,
+            active: h.active
+          }));
+          const { error: insertErr } = await window.supabaseMgr.client.from('habits').insert(habitsToInsert);
+          if (insertErr) {
+            console.error("Error uploading missing local habits:", insertErr);
+          } else {
+            // Add them to cloudHabits so they are included in local mapping
+            missingLocalHabits.forEach(h => {
+              cloudHabits.push({
+                id: h.id,
+                user_id: userId,
+                name: h.name,
+                emoji: h.emoji,
+                created_at: h.createdAt,
+                active: h.active
+              });
+            });
+          }
+        }
+
+        // Save merged habits to local storage
         this.habits = cloudHabits.map(h => ({
           id: h.id,
           name: h.name,
@@ -149,7 +181,47 @@ class HabitDatabase {
         }));
         this.saveHabits();
 
-        // Map cloud history
+        // 2. Merge history
+        const cloudHistorySet = new Set(cloudHistory.map(item => `${item.date}_${item.habit_id}`));
+        const historyToInsert = [];
+
+        for (const dateStr in this.history) {
+          const dayHabits = this.history[dateStr];
+          for (const habitId in dayHabits) {
+            const record = dayHabits[habitId];
+            if (!cloudHistorySet.has(`${dateStr}_${habitId}`)) {
+              let completed = false;
+              let remark = '';
+              if (record && typeof record === 'object') {
+                completed = record.completed;
+                remark = record.remark || '';
+              } else {
+                completed = Boolean(record);
+              }
+              historyToInsert.push({
+                user_id: userId,
+                date: dateStr,
+                habit_id: habitId,
+                completed: completed,
+                remark: remark
+              });
+            }
+          }
+        }
+
+        if (historyToInsert.length > 0) {
+          console.log(`Uploading ${historyToInsert.length} missing history records to cloud...`);
+          const { error: historyInsertErr } = await window.supabaseMgr.client.from('history').insert(historyToInsert);
+          if (historyInsertErr) {
+            console.error("Error uploading missing history records:", historyInsertErr);
+          } else {
+            historyToInsert.forEach(item => {
+              cloudHistory.push(item);
+            });
+          }
+        }
+
+        // Save merged history to local storage
         this.history = {};
         cloudHistory.forEach(item => {
           const dateStr = item.date;
@@ -173,6 +245,9 @@ class HabitDatabase {
           };
           this.saveProfile();
         }
+
+        // Recalculate and update streaks locally and push to cloud
+        this.updateStreaks();
       }
       
       // Notify app to re-render
