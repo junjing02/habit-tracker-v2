@@ -31,7 +31,7 @@ class HabitDatabase {
     this.profile = {
       currentStreak: 0,
       longestStreak: 0,
-      soundEnabled: true,
+      soundEnabled: false,
       theme: 'cyberpunk',
       lastActiveDate: '',
       habitStreaks: {} // Format: { 'habitId': { current: Int, longest: Int } }
@@ -656,7 +656,7 @@ class HabitDatabase {
     this.profile = {
       currentStreak: 0,
       longestStreak: 0,
-      soundEnabled: true,
+      soundEnabled: false,
       theme: 'cyberpunk',
       lastActiveDate: '',
       habitStreaks: {}
