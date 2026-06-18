@@ -1982,19 +1982,21 @@ body {
 
 /* --- Premium Mobile Redesign --- */
 @media (max-width: 600px) {
-  /* 1. Sticky Bottom Nav Padding on Body */
+  /* 1. Sticky Bottom Nav Padding on Body with iOS Safe Area support */
   body {
-    padding-bottom: 76px !important;
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important;
   }
   
   .app-container {
-    padding: 12px 10px;
-    gap: 16px;
+    padding: 12px 12px;
+    gap: 16px !important;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   /* 2. Header Layout Optimization */
   .header {
-    gap: 12px;
+    gap: 12px !important;
   }
   
   .header-top {
@@ -2013,36 +2015,39 @@ body {
   }
   
   .logo-icon {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
   }
   
   .app-title {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
   }
 
   /* Compact top status row on mobile */
   .game-widgets-container {
     gap: 8px;
     justify-content: flex-end;
+    flex-wrap: nowrap; /* Keep widgets inline */
   }
   
   .header-status-pill {
-    padding: 6px 10px;
+    padding: 6px 8px;
     font-size: 0.75rem;
     border-radius: var(--border-radius-sm);
+    white-space: nowrap;
   }
   
   .sound-panel-btn {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    flex-shrink: 0;
   }
 
-  /* Hide header views tab switcher container on mobile and dock at bottom */
+  /* Toolbar switcher alignment */
   .nav-row {
     border: none;
     padding: 0;
@@ -2052,7 +2057,9 @@ body {
   .toolbar-actions {
     display: flex;
     width: 100%;
+    margin-top: 4px;
     margin-bottom: 4px;
+    box-sizing: border-box;
   }
   
   #btn-add-habit {
@@ -2063,7 +2070,7 @@ body {
     border-radius: var(--border-radius-md);
   }
 
-  /* 3. Sticky Bottom Navigation Bar (transforms views-container) */
+  /* 3. Sticky Bottom Navigation Bar with iOS safe-area support */
   .views-container {
     position: fixed;
     bottom: 0;
@@ -2075,10 +2082,12 @@ body {
     border-radius: 0;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    padding: 8px 0;
+    padding-top: 8px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
     z-index: 1000;
     box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(16px);
+    box-sizing: border-box;
   }
   
   .view-tab {
@@ -2107,28 +2116,59 @@ body {
     filter: drop-shadow(0 0 4px var(--color-primary-glow));
   }
 
-  /* 4. Touch checklist optimizations */
+  /* 4. Dashboard View Wrapper Alignment */
+  .today-view-wrapper {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .today-habits-section {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
   .today-habit-card {
     padding: 12px 14px;
     min-height: 62px;
+    box-sizing: border-box;
+    width: 100%;
   }
   
   .checkbox-check {
     width: 32px;
     height: 32px;
+    flex-shrink: 0;
   }
   
+  .summary-card, .garden-card {
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  /* Center the tree generator horizontally on mobile screens */
+  .tree-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 8px auto 0 auto;
+  }
+
   /* 5. Clean matrix views (Sticky first column) */
   .table-container {
     width: 100%;
     overflow-x: auto;
     border-radius: var(--border-radius-sm);
     border: 1px solid var(--panel-border);
+    box-sizing: border-box;
   }
   
   .matrix-table {
     border-collapse: separate;
     border-spacing: 0;
+    width: 100%;
   }
   
   .matrix-table th:first-child,
@@ -2145,6 +2185,7 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    box-sizing: border-box;
   }
   
   .matrix-table th:first-child {
@@ -2154,11 +2195,14 @@ body {
   /* 6. Calendar enhancements on Mobile */
   #calendar-days-grid {
     gap: 4px !important;
+    width: 100%;
+    box-sizing: border-box;
   }
   
   .calendar-day-cell {
     min-height: 54px !important;
     padding: 4px !important;
+    box-sizing: border-box;
   }
   
   .calendar-day-number {
@@ -2179,6 +2223,7 @@ body {
   
   #manager-table td, #manager-table th {
     padding: 10px 6px;
+    box-sizing: border-box;
   }
   
   .row-action-btn {
@@ -2191,6 +2236,7 @@ body {
     padding: 0;
     align-items: flex-end;
     justify-content: center;
+    box-sizing: border-box;
   }
   
   .modal-content {
@@ -2200,6 +2246,7 @@ body {
     width: 100%;
     transform: translateY(100%);
     transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
   }
   
   .modal-overlay.open .modal-content {
@@ -2208,14 +2255,17 @@ body {
   
   .modal-header {
     padding: 16px 20px;
+    box-sizing: border-box;
   }
   
   .modal-body {
     padding: 16px 20px;
+    box-sizing: border-box;
   }
   
   .modal-actions {
     padding: 16px 20px;
+    box-sizing: border-box;
   }
 }
 
