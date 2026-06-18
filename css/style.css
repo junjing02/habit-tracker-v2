@@ -200,9 +200,13 @@ body {
   max-width: 1280px;
   margin: 0 auto;
   padding: 24px 16px;
-  display: flex;
+  display: none; /* Hide app content by default until authenticated */
   flex-direction: column;
   gap: 24px;
+}
+
+body.logged-in .app-container {
+  display: flex; /* Show only when authenticated */
 }
 
 /* Header UI Elements */

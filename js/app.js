@@ -1545,6 +1545,7 @@ class AppController {
     const updateAuthUI = (user) => {
       const isConfigured = window.supabaseMgr && window.supabaseMgr.isConfigured();
       if (!isConfigured) {
+        document.body.classList.remove('logged-in');
         authUserSection.style.opacity = '0.5';
         authUserSection.style.pointerEvents = 'none';
         authSectionTitle.textContent = '2. Account Login (Setup Needed)';
@@ -1564,6 +1565,7 @@ class AppController {
       authSectionTitle.textContent = '2. Account Login';
 
       if (user) {
+        document.body.classList.add('logged-in');
         loginForm.style.display = 'none';
         loggedInProfile.style.display = 'flex';
         loggedInEmail.textContent = user.email;
@@ -1580,6 +1582,7 @@ class AppController {
           }, 300);
         }
       } else {
+        document.body.classList.remove('logged-in');
         loginForm.style.display = 'flex';
         loggedInProfile.style.display = 'none';
         window.db.notifySyncStatus('Offline');
