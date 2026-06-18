@@ -1540,6 +1540,8 @@ class AppController {
       }
     }
 
+    const authWall = document.getElementById('auth-wall');
+
     const updateAuthUI = (user) => {
       const isConfigured = window.supabaseMgr && window.supabaseMgr.isConfigured();
       if (!isConfigured) {
@@ -1549,6 +1551,11 @@ class AppController {
         loginForm.style.display = 'flex';
         loggedInProfile.style.display = 'none';
         window.db.notifySyncStatus('Offline');
+        if (authWall) {
+          authWall.style.display = 'flex';
+          authWall.style.opacity = '1';
+          authWall.style.pointerEvents = 'auto';
+        }
         return;
       }
 
@@ -1561,10 +1568,28 @@ class AppController {
         loggedInProfile.style.display = 'flex';
         loggedInEmail.textContent = user.email;
         window.db.notifySyncStatus('Connected');
+        
+        // Hide auth wall with a smooth fade-out animation
+        if (authWall) {
+          authWall.style.opacity = '0';
+          authWall.style.pointerEvents = 'none';
+          setTimeout(() => {
+            if (window.supabaseMgr.isAuthenticated()) {
+              authWall.style.display = 'none';
+            }
+          }, 300);
+        }
       } else {
         loginForm.style.display = 'flex';
         loggedInProfile.style.display = 'none';
         window.db.notifySyncStatus('Offline');
+        
+        // Show auth wall
+        if (authWall) {
+          authWall.style.display = 'flex';
+          authWall.style.opacity = '1';
+          authWall.style.pointerEvents = 'auto';
+        }
       }
     };
 
@@ -1700,6 +1725,72 @@ class AppController {
         await window.db.syncWithCloud();
         authStatusMessage.textContent = '✅ Synchronization complete!';
         authStatusMessage.style.color = 'var(--color-primary)';
+      });
+    }
+
+    // Wall Login Form Event Listener
+    const wallLoginForm = document.getElementById('wall-login-form');
+    const wallEmailInput = document.getElementById('wall-email-input');
+    const wallPasswordInput = document.getElementById('wall-password-input');
+    const btnWallSignup = document.getElementById('btn-wall-signup');
+    const wallStatusMessage = document.getElementById('wall-status-message');
+
+    if (wallLoginForm) {
+      wallLoginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = wallEmailInput.value.trim();
+        const password = wallPasswordInput.value;
+        if (wallStatusMessage) {
+          wallStatusMessage.textContent = 'Logging in...';
+          wallStatusMessage.style.color = 'var(--text-muted)';
+        }
+
+        try {
+          await window.supabaseMgr.login(email, password);
+          if (wallStatusMessage) {
+            wallStatusMessage.textContent = '✅ Logged in successfully!';
+            wallStatusMessage.style.color = 'var(--color-primary)';
+          }
+        } catch (err) {
+          if (wallStatusMessage) {
+            wallStatusMessage.textContent = `❌ Login Error: ${err.message}`;
+            wallStatusMessage.style.color = 'var(--color-danger)';
+          }
+        }
+      });
+    }
+
+    if (btnWallSignup) {
+      btnWallSignup.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const email = wallEmailInput.value.trim();
+        const password = wallPasswordInput.value;
+        
+        if (!email || !password || password.length < 6) {
+          if (wallStatusMessage) {
+            wallStatusMessage.textContent = '❌ Valid Email and Password (min 6 chars) required to sign up.';
+            wallStatusMessage.style.color = 'var(--color-danger)';
+          }
+          return;
+        }
+
+        if (wallStatusMessage) {
+          wallStatusMessage.textContent = 'Signing up...';
+          wallStatusMessage.style.color = 'var(--text-muted)';
+        }
+
+        try {
+          await window.supabaseMgr.signup(email, password);
+          if (wallStatusMessage) {
+            wallStatusMessage.textContent = '✅ Check email for confirmation link!';
+            wallStatusMessage.style.color = 'var(--color-primary)';
+          }
+        } catch (err) {
+          if (wallStatusMessage) {
+            wallStatusMessage.textContent = `❌ Signup Error: ${err.message}`;
+            wallStatusMessage.style.color = 'var(--color-danger)';
+          }
+        }
       });
     }
   }
