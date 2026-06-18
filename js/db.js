@@ -38,6 +38,21 @@ class HabitDatabase {
     };
 
     this.loadFromStorage();
+
+    // Listen to Supabase Auth State changes to trigger syncing
+    if (window.supabaseMgr) {
+      window.supabaseMgr.onAuthStateChange((user) => {
+        if (user) {
+          this.syncWithCloud();
+        } else {
+          // Logged out: reload from local storage only
+          this.loadFromStorage();
+          if (window.app && typeof window.app.renderAll === 'function') {
+            window.app.renderAll();
+          }
+        }
+      });
+    }
   }
 
   loadFromStorage() {
@@ -79,6 +94,180 @@ class HabitDatabase {
     localStorage.setItem(DB_KEYS.PROFILE, JSON.stringify(this.profile));
   }
 
+  // Sync with Supabase Database
+  async syncWithCloud() {
+    if (!window.supabaseMgr || !window.supabaseMgr.isAuthenticated()) return;
+    const user = window.supabaseMgr.currentUser;
+    const userId = user.id;
+
+    try {
+      console.log("Syncing with cloud...");
+      this.notifySyncStatus("Syncing...");
+      
+      // 1. Fetch habits from cloud
+      const { data: cloudHabits, error: habitsErr } = await window.supabaseMgr.client
+        .from('habits')
+        .select('*')
+        .eq('user_id', userId);
+        
+      if (habitsErr) throw habitsErr;
+
+      // 2. Fetch history from cloud
+      const { data: cloudHistory, error: historyErr } = await window.supabaseMgr.client
+        .from('history')
+        .select('*')
+        .eq('user_id', userId);
+
+      if (historyErr) throw historyErr;
+
+      // 3. Fetch profile from cloud
+      const { data: cloudProfiles, error: profileErr } = await window.supabaseMgr.client
+        .from('profiles')
+        .select('*')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+      if (profileErr) throw profileErr;
+
+      // Merging Logic:
+      // If cloud is completely empty, upload local data as first sync!
+      if (!cloudHabits || cloudHabits.length === 0) {
+        console.log("Cloud is empty. Uploading local data...");
+        this.notifySyncStatus("Uploading data...");
+        await this.uploadLocalDataToCloud(userId);
+      } else {
+        // Cloud has data: download and overwrite local storage (cloud is single source of truth)
+        console.log("Downloading cloud data...");
+        
+        // Map cloud habits
+        this.habits = cloudHabits.map(h => ({
+          id: h.id,
+          name: h.name,
+          emoji: h.emoji,
+          createdAt: Number(h.created_at),
+          active: h.active
+        }));
+        this.saveHabits();
+
+        // Map cloud history
+        this.history = {};
+        cloudHistory.forEach(item => {
+          const dateStr = item.date;
+          if (!this.history[dateStr]) this.history[dateStr] = {};
+          this.history[dateStr][item.habit_id] = {
+            completed: item.completed,
+            remark: item.remark || ''
+          };
+        });
+        this.saveHistory();
+
+        // Map cloud profile
+        if (cloudProfiles) {
+          this.profile = {
+            currentStreak: cloudProfiles.current_streak,
+            longestStreak: cloudProfiles.longest_streak,
+            soundEnabled: cloudProfiles.sound_enabled,
+            theme: cloudProfiles.theme,
+            lastActiveDate: cloudProfiles.last_active_date || '',
+            habitStreaks: cloudProfiles.habit_streaks || {}
+          };
+          this.saveProfile();
+        }
+      }
+      
+      // Notify app to re-render
+      if (window.app && typeof window.app.renderAll === 'function') {
+        window.app.renderAll();
+      }
+      
+      this.notifySyncStatus("Connected");
+      console.log("Cloud sync complete!");
+    } catch (e) {
+      this.notifySyncStatus("Sync Error");
+      console.error("Cloud sync failed", e);
+    }
+  }
+
+  // Upload offline data to cloud
+  async uploadLocalDataToCloud(userId) {
+    // 1. Upload habits
+    const habitsToInsert = this.habits.map(h => ({
+      id: h.id,
+      user_id: userId,
+      name: h.name,
+      emoji: h.emoji,
+      created_at: h.createdAt,
+      active: h.active
+    }));
+    
+    if (habitsToInsert.length > 0) {
+      const { error } = await window.supabaseMgr.client.from('habits').insert(habitsToInsert);
+      if (error) throw error;
+    }
+
+    // 2. Upload history
+    const historyToInsert = [];
+    for (const dateStr in this.history) {
+      const dayHabits = this.history[dateStr];
+      for (const habitId in dayHabits) {
+        const record = dayHabits[habitId];
+        let completed = false;
+        let remark = '';
+        if (record && typeof record === 'object') {
+          completed = record.completed;
+          remark = record.remark || '';
+        } else {
+          completed = Boolean(record);
+        }
+        historyToInsert.push({
+          user_id: userId,
+          date: dateStr,
+          habit_id: habitId,
+          completed: completed,
+          remark: remark
+        });
+      }
+    }
+
+    if (historyToInsert.length > 0) {
+      const { error } = await window.supabaseMgr.client.from('history').insert(historyToInsert);
+      if (error) throw error;
+    }
+
+    // 3. Upload profile
+    const { error: profileErr } = await window.supabaseMgr.client.from('profiles').upsert({
+      user_id: userId,
+      theme: this.profile.theme,
+      sound_enabled: this.profile.soundEnabled,
+      current_streak: this.profile.currentStreak,
+      longest_streak: this.profile.longestStreak,
+      last_active_date: this.profile.lastActiveDate,
+      habit_streaks: this.profile.habitStreaks
+    });
+    
+    if (profileErr) throw profileErr;
+  }
+
+  // UI helper for sync status
+  notifySyncStatus(status) {
+    const statusEl = document.getElementById('cloud-sync-status');
+    const iconEl = document.getElementById('cloud-sync-icon');
+    if (statusEl) {
+      statusEl.textContent = status;
+    }
+    if (iconEl) {
+      if (status === 'Connected') {
+        iconEl.textContent = '🟢';
+      } else if (status === 'Offline') {
+        iconEl.textContent = '☁️';
+      } else if (status === 'Syncing...') {
+        iconEl.textContent = '🔄';
+      } else if (status === 'Sync Error') {
+        iconEl.textContent = '🔴';
+      }
+    }
+  }
+
   // Get active habits
   getActiveHabits() {
     return this.habits.filter(h => h.active);
@@ -98,6 +287,21 @@ class HabitDatabase {
     this.habits.push(newHabit);
     this.saveHabits();
     this.updateStreaks();
+
+    // Cloud insert
+    if (window.supabaseMgr && window.supabaseMgr.isAuthenticated()) {
+      window.supabaseMgr.client.from('habits').insert({
+        id: newHabit.id,
+        user_id: window.supabaseMgr.currentUser.id,
+        name: newHabit.name,
+        emoji: newHabit.emoji,
+        created_at: newHabit.createdAt,
+        active: newHabit.active
+      }).then(({ error }) => {
+        if (error) console.error("Cloud insert habit failed", error);
+      });
+    }
+
     return newHabit;
   }
 
@@ -107,6 +311,18 @@ class HabitDatabase {
     if (index !== -1) {
       this.habits[index] = { ...this.habits[index], ...updates };
       this.saveHabits();
+
+      // Cloud update
+      if (window.supabaseMgr && window.supabaseMgr.isAuthenticated()) {
+        window.supabaseMgr.client.from('habits').update({
+          name: this.habits[index].name,
+          emoji: this.habits[index].emoji,
+          active: this.habits[index].active
+        }).eq('id', id).then(({ error }) => {
+          if (error) console.error("Cloud update habit failed", error);
+        });
+      }
+
       return this.habits[index];
     }
     return null;
@@ -119,6 +335,16 @@ class HabitDatabase {
       this.habits[index].active = false;
       this.saveHabits();
       this.updateStreaks();
+
+      // Cloud update
+      if (window.supabaseMgr && window.supabaseMgr.isAuthenticated()) {
+        window.supabaseMgr.client.from('habits').update({
+          active: false
+        }).eq('id', id).then(({ error }) => {
+          if (error) console.error("Cloud soft-delete habit failed", error);
+        });
+      }
+
       return true;
     }
     return false;
@@ -136,6 +362,15 @@ class HabitDatabase {
     }
     this.saveHistory();
     this.updateStreaks();
+
+    // Cloud hard-delete
+    if (window.supabaseMgr && window.supabaseMgr.isAuthenticated()) {
+      window.supabaseMgr.client.from('history').delete().eq('habit_id', id).then(() => {
+        window.supabaseMgr.client.from('habits').delete().eq('id', id).then(({ error }) => {
+          if (error) console.error("Cloud hard-delete habit failed", error);
+        });
+      });
+    }
   }
 
   // Set checkbox progress for a habit on a specific date
@@ -169,6 +404,19 @@ class HabitDatabase {
 
     this.updateStreaks();
 
+    // Cloud upsert
+    if (window.supabaseMgr && window.supabaseMgr.isAuthenticated()) {
+      window.supabaseMgr.client.from('history').upsert({
+        user_id: window.supabaseMgr.currentUser.id,
+        date: dateStr,
+        habit_id: habitId,
+        completed: completed,
+        remark: oldRemark
+      }, { onConflict: 'user_id,date,habit_id' }).then(({ error }) => {
+        if (error) console.error("Cloud setProgress failed", error);
+      });
+    }
+
     return {
       statusChanged: wasCompleted !== isCompleted,
       completed: isCompleted
@@ -195,6 +443,19 @@ class HabitDatabase {
       remark: remark
     };
     this.saveHistory();
+
+    // Cloud upsert
+    if (window.supabaseMgr && window.supabaseMgr.isAuthenticated()) {
+      window.supabaseMgr.client.from('history').upsert({
+        user_id: window.supabaseMgr.currentUser.id,
+        date: dateStr,
+        habit_id: habitId,
+        completed: completed,
+        remark: remark
+      }, { onConflict: 'user_id,date,habit_id' }).then(({ error }) => {
+        if (error) console.error("Cloud setRemark failed", error);
+      });
+    }
   }
 
   // Check if a specific date had 100% completion of active habits that existed on that day
@@ -359,6 +620,21 @@ class HabitDatabase {
 
     this.profile.lastActiveDate = todayStr;
     this.saveProfile();
+
+    // Cloud update profile
+    if (window.supabaseMgr && window.supabaseMgr.isAuthenticated()) {
+      window.supabaseMgr.client.from('profiles').upsert({
+        user_id: window.supabaseMgr.currentUser.id,
+        theme: this.profile.theme,
+        sound_enabled: this.profile.soundEnabled,
+        current_streak: this.profile.currentStreak,
+        longest_streak: this.profile.longestStreak,
+        last_active_date: this.profile.lastActiveDate,
+        habit_streaks: this.profile.habitStreaks
+      }).then(({ error }) => {
+        if (error) console.error("Cloud update profile failed", error);
+      });
+    }
   }
 
   // Get date helper
@@ -389,6 +665,25 @@ class HabitDatabase {
     this.saveHabits();
     this.saveHistory();
     this.saveProfile();
+
+    if (window.supabaseMgr && window.supabaseMgr.isAuthenticated()) {
+      const userId = window.supabaseMgr.currentUser.id;
+      Promise.all([
+        window.supabaseMgr.client.from('history').delete().eq('user_id', userId),
+        window.supabaseMgr.client.from('habits').delete().eq('user_id', userId),
+        window.supabaseMgr.client.from('profiles').upsert({
+          user_id: userId,
+          theme: 'cyberpunk',
+          sound_enabled: true,
+          current_streak: 0,
+          longest_streak: 0,
+          last_active_date: '',
+          habit_streaks: {}
+        })
+      ]).then(() => {
+        this.uploadLocalDataToCloud(userId);
+      }).catch(err => console.error("Cloud reset failed", err));
+    }
   }
 }
 

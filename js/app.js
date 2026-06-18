@@ -161,6 +161,7 @@ class AppController {
 
     this.initElements();
     this.initEvents();
+    this.initSupabase();
   }
 
   initElements() {
@@ -1505,6 +1506,193 @@ class AppController {
 
   hideTooltip() {
     this.tooltip.style.opacity = 0;
+  }
+
+  renderAll() {
+    this.render();
+  }
+
+  initSupabase() {
+    // Elements
+    const authModal = document.getElementById('auth-modal');
+    const cloudSyncPill = document.getElementById('cloud-sync-pill');
+    const btnSaveConfig = document.getElementById('btn-save-supabase-config');
+    const supabaseUrlInput = document.getElementById('supabase-url-input');
+    const supabaseKeyInput = document.getElementById('supabase-key-input');
+    const loginForm = document.getElementById('login-form');
+    const authEmailInput = document.getElementById('auth-email-input');
+    const authPasswordInput = document.getElementById('auth-password-input');
+    const btnSignupSubmit = document.getElementById('btn-signup-submit');
+    const loggedInProfile = document.getElementById('logged-in-profile');
+    const loggedInEmail = document.getElementById('logged-in-email');
+    const btnSyncNow = document.getElementById('btn-sync-now');
+    const btnLogout = document.getElementById('btn-logout');
+    const authStatusMessage = document.getElementById('auth-status-message');
+    const authSectionTitle = document.getElementById('auth-section-title');
+    const authUserSection = document.getElementById('auth-user-section');
+
+    const updateAuthUI = (user) => {
+      const isConfigured = window.supabaseMgr && window.supabaseMgr.isConfigured();
+      if (!isConfigured) {
+        authUserSection.style.opacity = '0.5';
+        authUserSection.style.pointerEvents = 'none';
+        authSectionTitle.textContent = '2. Account Login (Setup Needed)';
+        loginForm.style.display = 'flex';
+        loggedInProfile.style.display = 'none';
+        window.db.notifySyncStatus('Offline');
+        return;
+      }
+
+      authUserSection.style.opacity = '1';
+      authUserSection.style.pointerEvents = 'auto';
+      authSectionTitle.textContent = '2. Account Login';
+
+      if (user) {
+        loginForm.style.display = 'none';
+        loggedInProfile.style.display = 'flex';
+        loggedInEmail.textContent = user.email;
+        window.db.notifySyncStatus('Connected');
+      } else {
+        loginForm.style.display = 'flex';
+        loggedInProfile.style.display = 'none';
+        window.db.notifySyncStatus('Offline');
+      }
+    };
+
+    // Load Saved Config to Inputs
+    if (window.supabaseMgr) {
+      supabaseUrlInput.value = window.supabaseMgr.url || '';
+      supabaseKeyInput.value = window.supabaseMgr.anonKey ? '••••••••••••••••' : '';
+
+      window.supabaseMgr.onAuthStateChange((user) => {
+        updateAuthUI(user);
+      });
+    }
+
+    // Click Cloud Pill to open modal
+    if (cloudSyncPill) {
+      cloudSyncPill.addEventListener('click', () => {
+        authStatusMessage.textContent = '';
+        authModal.classList.add('open');
+        this.sound.playClick();
+      });
+    }
+
+    // Save Supabase config
+    if (btnSaveConfig) {
+      btnSaveConfig.addEventListener('click', async () => {
+        const url = supabaseUrlInput.value.trim();
+        let key = supabaseKeyInput.value.trim();
+
+        if (!url) {
+          authStatusMessage.textContent = '❌ Please enter a valid URL.';
+          authStatusMessage.style.color = 'var(--color-danger)';
+          return;
+        }
+
+        // If key is masked, load the existing key from manager
+        if (key === '••••••••••••••••') {
+          key = localStorage.getItem('habit_v2_supabase_key') || window.supabaseMgr.defaultAnonKey;
+        }
+
+        try {
+          const success = window.supabaseMgr.saveConfig(url, key);
+          if (success) {
+            authStatusMessage.textContent = '✅ Connection Settings Saved!';
+            authStatusMessage.style.color = 'var(--color-primary)';
+            updateAuthUI(window.supabaseMgr.currentUser);
+            // Trigger sync
+            if (window.supabaseMgr.isAuthenticated()) {
+              window.db.syncWithCloud();
+            }
+          } else {
+            authStatusMessage.textContent = '❌ Failed to initialize Supabase. Check key/URL.';
+            authStatusMessage.style.color = 'var(--color-danger)';
+          }
+        } catch (err) {
+          authStatusMessage.textContent = `❌ Error: ${err.message}`;
+          authStatusMessage.style.color = 'var(--color-danger)';
+        }
+      });
+    }
+
+    // Login Submit
+    if (loginForm) {
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = authEmailInput.value.trim();
+        const password = authPasswordInput.value;
+        authStatusMessage.textContent = 'Logging in...';
+        authStatusMessage.style.color = 'var(--text-muted)';
+
+        try {
+          await window.supabaseMgr.login(email, password);
+          authStatusMessage.textContent = '✅ Logged in successfully!';
+          authStatusMessage.style.color = 'var(--color-primary)';
+          authEmailInput.value = '';
+          authPasswordInput.value = '';
+        } catch (err) {
+          authStatusMessage.textContent = `❌ Login Error: ${err.message}`;
+          authStatusMessage.style.color = 'var(--color-danger)';
+        }
+      });
+    }
+
+    // Sign Up Submit
+    if (btnSignupSubmit) {
+      btnSignupSubmit.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const email = authEmailInput.value.trim();
+        const password = authPasswordInput.value;
+        
+        if (!email || !password || password.length < 6) {
+          authStatusMessage.textContent = '❌ Valid Email and Password (min 6 chars) required to sign up.';
+          authStatusMessage.style.color = 'var(--color-danger)';
+          return;
+        }
+
+        authStatusMessage.textContent = 'Signing up...';
+        authStatusMessage.style.color = 'var(--text-muted)';
+
+        try {
+          await window.supabaseMgr.signup(email, password);
+          authStatusMessage.textContent = '✅ Check email for confirmation link!';
+          authStatusMessage.style.color = 'var(--color-primary)';
+          authEmailInput.value = '';
+          authPasswordInput.value = '';
+        } catch (err) {
+          authStatusMessage.textContent = `❌ Signup Error: ${err.message}`;
+          authStatusMessage.style.color = 'var(--color-danger)';
+        }
+      });
+    }
+
+    // Logout
+    if (btnLogout) {
+      btnLogout.addEventListener('click', async () => {
+        authStatusMessage.textContent = 'Logging out...';
+        authStatusMessage.style.color = 'var(--text-muted)';
+        try {
+          await window.supabaseMgr.logout();
+          authStatusMessage.textContent = 'Logged out.';
+          authStatusMessage.style.color = 'var(--text-muted)';
+        } catch (err) {
+          authStatusMessage.textContent = `Error logging out: ${err.message}`;
+          authStatusMessage.style.color = 'var(--color-danger)';
+        }
+      });
+    }
+
+    // Manual Sync Now
+    if (btnSyncNow) {
+      btnSyncNow.addEventListener('click', async () => {
+        authStatusMessage.textContent = 'Syncing...';
+        authStatusMessage.style.color = 'var(--text-muted)';
+        await window.db.syncWithCloud();
+        authStatusMessage.textContent = '✅ Synchronization complete!';
+        authStatusMessage.style.color = 'var(--color-primary)';
+      });
+    }
   }
 }
 
