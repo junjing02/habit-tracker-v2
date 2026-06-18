@@ -1555,6 +1555,10 @@ class AppController {
           blocker.style.display = 'block';
         }
         this.switchView('dashboard');
+        // Auto-open modal to prompt credentials setup
+        if (authModal) {
+          authModal.classList.add('open');
+        }
         return;
       }
 
@@ -1582,6 +1586,11 @@ class AppController {
           blocker.style.display = 'block';
         }
         this.switchView('dashboard');
+        
+        // Auto-open modal to prompt login
+        if (authModal) {
+          authModal.classList.add('open');
+        }
       }
     };
 

@@ -1957,8 +1957,8 @@ body {
 }
 
 /* Fix z-index stacking so overlays open on top of the manager modal */
-#habit-modal, #confirm-delete-modal, #remark-modal {
-  z-index: 110 !important;
+#habit-modal, #confirm-delete-modal, #remark-modal, #auth-modal {
+  z-index: 10000 !important;
 }
 
 /* Row Actions inline styles (hidden by default, visible on row hover) */
