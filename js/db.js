@@ -199,7 +199,7 @@ class HabitDatabase {
         longest_streak: this.profile.longestStreak,
         last_active_date: this.profile.lastActiveDate,
         habit_streaks: this.profile.habitStreaks
-      }).then(({ error }) => {
+      }, { onConflict: 'user_id' }).then(({ error }) => {
         if (error) console.error("Cloud update profile failed", error);
       });
     }
@@ -393,14 +393,17 @@ class HabitDatabase {
         this.saveHistory();
 
         // Map cloud profile
-        if (cloudProfiles) {
+        if (!cloudProfiles) {
+          console.log("No cloud profile row found. Creating one...");
+          this.saveProfile();
+        } else {
           this.profile = {
-            currentStreak: cloudProfiles.current_streak,
-            longestStreak: cloudProfiles.longest_streak,
-            soundEnabled: cloudProfiles.sound_enabled,
-            theme: cloudProfiles.theme,
-            lastActiveDate: cloudProfiles.last_active_date || '',
-            habitStreaks: cloudProfiles.habit_streaks || {}
+            currentStreak: cloudProfiles.current_streak !== null && cloudProfiles.current_streak !== undefined ? cloudProfiles.current_streak : this.profile.currentStreak,
+            longestStreak: cloudProfiles.longest_streak !== null && cloudProfiles.longest_streak !== undefined ? cloudProfiles.longest_streak : this.profile.longestStreak,
+            soundEnabled: cloudProfiles.sound_enabled !== null && cloudProfiles.sound_enabled !== undefined ? cloudProfiles.sound_enabled : this.profile.soundEnabled,
+            theme: cloudProfiles.theme || this.profile.theme || 'cyberpunk',
+            lastActiveDate: cloudProfiles.last_active_date || this.profile.lastActiveDate || '',
+            habitStreaks: cloudProfiles.habit_streaks || this.profile.habitStreaks || {}
           };
           this.saveProfile();
         }
@@ -477,7 +480,7 @@ class HabitDatabase {
       longest_streak: this.profile.longestStreak,
       last_active_date: this.profile.lastActiveDate,
       habit_streaks: this.profile.habitStreaks
-    });
+    }, { onConflict: 'user_id' });
     
     if (profileErr) throw profileErr;
   }
@@ -926,7 +929,7 @@ class HabitDatabase {
         longest_streak: this.profile.longestStreak,
         last_active_date: this.profile.lastActiveDate,
         habit_streaks: this.profile.habitStreaks
-      }).then(({ error }) => {
+      }, { onConflict: 'user_id' }).then(({ error }) => {
         if (error) console.error("Cloud update profile failed", error);
       });
     }
@@ -976,7 +979,7 @@ class HabitDatabase {
           longest_streak: 0,
           last_active_date: '',
           habit_streaks: {}
-        })
+        }, { onConflict: 'user_id' })
       ]).then(() => {
         this.uploadLocalDataToCloud(userId);
       }).catch(err => console.error("Cloud reset failed", err));

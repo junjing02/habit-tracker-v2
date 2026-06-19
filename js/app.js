@@ -2044,6 +2044,33 @@ class AppController {
 
   renderAll() {
     this.render();
+    
+    // Dynamically apply the synced theme to the document and dropdowns
+    const currentTheme = window.db.profile.theme === 'light' ? 'light' : 'cyberpunk';
+    document.body.setAttribute('data-theme', currentTheme);
+    
+    const themeSelect = document.getElementById('theme-selector');
+    const landingThemeSelect = document.getElementById('landing-theme-selector');
+    const drawerThemeSelect = document.getElementById('drawer-theme-selector');
+    
+    if (themeSelect) themeSelect.value = currentTheme;
+    if (landingThemeSelect) landingThemeSelect.value = currentTheme;
+    if (drawerThemeSelect) drawerThemeSelect.value = currentTheme;
+
+    // Apply synced sound settings
+    const soundBtn = document.getElementById('btn-toggle-sound');
+    const drawerSoundBtn = document.getElementById('drawer-btn-toggle-sound');
+    const iconText = window.db.profile.soundEnabled ? '🔊' : '🔇';
+    
+    if (soundBtn) {
+      const soundIcon = soundBtn.querySelector('i');
+      if (soundIcon) soundIcon.textContent = iconText;
+    }
+    if (drawerSoundBtn) {
+      const drawerSoundIcon = drawerSoundBtn.querySelector('i');
+      if (drawerSoundIcon) drawerSoundIcon.textContent = iconText;
+    }
+    this.sound.enabled = window.db.profile.soundEnabled;
   }
 
   initSupabase() {

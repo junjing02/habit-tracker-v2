@@ -2207,6 +2207,11 @@ body {
     width: 100%;
     box-sizing: border-box;
   }
+  
+  .app-container > * {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
 
   /* 2. Header Layout Optimization */
   .header {
@@ -2320,12 +2325,19 @@ body {
   .today-view-wrapper {
     grid-template-columns: 1fr !important;
     gap: 16px !important;
-    width: 100%;
-    box-sizing: border-box;
+    width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
   }
   
-  .today-habits-section, .garden-section {
+  .today-habits-section,
+  .today-habits-list,
+  .date-navigator,
+  .today-habit-card,
+  .garden-section {
     width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
     box-sizing: border-box !important;
     min-width: 0 !important;
   }
@@ -2333,8 +2345,6 @@ body {
   .today-habit-card {
     padding: 12px 14px;
     min-height: 62px;
-    box-sizing: border-box;
-    width: 100%;
   }
   
   .checkbox-check {
@@ -3951,4 +3961,40 @@ body {
   font-weight: 700;
   color: var(--color-primary);
   text-shadow: 0 0 8px var(--color-primary-glow);
+}
+
+/* Custom consistent Preferences styling inside Mobile Drawer Settings */
+.drawer-theme-select,
+.drawer-sound-btn {
+  height: 34px !important;
+  width: 90px !important;
+  box-sizing: border-box !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  border-radius: 8px !important;
+  border: 1px solid var(--panel-border) !important;
+  background: var(--input-bg) !important;
+  color: var(--text-main) !important;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.drawer-theme-select {
+  padding: 0 10px !important;
+  outline: none;
+  font-family: inherit;
+  text-align: center;
+  text-align-last: center;
+}
+
+.drawer-sound-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+}
+
+.drawer-theme-select:hover,
+.drawer-sound-btn:hover {
+  border-color: var(--color-primary) !important;
 }
