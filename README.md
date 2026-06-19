@@ -1,15 +1,42 @@
-# Routine & Streak Tracker
+# Aura Habit
 
-A routines and streak tracker built using vanilla web technologies and integrated with Supabase for cloud data synchronization.
+A client-side routine tracker and streak manager built with vanilla web technologies and integrated with Supabase for real-time cloud data synchronization.
 
-## Description
-Aura Habit is a routine tracker and streak manager. It features a guest sandbox demo mode, a daily checklist with progress visualization, weekly/calendar matrix views, and streak tracking.
+[![HTML](https://img.shields.io/badge/HTML-HTML5-orange.svg)]()
+[![CSS](https://img.shields.io/badge/CSS-Vanilla-blue.svg)]()
+[![JS](https://img.shields.io/badge/JS-ES6-yellow.svg)]()
+
+## Features
+
+- **Guest Sandbox Mode:** Isolated in-memory demo environment requiring no account.
+- **Daily Checklist:** Tracker supporting completion toggles and contextual notes.
+- **Habit Garden:** Procedural SVG tree drawing that dynamically grows based on completion rates.
+- **Consistency Calendar:** Interactive grid heatmap displaying monthly completion statuses.
+- **Weekly Matrix:** Spreadsheet overview of routine history from Monday to Sunday.
+- **Cloud Sync:** Secure login and session backup powered by Supabase.
+- **Theme Switching:** Client-side preference switcher supporting Dark and Light modes.
 
 ## Tech Stack
-- **Frontend**: HTML5, CSS3 (CSS Variables, Flexbox, Grid), ES6 JavaScript
-- **Backend & Database**: Supabase (Auth & Database Cloud Sync)
-- **Offline Storage**: LocalStorage API
 
-## How to Run
-- **Live Version**: Visit the [GitHub Pages App](https://junjing02.github.io/habit-tracker-v2/)
-- **Local Version**: Open `index.html` in any modern web browser.
+- **Frontend:** Semantic HTML5, Vanilla CSS3 (Custom Properties, Flexbox, Grid), ES6+ JavaScript
+- **Backend & Database:** Supabase (Auth, Cloud Database Sync)
+- **Offline Storage:** LocalStorage API
+
+## Getting Started
+
+### Live Demo
+Access the live deployed application at:
+👉 **[Live App URL](https://junjing02.github.io/habit-tracker-v2/)**
+
+### Local Setup
+To run the project locally:
+
+1. Clone the repository:
+   ```bash
+   git clone git@github.com:junjing02/habit-tracker-v2.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd habit-tracker-v2
+   ```
+3. Open `index.html` in your web browser.
