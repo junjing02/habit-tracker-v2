@@ -163,6 +163,7 @@ class AppController {
     this.initElements();
     this.initEvents();
     this.initSupabase();
+    this.initRouter();
   }
 
   initElements() {
@@ -230,17 +231,8 @@ class AppController {
 
     if (landingBtnTry) {
       landingBtnTry.addEventListener('click', () => {
-        this.guestSandboxMode = true;
-        window.db.initSandboxMode();
-        
-        // Hide landing page, show app container
-        const landingEl = document.getElementById('landing-page');
-        const appContainerEl = document.querySelector('.app-container');
-        if (landingEl) landingEl.classList.add('hidden-view');
-        if (appContainerEl) appContainerEl.classList.remove('hidden-view');
-        
         this.sound.playClick();
-        this.renderAll();
+        window.location.hash = '#demo';
       });
     }
 
@@ -257,6 +249,28 @@ class AppController {
     }
     if (landingBtnNavLogin) {
       landingBtnNavLogin.addEventListener('click', openAuthModal);
+    }
+
+    // Heading Brand Logo Click Routing
+    const brandLogoBtn = document.getElementById('brand-logo-btn');
+    if (brandLogoBtn) {
+      brandLogoBtn.addEventListener('click', () => {
+        const isLoggedIn = window.supabaseMgr && window.supabaseMgr.isAuthenticated();
+        this.sound.playClick();
+        if (isLoggedIn) {
+          window.location.hash = '#dashboard';
+        } else {
+          window.location.hash = '#landing';
+        }
+      });
+    }
+
+    const landingLogoBtn = document.getElementById('landing-logo-btn');
+    if (landingLogoBtn) {
+      landingLogoBtn.addEventListener('click', () => {
+        this.sound.playClick();
+        window.location.hash = '#landing';
+      });
     }
 
     // 0. Capturing event listener to prompt login when guest clicks anything interactive
@@ -495,8 +509,77 @@ class AppController {
     });
   }
 
+  // Routing initialization
+  initRouter() {
+    window.addEventListener('hashchange', () => {
+      this.handleRouting();
+    });
+    // Trigger initially
+    this.handleRouting();
+  }
+
+  handleRouting() {
+    const hash = window.location.hash || '#landing';
+    const isLoggedIn = window.supabaseMgr && window.supabaseMgr.isAuthenticated();
+
+    if (isLoggedIn) {
+      // If logged in, #landing or #demo hashes automatically redirect to dashboard
+      if (hash === '#landing' || hash === '#demo' || hash.startsWith('#demo-')) {
+        window.location.hash = '#dashboard';
+        return;
+      }
+      this.guestSandboxMode = false;
+      window.db.guestSandboxMode = false;
+      const targetView = hash.replace('#', '');
+      if (['dashboard', 'matrix', 'calendar', 'analytics'].includes(targetView)) {
+        this.switchView(targetView, false);
+      } else {
+        window.location.hash = '#dashboard';
+      }
+    } else {
+      // If logged out
+      if (hash === '#demo') {
+        this.guestSandboxMode = true;
+        window.db.initSandboxMode();
+        
+        const landingEl = document.getElementById('landing-page');
+        const appContainerEl = document.querySelector('.app-container');
+        if (landingEl) landingEl.classList.add('hidden-view');
+        if (appContainerEl) appContainerEl.classList.remove('hidden-view');
+        this.switchView('dashboard', false);
+      } else if (hash.startsWith('#demo-')) {
+        this.guestSandboxMode = true;
+        window.db.initSandboxMode();
+        
+        const landingEl = document.getElementById('landing-page');
+        const appContainerEl = document.querySelector('.app-container');
+        if (landingEl) landingEl.classList.add('hidden-view');
+        if (appContainerEl) appContainerEl.classList.remove('hidden-view');
+
+        const subView = hash.replace('#demo-', '');
+        if (['dashboard', 'matrix', 'calendar', 'analytics'].includes(subView)) {
+          this.switchView(subView, false);
+        } else {
+          this.switchView('dashboard', false);
+        }
+      } else {
+        // Show landing page
+        this.guestSandboxMode = false;
+        window.db.guestSandboxMode = false;
+        
+        const landingEl = document.getElementById('landing-page');
+        const appContainerEl = document.querySelector('.app-container');
+        if (landingEl) landingEl.classList.remove('hidden-view');
+        if (appContainerEl) appContainerEl.classList.add('hidden-view');
+        
+        const authModal = document.getElementById('auth-modal');
+        if (authModal) authModal.classList.remove('open');
+      }
+    }
+  }
+
   // View Swapper
-  switchView(viewName) {
+  switchView(viewName, updateHash = true) {
     this.currentView = viewName;
     
     document.querySelectorAll('.view-tab').forEach(tab => {
@@ -513,6 +596,14 @@ class AppController {
     this.analyticsView.style.display = viewName === 'analytics' ? 'flex' : 'none';
 
     this.render();
+
+    if (updateHash) {
+      if (this.guestSandboxMode) {
+        window.location.hash = `#demo-${viewName}`;
+      } else {
+        window.location.hash = `#${viewName}`;
+      }
+    }
   }
 
   // Render Engine
