@@ -195,6 +195,8 @@ class AppController {
     this.habitIdInput = document.getElementById('modal-habit-id');
     this.habitNameInput = document.getElementById('habit-name-input');
     this.habitEmojiInput = document.getElementById('modal-habit-emoji');
+    this.recoveryForm = document.getElementById('recovery-form');
+    this.recoveryPasswordInput = document.getElementById('recovery-password-input');
 
     // Remark inputs
     this.remarkHabitTitle = document.getElementById('remark-habit-title');
@@ -1576,20 +1578,14 @@ class AppController {
     const configSection = document.getElementById('auth-config-section');
     if (configSection && window.supabaseMgr && window.supabaseMgr.defaultUrl && window.supabaseMgr.defaultAnonKey) {
       configSection.style.display = 'none';
-      if (authSectionTitle) {
-        authSectionTitle.textContent = 'Account Login';
-      }
-    }
-
-    const blocker = document.getElementById('interaction-blocker');
-
-    const updateAuthUI = (user) => {
+      const updateAuthUI = (user, event) => {
       const isConfigured = window.supabaseMgr && window.supabaseMgr.isConfigured();
       if (!isConfigured) {
         authUserSection.style.opacity = '0.5';
         authUserSection.style.pointerEvents = 'none';
         authSectionTitle.textContent = 'Account Login (Setup Needed)';
         loginForm.style.display = 'flex';
+        this.recoveryForm.style.display = 'none';
         loggedInProfile.style.display = 'none';
         window.db.notifySyncStatus('Offline');
         if (blocker) {
@@ -1601,7 +1597,24 @@ class AppController {
  
       authUserSection.style.opacity = '1';
       authUserSection.style.pointerEvents = 'auto';
+
+      if (event === 'PASSWORD_RECOVERY') {
+        authSectionTitle.textContent = 'Reset Your Password';
+        loginForm.style.display = 'none';
+        loggedInProfile.style.display = 'none';
+        this.recoveryForm.style.display = 'flex';
+        
+        // Auto-open modal so they can type password immediately
+        if (authModal) {
+          authModal.classList.add('open');
+        }
+        authStatusMessage.textContent = 'Please enter your new password below.';
+        authStatusMessage.style.color = 'var(--text-main)';
+        return;
+      }
+ 
       authSectionTitle.textContent = 'Account Login';
+      this.recoveryForm.style.display = 'none';
  
       if (user) {
         loginForm.style.display = 'none';
@@ -1613,6 +1626,17 @@ class AppController {
         if (blocker) {
           blocker.style.display = 'none';
         }
+
+        // Close auth modal automatically on successful login/update
+        // unless it's the INITIAL event (we don't want to close a modal they explicitly opened)
+        if (event && event !== 'INITIAL' && event !== 'PASSWORD_RECOVERY') {
+          if (authModal) {
+            authModal.classList.remove('open');
+          }
+        }
+
+        // Refresh UI immediately to reflect user's actual data
+        this.renderAll();
       } else {
         loginForm.style.display = 'flex';
         loggedInProfile.style.display = 'none';
@@ -1630,11 +1654,11 @@ class AppController {
     if (window.supabaseMgr) {
       supabaseUrlInput.value = window.supabaseMgr.url || '';
       supabaseKeyInput.value = window.supabaseMgr.anonKey ? '••••••••••••••••' : '';
-
-      window.supabaseMgr.onAuthStateChange((user) => {
-        updateAuthUI(user);
+ 
+      window.supabaseMgr.onAuthStateChange((user, event) => {
+        updateAuthUI(user, event);
       });
-    }
+
 
     // Click Blocker to open login modal
     if (blocker) {
@@ -1764,6 +1788,46 @@ class AppController {
           authPasswordInput.value = '';
         } catch (err) {
           authStatusMessage.textContent = `❌ Signup Error: ${err.message}`;
+          authStatusMessage.style.color = 'var(--color-danger)';
+        }
+      });
+    }
+
+    // Recovery Form Submit
+    if (this.recoveryForm) {
+      this.recoveryForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const newPassword = this.recoveryPasswordInput.value;
+        if (!newPassword || newPassword.length < 6) {
+          authStatusMessage.textContent = '❌ Password must be at least 6 characters.';
+          authStatusMessage.style.color = 'var(--color-danger)';
+          return;
+        }
+
+        authStatusMessage.textContent = 'Updating password...';
+        authStatusMessage.style.color = 'var(--text-muted)';
+
+        try {
+          await window.supabaseMgr.updatePassword(newPassword);
+          authStatusMessage.textContent = '✅ Password updated successfully!';
+          authStatusMessage.style.color = 'var(--color-primary)';
+          this.recoveryPasswordInput.value = '';
+          
+          // Clear URL hash to prevent re-triggering PASSWORD_RECOVERY on refresh
+          if (window.history && window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.pathname + window.location.search);
+          }
+
+          // Delay for 1.5 seconds, then close modal and restore UI state
+          setTimeout(() => {
+            if (authModal) {
+              authModal.classList.remove('open');
+            }
+            updateAuthUI(window.supabaseMgr.currentUser, 'SIGNED_IN');
+          }, 1500);
+
+        } catch (err) {
+          authStatusMessage.textContent = `❌ Update Error: ${err.message}`;
           authStatusMessage.style.color = 'var(--color-danger)';
         }
       });

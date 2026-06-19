@@ -76,7 +76,7 @@ class SupabaseManager {
         this.client.auth.onAuthStateChange((event, session) => {
           this.currentUser = session ? session.user : null;
           if (this.authCallback) {
-            this.authCallback(this.currentUser);
+            this.authCallback(this.currentUser, event);
           }
         });
 
@@ -84,7 +84,7 @@ class SupabaseManager {
         this.client.auth.getSession().then(({ data }) => {
           if (data && data.session) {
             this.currentUser = data.session.user;
-            if (this.authCallback) this.authCallback(this.currentUser);
+            if (this.authCallback) this.authCallback(this.currentUser, 'INITIAL');
           }
         });
 
@@ -113,9 +113,9 @@ class SupabaseManager {
     this.authCallback = callback;
     // Call immediately with current state
     if (this.isConfigured()) {
-      callback(this.currentUser);
+      callback(this.currentUser, 'INITIAL');
     } else {
-      callback(null);
+      callback(null, 'INITIAL');
     }
   }
 
@@ -162,7 +162,19 @@ class SupabaseManager {
     if (!this.isConfigured()) throw new Error("Supabase is not configured.");
     
     const { data, error } = await this.client.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin
+      redirectTo: window.location.href.split('#')[0].split('?')[0]
+    });
+    
+    if (error) throw error;
+    return data;
+  }
+
+  // Update password for currently signed-in user (recovery flow)
+  async updatePassword(password) {
+    if (!this.isConfigured()) throw new Error("Supabase is not configured.");
+    
+    const { data, error } = await this.client.auth.updateUser({
+      password: password
     });
     
     if (error) throw error;

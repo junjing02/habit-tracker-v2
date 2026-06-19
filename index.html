@@ -452,6 +452,15 @@
             </div>
           </form>
 
+          <!-- State: Password Recovery (Update Password) -->
+          <form id="recovery-form" style="display: none; flex-direction: column; gap: 12px;">
+            <div class="form-group">
+              <label class="form-label" for="recovery-password-input">New Password</label>
+              <input type="password" class="form-input" id="recovery-password-input" placeholder="Min 6 characters" required autocomplete="new-password" style="width: 100%; box-sizing: border-box;">
+            </div>
+            <button type="submit" class="btn-primary" id="btn-update-password" style="width: 100%; margin-top: 8px;">Update Password</button>
+          </form>
+
           <!-- State: Logged In -->
           <div id="logged-in-profile" style="display: none; flex-direction: column; gap: 10px;">
             <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0;">
