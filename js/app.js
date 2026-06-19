@@ -606,8 +606,10 @@ class AppController {
     } else {
       // If logged out
       if (hash === '#demo') {
+        if (!this.guestSandboxMode) {
+          window.db.sandboxInitialized = false; // Force re-initialization ONLY when entering from outside
+        }
         this.guestSandboxMode = true;
-        window.db.sandboxInitialized = false; // Force re-initialization on fresh demo entry
         window.db.initSandboxMode();
         
         const landingEl = document.getElementById('landing-page');
@@ -1882,9 +1884,14 @@ class AppController {
       }
  
       if (user) {
-        // Logged In: sandbox mode is deactivated
+        // Logged In: de-activate sandbox mode
         this.guestSandboxMode = false;
         window.db.guestSandboxMode = false;
+        window.db.sandboxInitialized = false;
+
+        // Force database to load real user data from LocalStorage and run cloud sync
+        window.db.loadFromStorage();
+        window.db.syncWithCloud();
 
         loginForm.style.display = 'none';
         loggedInProfile.style.display = 'flex';
