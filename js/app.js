@@ -255,12 +255,32 @@ class AppController {
     const brandLogoBtn = document.getElementById('brand-logo-btn');
     if (brandLogoBtn) {
       brandLogoBtn.addEventListener('click', () => {
-        const isLoggedIn = window.supabaseMgr && window.supabaseMgr.isAuthenticated();
-        this.sound.playClick();
+        let isLoggedIn = false;
+        try {
+          if (window.supabaseMgr && typeof window.supabaseMgr.isAuthenticated === 'function') {
+            isLoggedIn = window.supabaseMgr.isAuthenticated();
+          }
+        } catch (err) {
+          console.error("Auth check failed", err);
+        }
+
+        if (this.sound && typeof this.sound.playClick === 'function') {
+          this.sound.playClick();
+        }
+
         if (isLoggedIn) {
-          window.location.hash = '#dashboard';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          if (window.location.hash === '#dashboard') {
+            this.handleRouting();
+          } else {
+            window.location.hash = '#dashboard';
+          }
         } else {
-          window.location.hash = '#landing';
+          if (window.location.hash === '#landing') {
+            this.handleRouting();
+          } else {
+            window.location.hash = '#landing';
+          }
         }
       });
     }
@@ -268,8 +288,15 @@ class AppController {
     const landingLogoBtn = document.getElementById('landing-logo-btn');
     if (landingLogoBtn) {
       landingLogoBtn.addEventListener('click', () => {
-        this.sound.playClick();
-        window.location.hash = '#landing';
+        if (this.sound && typeof this.sound.playClick === 'function') {
+          this.sound.playClick();
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (window.location.hash === '#landing') {
+          this.handleRouting();
+        } else {
+          window.location.hash = '#landing';
+        }
       });
     }
 
