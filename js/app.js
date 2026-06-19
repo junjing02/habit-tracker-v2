@@ -7,7 +7,7 @@
 class SoundEffectManager {
   constructor() {
     this.ctx = null;
-    this.enabled = true;
+    this.enabled = false;
   }
   
   init() {
@@ -330,29 +330,6 @@ class AppController {
     if (footerBtn) footerBtn.addEventListener('click', () => this.openManagerModal());
     this.btnManagerAddHabit.addEventListener('click', () => this.openHabitModal());
 
-    const quickAddInput = document.getElementById('quick-add-name');
-    const quickAddBtn = document.getElementById('btn-quick-add-submit');
-    if (quickAddInput && quickAddBtn) {
-      const handleQuickAdd = () => {
-        const name = quickAddInput.value.trim();
-        if (!name) return;
-        
-        const presetEmojis = ['💧', '🏃‍♂️', '📖', '🧘‍♂️', '😴', '🍎', '💻', '🎨', '✍️', '🚶‍♂️', '🌱', '🧹', '🔋', '🧠', '🏋️‍♂️', '🥛', '☀️', '🍵', '🚴', '🥑'];
-        const randomEmoji = presetEmojis[Math.floor(Math.random() * presetEmojis.length)];
-        
-        window.db.createHabit(name, randomEmoji);
-        quickAddInput.value = '';
-        this.render();
-        this.sound.playCheck();
-      };
-      
-      quickAddBtn.addEventListener('click', handleQuickAdd);
-      quickAddInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          handleQuickAdd();
-        }
-      });
-    }
 
     const calTodayBtn = document.getElementById('btn-cal-today');
     if (calTodayBtn) {
@@ -608,6 +585,7 @@ class AppController {
 
         if (remarkText) {
           noteBtn.addEventListener('mouseenter', (e) => {
+            if (window.innerWidth <= 600) return;
             if (this.tooltipTimeout) clearTimeout(this.tooltipTimeout);
             const target = e.currentTarget;
             this.tooltipTimeout = setTimeout(() => {
@@ -629,6 +607,7 @@ class AppController {
         noteBtn.innerHTML = '📝';
         
         noteBtn.addEventListener('mouseenter', (e) => {
+          if (window.innerWidth <= 600) return;
           if (this.tooltipTimeout) clearTimeout(this.tooltipTimeout);
           const target = e.currentTarget;
           this.tooltipTimeout = setTimeout(() => {
@@ -837,6 +816,7 @@ class AppController {
       const remark = ind.dataset.remark;
       if (remark) {
         ind.addEventListener('mouseenter', (e) => {
+          if (window.innerWidth <= 600) return;
           if (this.tooltipTimeout) clearTimeout(this.tooltipTimeout);
           const target = e.currentTarget;
           this.tooltipTimeout = setTimeout(() => {
@@ -938,6 +918,7 @@ class AppController {
       // Hover tooltip: only shows the percentage and the missed habits (for current date and past only)
       if (totalCount > 0 && cellDateStr <= todayStr) {
         cell.addEventListener('mouseenter', (e) => {
+          if (window.innerWidth <= 600) return;
           if (this.tooltipTimeout) clearTimeout(this.tooltipTimeout);
           const target = e.currentTarget;
           this.tooltipTimeout = setTimeout(() => {
@@ -1196,6 +1177,7 @@ class AppController {
 
     container.querySelectorAll('.chart-point').forEach(pt => {
       pt.addEventListener('mouseenter', (e) => {
+        if (window.innerWidth <= 600) return;
         if (this.tooltipTimeout) clearTimeout(this.tooltipTimeout);
         const target = e.currentTarget;
         this.tooltipTimeout = setTimeout(() => {
@@ -1441,12 +1423,12 @@ class AppController {
   saveHabitForm() {
     const id = this.habitIdInput.value;
     const name = this.habitNameInput.value.trim();
-    const emoji = this.habitEmojiInput.value;
-
+    const emoji = this.habitEmojiInput.value || '⭐';
+ 
     if (id) {
-      window.db.updateHabit(id, { name, emoji });
+       window.db.updateHabit(id, { name, emoji });
     } else {
-      window.db.createHabit(name, emoji);
+       window.db.createHabit(name, emoji);
     }
 
     const managerModal = document.getElementById('manager-modal');

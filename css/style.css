@@ -1897,6 +1897,9 @@ body {
   padding: 12px 8px;
   vertical-align: middle;
 }
+#manager-table td:nth-child(2) {
+  text-align: left !important;
+}
 #manager-table .manager-checkbox-cell {
   text-align: center;
 }
@@ -2471,6 +2474,26 @@ body {
     margin-top: 2px !important;
     line-height: 1 !important;
     display: inline-block !important;
+  }
+
+  /* 3. Today Focus View Layout overrides */
+  .date-navigator {
+    padding: 6px 12px !important;
+    margin-bottom: 12px !important;
+    border-radius: var(--border-radius-sm) !important;
+    min-height: auto !important;
+  }
+  .date-label {
+    font-size: 0.82rem !important;
+  }
+  .date-btn, .today-btn {
+    height: 28px !important;
+    font-size: 0.75rem !important;
+    padding: 0 8px !important;
+  }
+  .today-habit-card {
+    min-height: 72px !important;
+    padding: 16px 18px !important;
   }
 }
 

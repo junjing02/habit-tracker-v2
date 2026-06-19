@@ -752,7 +752,7 @@ class HabitDatabase {
         window.supabaseMgr.client.from('profiles').upsert({
           user_id: userId,
           theme: 'cyberpunk',
-          sound_enabled: true,
+          sound_enabled: false,
           current_streak: 0,
           longest_streak: 0,
           last_active_date: '',
