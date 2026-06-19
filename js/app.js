@@ -581,32 +581,30 @@ class AppController {
       const action = document.createElement('div');
       action.className = 'habit-action-area';
 
-      // 1. Remark/Note button
-      if (!isCompleted && !isFutureDate) {
+      // 1. Remark/Note button (only visible if there is an existing note)
+      if (!isCompleted && !isFutureDate && remarkText) {
         const noteBtn = document.createElement('button');
-        noteBtn.className = `btn-note-action ${remarkText ? 'active-note' : ''}`;
-        noteBtn.innerHTML = remarkText ? '📝' : '➕';
-        noteBtn.title = remarkText ? 'Edit missed reason' : 'Add reason why missed';
+        noteBtn.className = 'btn-note-action active-note';
+        noteBtn.innerHTML = '📝';
+        noteBtn.title = 'Edit missed reason';
         
         noteBtn.addEventListener('click', () => {
           this.openRemarkModal(habit.id, dateStr);
         });
 
-        if (remarkText) {
-          noteBtn.addEventListener('mouseenter', (e) => {
-            if (window.innerWidth <= 600) return;
-            if (this.tooltipTimeout) clearTimeout(this.tooltipTimeout);
-            const target = e.currentTarget;
-            this.tooltipTimeout = setTimeout(() => {
-              const rect = target.getBoundingClientRect();
-              this.showTooltip(`Note: "${remarkText}"`, rect.left + rect.width / 2, rect.top - 6);
-            }, 400);
-          });
-          noteBtn.addEventListener('mouseleave', () => {
-            if (this.tooltipTimeout) clearTimeout(this.tooltipTimeout);
-            this.hideTooltip();
-          });
-        }
+        noteBtn.addEventListener('mouseenter', (e) => {
+          if (window.innerWidth <= 600) return;
+          if (this.tooltipTimeout) clearTimeout(this.tooltipTimeout);
+          const target = e.currentTarget;
+          this.tooltipTimeout = setTimeout(() => {
+            const rect = target.getBoundingClientRect();
+            this.showTooltip(`Note: "${remarkText}"`, rect.left + rect.width / 2, rect.top - 6);
+          }, 400);
+        });
+        noteBtn.addEventListener('mouseleave', () => {
+          if (this.tooltipTimeout) clearTimeout(this.tooltipTimeout);
+          this.hideTooltip();
+        });
 
         action.appendChild(noteBtn);
       } else if (isCompleted && remarkText) {
@@ -768,9 +766,6 @@ class AppController {
 
             if (remarkText) {
               visibilityVal = 'visible';
-            } else if (!isCompleted) {
-              noteContent = '➕';
-              classVal += ' empty-note-hover';
             }
 
             cellInner = `
