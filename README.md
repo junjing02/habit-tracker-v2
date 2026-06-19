@@ -2,6 +2,12 @@
 
 Aura Habit is a gorgeous, premium-styled personal routine tracker and streak manager. It features a modern Apple-style landing homepage, guest sandbox demo mode, cloud synchronization, a procedurally growing virtual tree garden, interactive weekly spreadsheets, visual calendars, analytics, dynamic themes, and a sound synthesizer—all built entirely with native web technologies.
 
+## 📸 Screenshots
+
+| Landing Showcase | Focus Dashboard & Garden |
+| :---: | :---: |
+| ![Aura Habit Landing Page](assets/landing_preview.jpg) | ![Aura Habit Dashboard](assets/dashboard_preview.jpg) |
+
 ---
 
 ## ✨ Features
