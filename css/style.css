@@ -1860,6 +1860,14 @@ body {
   stroke-linecap: round;
   transition: stroke-dashoffset 0.35s ease;
 }
+.calendar-progress-ring .ring-checkmark {
+  fill: none;
+  stroke: #10b981;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 1px rgba(16, 185, 129, 0.4));
+}
 
 /* Level 1: 0% - 20% (Red) */
 .calendar-progress-ring.ring-lvl-1 .ring-bar {

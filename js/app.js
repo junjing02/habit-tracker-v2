@@ -1107,10 +1107,16 @@ class AppController {
         const circ = 50.27;
         const offset = circ - (rate / 100 * circ);
         
+        // Show a mini checkmark inside the progress ring when all habits are completed
+        const checkmarkHtml = (completedCount === totalCount)
+          ? `<path class="ring-checkmark" d="M6.5 10 L9 12.5 L13.5 7.5" transform="rotate(90 10 10)"></path>`
+          : '';
+
         progressRingHtml = `
           <svg class="calendar-progress-ring ${lvlClass}" width="20" height="20" viewBox="0 0 20 20" title="${completedCount}/${totalCount} completed">
             <circle class="ring-bg" cx="10" cy="10" r="8"></circle>
             <circle class="ring-bar" cx="10" cy="10" r="8" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"></circle>
+            ${checkmarkHtml}
           </svg>
         `;
       }
