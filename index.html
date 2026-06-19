@@ -12,10 +12,120 @@
   <!-- Fullscreen Celebration Confetti Canvas -->
   <canvas id="confetti-canvas"></canvas>
 
-  <!-- TRANSPARENT INTERACTION BLOCKER FOR LOGGED-OUT PREVIEW -->
-  <div id="interaction-blocker" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 9990; cursor: pointer; display: none;"></div>
+  <!-- APP LIFECYCLE LOADER -->
+  <div id="app-loader" class="app-loader-viewport">
+    <div class="app-loader-spinner"></div>
+    <span class="app-loader-text">Loading Aura Habit...</span>
+  </div>
 
-  <div class="app-container">
+  <!-- APPLE-STYLE PREMIUM LANDING PAGE -->
+  <div id="landing-page" class="landing-viewport hidden-view">
+    <!-- Mini Sticky Header -->
+    <header class="landing-header">
+      <div class="landing-header-container">
+        <div class="landing-logo">
+          <span class="landing-logo-emoji">🌿</span>
+          <span class="landing-logo-text">Aura Habit</span>
+        </div>
+        <nav class="landing-nav">
+          <a href="#features-anchor" class="landing-nav-link">Features</a>
+          <a href="#garden-anchor" class="landing-nav-link">Virtual Garden</a>
+        </nav>
+        <div class="landing-actions">
+          <button class="landing-btn-nav-login" id="landing-btn-nav-login">Sign In</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Hero Section -->
+    <section class="landing-hero">
+      <div class="hero-glow"></div>
+      <h2 class="hero-eyebrow">Aura Habit v2</h2>
+      <h1 class="hero-title">Transform your routine.<br><span class="gradient-text">One leaf at a time.</span></h1>
+      <p class="hero-subtitle">
+        A premium, minimal habit tracker designed to help you build consistency, visualize streaks, and grow a procedurally generated virtual garden.
+      </p>
+      <div class="hero-ctas">
+        <button class="landing-btn-primary" id="landing-btn-try">Try Demo</button>
+        <button class="landing-btn-secondary" id="landing-btn-login">Sign In / Up</button>
+      </div>
+    </section>
+
+    <!-- Visual Teaser Section -->
+    <section class="landing-preview-section">
+      <div class="preview-device">
+        <div class="preview-screen-header">
+          <span style="color: var(--color-primary); font-weight: 700;">🔥 Streak: 7 Days</span>
+          <span style="color: var(--color-secondary); font-weight: 700;">🌿 Completion: 100%</span>
+        </div>
+        <div class="preview-habits-list">
+          <div class="preview-habit-item">
+            <span class="preview-habit-emoji">🌱</span>
+            <span class="preview-habit-name">Habit 1</span>
+            <div class="preview-checkbox checked">✓</div>
+          </div>
+          <div class="preview-habit-item">
+            <span class="preview-habit-emoji">💧</span>
+            <span class="preview-habit-name">Habit 2</span>
+            <div class="preview-checkbox checked">✓</div>
+          </div>
+          <div class="preview-habit-item">
+            <span class="preview-habit-emoji">🏃‍♂️</span>
+            <span class="preview-habit-name">Habit 3</span>
+            <div class="preview-checkbox"></div>
+          </div>
+        </div>
+        <!-- Mock Tree Container -->
+        <div class="preview-tree-container" id="garden-anchor">
+          <svg viewBox="0 0 100 100" class="preview-tree-svg">
+            <path d="M50 90 L50 60" stroke="#10b981" stroke-width="4" stroke-linecap="round"></path>
+            <path d="M50 60 Q35 45 40 30" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round"></path>
+            <path d="M50 60 Q65 45 60 35" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round"></path>
+            <circle cx="40" cy="30" r="6" fill="#ec4899" opacity="0.8"></circle>
+            <circle cx="60" cy="35" r="5" fill="#8b5cf6" opacity="0.8"></circle>
+            <circle cx="50" cy="50" r="4" fill="#f59e0b" opacity="0.8"></circle>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features-anchor" class="landing-features">
+      <div class="features-header">
+        <h2 class="features-section-title">Designed for Consistency.</h2>
+        <p class="features-section-subtitle">Everything you need to master your routines, packed in a minimal dashboard.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🌳</div>
+          <h3 class="feature-card-title">Habit Garden</h3>
+          <p class="feature-card-desc">Grow a custom virtual tree procedurally that reflects your weekly completion rates.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📅</div>
+          <h3 class="feature-card-title">Consistency Calendar</h3>
+          <p class="feature-card-desc">Interactive monthly calendar dynamically colored based on your daily habit completion rate.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3 class="feature-card-title">Activity Trends</h3>
+          <p class="feature-card-desc">Interactive SVG trend charts showing consistency rate and custom streak metrics.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">☁️</div>
+          <h3 class="feature-card-title">Cloud Sync</h3>
+          <p class="feature-card-desc">Fully integrated with Supabase. Works offline and syncs automatically when online.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bottom Footer -->
+    <footer class="landing-footer">
+      <p>© 2026 Aura Habit. Premium Minimalist Habit Tracker.</p>
+    </footer>
+  </div>
+
+  <div class="app-container hidden-view">
     
     <!-- Top Premium Header -->
     <header class="header">

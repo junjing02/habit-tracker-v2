@@ -14,7 +14,8 @@ class SupabaseManager {
     this.url = '';
     this.anonKey = '';
     this.currentUser = null;
-    this.authCallback = null;
+    this.authCallbacks = [];
+    this.initialSessionChecked = false;
 
     this.loadConfig();
     this.init();
@@ -54,12 +55,21 @@ class SupabaseManager {
     this.anonKey = this.defaultAnonKey;
     this.client = null;
     this.currentUser = null;
-    if (this.authCallback) this.authCallback(null);
+    this.authCallbacks.forEach(cb => {
+      try {
+        cb(null, 'SIGNED_OUT');
+      } catch (e) {
+        console.error("Error in auth callback during clearConfig", e);
+      }
+    });
   }
 
   // Initialize client
   init(forceReinit = false) {
     if (this.client && !forceReinit) return true;
+    if (forceReinit) {
+      this.initialSessionChecked = false;
+    }
 
     if (!this.url || !this.anonKey || this.url.includes('YOUR_') || this.anonKey.includes('YOUR_')) {
       console.warn("Supabase client not initialized: URL or Anon Key is missing/placeholder.");
@@ -75,16 +85,37 @@ class SupabaseManager {
         // Listen to Auth State Changes
         this.client.auth.onAuthStateChange((event, session) => {
           this.currentUser = session ? session.user : null;
-          if (this.authCallback) {
-            this.authCallback(this.currentUser, event);
-          }
+          this.authCallbacks.forEach(cb => {
+            try {
+              cb(this.currentUser, event);
+            } catch (e) {
+              console.error("Error in auth callback", e);
+            }
+          });
         });
 
         // Set initial user if session exists
         this.client.auth.getSession().then(({ data }) => {
           if (data && data.session) {
             this.currentUser = data.session.user;
-            if (this.authCallback) this.authCallback(this.currentUser, 'INITIAL');
+            this.initialSessionChecked = true;
+            this.authCallbacks.forEach(cb => {
+              try {
+                cb(this.currentUser, 'INITIAL');
+              } catch (e) {
+                console.error("Error in auth callback", e);
+              }
+            });
+          } else {
+            this.currentUser = null;
+            this.initialSessionChecked = true;
+            this.authCallbacks.forEach(cb => {
+              try {
+                cb(null, 'INITIAL');
+              } catch (e) {
+                console.error("Error in auth callback", e);
+              }
+            });
           }
         });
 
@@ -110,12 +141,13 @@ class SupabaseManager {
 
   // Authenticate listener
   onAuthStateChange(callback) {
-    this.authCallback = callback;
-    // Call immediately with current state
-    if (this.isConfigured()) {
-      callback(this.currentUser, 'INITIAL');
-    } else {
+    this.authCallbacks.push(callback);
+    // If client is not configured, trigger callback immediately with null
+    if (!this.isConfigured()) {
       callback(null, 'INITIAL');
+    } else if (this.initialSessionChecked) {
+      // If we already resolved a user, notify immediately
+      callback(this.currentUser, 'INITIAL');
     }
   }
 

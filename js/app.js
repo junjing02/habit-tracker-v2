@@ -158,6 +158,7 @@ class AppController {
     this.confetti = null;
     this.activeContextMenuId = null;
     this.tooltipTimeout = null;
+    this.guestSandboxMode = false;
 
     this.initElements();
     this.initEvents();
@@ -220,6 +221,44 @@ class AppController {
   }
 
   initEvents() {
+    // Landing Page Event Listeners
+    const landingBtnTry = document.getElementById('landing-btn-try');
+    const landingBtnLogin = document.getElementById('landing-btn-login');
+    const landingBtnNavLogin = document.getElementById('landing-btn-nav-login');
+    const authModal = document.getElementById('auth-modal');
+    const authStatusMessage = document.getElementById('auth-status-message');
+
+    if (landingBtnTry) {
+      landingBtnTry.addEventListener('click', () => {
+        this.guestSandboxMode = true;
+        window.db.initSandboxMode();
+        
+        // Hide landing page, show app container
+        const landingEl = document.getElementById('landing-page');
+        const appContainerEl = document.querySelector('.app-container');
+        if (landingEl) landingEl.classList.add('hidden-view');
+        if (appContainerEl) appContainerEl.classList.remove('hidden-view');
+        
+        this.sound.playClick();
+        this.renderAll();
+      });
+    }
+
+    const openAuthModal = () => {
+      if (authModal) {
+        authStatusMessage.textContent = '';
+        authModal.classList.add('open');
+      }
+      this.sound.playClick();
+    };
+
+    if (landingBtnLogin) {
+      landingBtnLogin.addEventListener('click', openAuthModal);
+    }
+    if (landingBtnNavLogin) {
+      landingBtnNavLogin.addEventListener('click', openAuthModal);
+    }
+
     // 0. Capturing event listener to prompt login when guest clicks anything interactive
     document.addEventListener('click', (e) => {
       // Safe check for Supabase Auth state
@@ -236,31 +275,49 @@ class AppController {
         return;
       }
 
+      // If we are in Sandbox Mode, allow checklist toggles and view switching, but restrict customizations
+      if (this.guestSandboxMode) {
+        const target = e.target;
+        const isRestricted = target.closest(
+          '#btn-add-habit, #btn-manager-add-habit, #cloud-sync-pill, .dropdown-item, .matrix-note-indicator, .habit-menu-btn, .today-habit-menu-btn'
+        );
+        if (isRestricted) {
+          e.stopPropagation();
+          e.preventDefault();
+          if (authModal) {
+            authModal.classList.add('open');
+            if (authStatusMessage) {
+              authStatusMessage.textContent = '☁️ Please log in or sign up to customize habits and sync data.';
+              authStatusMessage.style.color = 'var(--text-main)';
+            }
+          }
+          this.sound.playClick();
+        }
+        return; // Allow the click to proceed
+      }
+
       const target = e.target;
       const isInteractive = target.closest(
         'button, input, select, textarea, a, [role="button"], .calendar-day-cell, .matrix-note-indicator, .habit-name-cell, .chart-point, #cloud-sync-pill'
       );
       
       const isInsideAuthModal = target.closest('#auth-modal');
+      const isInsideLandingPage = target.closest('#landing-page');
 
-      if (isInteractive && !isInsideAuthModal) {
+      if (isInteractive && !isInsideAuthModal && !isInsideLandingPage) {
         e.stopPropagation();
         e.preventDefault();
 
         // Open auth modal
-        const authModal = document.getElementById('auth-modal');
         if (authModal) {
           authModal.classList.add('open');
-          const authStatusMessage = document.getElementById('auth-status-message');
           if (authStatusMessage) {
             authStatusMessage.textContent = '☁️ Please log in or sign up to start tracking your habits.';
             authStatusMessage.style.color = 'var(--text-main)';
           }
         }
         
-        if (this.sound) {
-          this.sound.playClick();
-        }
+        this.sound.playClick();
       }
     }, true); // Capture phase!
 
@@ -1607,6 +1664,12 @@ class AppController {
     const blocker = document.getElementById('interaction-blocker');
 
     const updateAuthUI = (user, event) => {
+      // Hide the global app loader
+      const loaderEl = document.getElementById('app-loader');
+      if (loaderEl) {
+        loaderEl.classList.add('hidden-view');
+      }
+
       const isConfigured = window.supabaseMgr && window.supabaseMgr.isConfigured();
       if (!isConfigured) {
         authUserSection.style.opacity = '0.5';
@@ -1618,10 +1681,12 @@ class AppController {
         }
         loggedInProfile.style.display = 'none';
         window.db.notifySyncStatus('Offline');
-        if (blocker) {
-          blocker.style.display = 'none';
-        }
-        this.switchView('dashboard');
+        
+        // Show landing page and hide app-container
+        const landingEl = document.getElementById('landing-page');
+        const appContainerEl = document.querySelector('.app-container');
+        if (landingEl) landingEl.classList.remove('hidden-view');
+        if (appContainerEl) appContainerEl.classList.add('hidden-view');
         return;
       }
  
@@ -1651,18 +1716,22 @@ class AppController {
       }
  
       if (user) {
+        // Logged In: sandbox mode is deactivated
+        this.guestSandboxMode = false;
+        window.db.guestSandboxMode = false;
+
         loginForm.style.display = 'none';
         loggedInProfile.style.display = 'flex';
         loggedInEmail.textContent = user.email;
         window.db.notifySyncStatus('Connected');
         
-        // Hide blocker so they can interact fully
-        if (blocker) {
-          blocker.style.display = 'none';
-        }
+        // Hide landing page, show app container
+        const landingEl = document.getElementById('landing-page');
+        const appContainerEl = document.querySelector('.app-container');
+        if (landingEl) landingEl.classList.add('hidden-view');
+        if (appContainerEl) appContainerEl.classList.remove('hidden-view');
 
         // Close auth modal automatically on successful login/update
-        // unless it's the INITIAL event (we don't want to close a modal they explicitly opened)
         if (event && event !== 'INITIAL' && event !== 'PASSWORD_RECOVERY') {
           if (authModal) {
             authModal.classList.remove('open');
@@ -1672,15 +1741,29 @@ class AppController {
         // Refresh UI immediately to reflect user's actual data
         this.renderAll();
       } else {
+        // Logged Out
         loginForm.style.display = 'flex';
         loggedInProfile.style.display = 'none';
-        window.db.notifySyncStatus('Offline');
         
-        // Hide blocker so they can view the dashboard template
-        if (blocker) {
-          blocker.style.display = 'none';
+        if (this.guestSandboxMode) {
+          // Sandbox Mode: keep showing app container
+          window.db.notifySyncStatus('Offline');
+          const landingEl = document.getElementById('landing-page');
+          const appContainerEl = document.querySelector('.app-container');
+          if (landingEl) landingEl.classList.add('hidden-view');
+          if (appContainerEl) appContainerEl.classList.remove('hidden-view');
+          this.renderAll();
+        } else {
+          // Normal Logged Out state: show landing page
+          window.db.notifySyncStatus('Offline');
+          const landingEl = document.getElementById('landing-page');
+          const appContainerEl = document.querySelector('.app-container');
+          if (landingEl) landingEl.classList.remove('hidden-view');
+          if (appContainerEl) appContainerEl.classList.add('hidden-view');
+          if (authModal) {
+            authModal.classList.remove('open');
+          }
         }
-        this.switchView('dashboard');
       }
     };
 
@@ -1873,6 +1956,8 @@ class AppController {
         authStatusMessage.textContent = 'Logging out...';
         authStatusMessage.style.color = 'var(--text-muted)';
         try {
+          this.guestSandboxMode = false;
+          window.db.guestSandboxMode = false;
           await window.supabaseMgr.logout();
           authStatusMessage.textContent = 'Logged out.';
           authStatusMessage.style.color = 'var(--text-muted)';

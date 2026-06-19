@@ -36,6 +36,7 @@ class HabitDatabase {
       lastActiveDate: '',
       habitStreaks: {} // Format: { 'habitId': { current: Int, longest: Int } }
     };
+    this.guestSandboxMode = false;
 
     this.loadFromStorage();
 
@@ -56,6 +57,12 @@ class HabitDatabase {
   }
 
   loadFromStorage() {
+    // If in sandbox mode, do not reload from storage, load sandbox habits instead
+    if (this.guestSandboxMode) {
+      this.initSandboxMode();
+      return;
+    }
+
     try {
       // 1. Habits
       const savedHabits = localStorage.getItem(DB_KEYS.HABITS);
@@ -85,20 +92,43 @@ class HabitDatabase {
     }
   }
 
+  initSandboxMode() {
+    this.guestSandboxMode = true;
+    this.habits = [
+      { id: 'h-guest-1', name: 'Habit 1', emoji: '🌱', createdAt: 1420070400000, active: true },
+      { id: 'h-guest-2', name: 'Habit 2', emoji: '💧', createdAt: 1420070400000, active: true },
+      { id: 'h-guest-3', name: 'Habit 3', emoji: '🏃‍♂️', createdAt: 1420070400000, active: true }
+    ];
+    this.history = {};
+    this.profile = {
+      currentStreak: 0,
+      longestStreak: 0,
+      soundEnabled: this.profile ? this.profile.soundEnabled : false,
+      theme: this.profile ? this.profile.theme : 'cyberpunk',
+      lastActiveDate: '',
+      habitStreaks: {}
+    };
+    this.updateStreaks();
+  }
+
   saveHabits() {
+    if (this.guestSandboxMode) return;
     localStorage.setItem(DB_KEYS.HABITS, JSON.stringify(this.habits));
   }
 
   saveHistory() {
+    if (this.guestSandboxMode) return;
     localStorage.setItem(DB_KEYS.HISTORY, JSON.stringify(this.history));
   }
 
   saveProfile() {
+    if (this.guestSandboxMode) return;
     localStorage.setItem(DB_KEYS.PROFILE, JSON.stringify(this.profile));
   }
 
   // Sync with Supabase Database
   async syncWithCloud() {
+    if (this.guestSandboxMode) return;
     if (!window.supabaseMgr || !window.supabaseMgr.isAuthenticated()) return;
     const user = window.supabaseMgr.currentUser;
     const userId = user.id;
@@ -353,6 +383,7 @@ class HabitDatabase {
 
   // Create Habit
   createHabit(name, emoji) {
+    if (this.guestSandboxMode) return null;
     const today = new Date();
     today.setHours(0,0,0,0);
     const newHabit = {
@@ -385,6 +416,7 @@ class HabitDatabase {
 
   // Update Habit details
   updateHabit(id, updates) {
+    if (this.guestSandboxMode) return null;
     const index = this.habits.findIndex(h => h.id === id);
     if (index !== -1) {
       this.habits[index] = { ...this.habits[index], ...updates };
@@ -408,6 +440,7 @@ class HabitDatabase {
 
   // Soft Delete Habit
   deleteHabit(id) {
+    if (this.guestSandboxMode) return false;
     const index = this.habits.findIndex(h => h.id === id);
     if (index !== -1) {
       this.habits[index].active = false;
@@ -430,6 +463,7 @@ class HabitDatabase {
 
   // Hard Delete Habit & all history entries
   hardDeleteHabit(id) {
+    if (this.guestSandboxMode) return;
     this.habits = this.habits.filter(h => h.id !== id);
     this.saveHabits();
 
@@ -725,6 +759,7 @@ class HabitDatabase {
 
   // Reset database
   resetAllData() {
+    if (this.guestSandboxMode) return;
     localStorage.removeItem(DB_KEYS.HABITS);
     localStorage.removeItem(DB_KEYS.HISTORY);
     localStorage.removeItem(DB_KEYS.PROFILE);
