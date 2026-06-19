@@ -364,13 +364,19 @@ class HabitDatabase {
     const statusEl = document.getElementById('cloud-sync-status');
     const iconEl = document.getElementById('cloud-sync-icon');
     if (statusEl) {
-      statusEl.textContent = status;
+      if (status === 'Offline') {
+        statusEl.textContent = 'Sign In';
+      } else if (status === 'Connected') {
+        statusEl.textContent = 'Connected';
+      } else {
+        statusEl.textContent = status;
+      }
     }
     if (iconEl) {
       if (status === 'Connected') {
-        iconEl.textContent = '🟢';
+        iconEl.textContent = '👤';
       } else if (status === 'Offline') {
-        iconEl.textContent = '☁️';
+        iconEl.textContent = '👤';
       } else if (status === 'Syncing...') {
         iconEl.textContent = '🔄';
       } else if (status === 'Sync Error') {

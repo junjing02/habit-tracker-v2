@@ -2034,6 +2034,23 @@ body {
   background-color: rgba(255, 255, 255, 0.08);
 }
 
+/* Hamburger button in header top */
+.hamburger-menu-btn {
+  display: none; /* Hidden on desktop */
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 8px;
+  line-height: 1;
+  transition: transform 0.2s;
+}
+
+.hamburger-menu-btn:hover {
+  transform: scale(1.1);
+}
+
 /* --- Premium Mobile Redesign --- */
 @media (max-width: 600px) {
   /* 1. Reset Body Padding as Bottom Nav is removed */
@@ -3170,23 +3187,6 @@ body {
 /* ------------------------------------------------------------- */
 /* PREMIUM MOBILE SLIDING SIDEBAR DRAWER */
 /* ------------------------------------------------------------- */
-
-/* Hamburger button in header top */
-.hamburger-menu-btn {
-  display: none; /* Hidden on desktop */
-  background: transparent;
-  border: none;
-  color: var(--text-main);
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 8px;
-  line-height: 1;
-  transition: transform 0.2s;
-}
-
-.hamburger-menu-btn:hover {
-  transform: scale(1.1);
-}
 
 /* Sidebar Drawer Overlay */
 .drawer-overlay {
