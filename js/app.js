@@ -2191,7 +2191,10 @@ class AppController {
         authStatusMessage.style.color = 'var(--text-muted)';
 
         try {
-          await window.supabaseMgr.signup(email, password, username);
+          const data = await window.supabaseMgr.signup(email, password, username);
+          if (data && data.user && data.user.identities && data.user.identities.length === 0) {
+            throw new Error("An account with this email address already exists.");
+          }
           authStatusMessage.textContent = '✅ Account created! Please check your email for the confirmation link.';
           authStatusMessage.style.color = 'var(--color-primary)';
           signupUsernameInput.value = '';
