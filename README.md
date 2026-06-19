@@ -4,52 +4,28 @@ Aura Habit is a client-side routine tracker and streak manager built using vanil
 
 ---
 
-## 🛠️ Functional Specifications
+## ✨ Features & Functions
 
-### 1. Unified Landing Homepage
-* **Feature Access Router**: Single page entry point routing between guest sandbox and account login/signup.
-* **Feature Overview**: Highlights key features including custom view configurations.
-
-### 2. Guest Sandbox Execution
-* **Memory-Only State**: Running in sandbox mode initializes exactly 3 local habits (`Habit 1`, `Habit 2`, `Habit 3`) operating strictly in-memory.
-* **Storage Isolation**: Guest updates are kept in memory and do not override existing local storage or remote cloud sync databases.
-* **Auth Boundary**: Restricts custom adjustments (adding/deleting/modifying habits or syncing data) by opening the auth modal.
-
-### 3. Focus Dashboard
-* **Procedural SVG Habit Garden**: Dynamically grows and renders a virtual tree scaled to the user's weekly completion rate.
-* **Routines Checklist**: Daily list checklist supporting completion toggles and optional notes/missed reason tracking.
-* **Completion Analytics**: Circular progress ring reflecting overall daily completion metrics.
-
-### 4. Interactive Consistency Calendar
-* **Progress Badging**: Displays daily completion status (e.g., `2/4`, `4/4`) for past and current dates.
-* **Smart Visibility**: Excludes progress badges for future dates.
-* **Tooltip Metadata**: Hover tooltips show missed habits list and completion data for checked cells.
-* **Heatmap Grid**: Automatically adjusts cell colors based on the daily completion percentage.
-
-### 5. Weekly Matrix View
-* **Spreadsheet Overview**: Tabular matrix presenting completion states and remarks across the current Mon–Sun week.
-* **Checklist Toggles**: Allows users to check off past records directly from the weekly grid.
-
-### 6. Data Analytics
-* **Consistency Line Graph**: Procedural SVG graph plotting the consistency percentage of the past 7 days.
-* **Streak Leaderboard**: Renders streak values and supports tied competition rankings (e.g., 🥇, 🥈, 🥉).
-
-### 7. Habits Manager
-* **Habit Modifiers**: Renders a form dialog to add, edit, or toggle active/inactive states of habits.
-* **Custom Emojis**: Associates habits with custom emojis.
-
-### 8. Synchronization & Preferences
-* **Database Synchronizer**: Fully integrated cloud sync with Supabase for user session storage, signup, recovery, and real-time history upserts.
-* **Theme System**: Dynamic switching between Neon, Forest, Cosmic, and Light theme profiles.
-* **Sound Feedback**: Synthesizes custom check/uncheck/click audio signals via the Web Audio API.
+* **Guest Sandbox Mode**: In-memory demo workspace isolated from local storage or cloud databases.
+* **Daily Checklist**: Checklist supporting completion toggles and optional missed-reason notes.
+* **Progress Ring**: Visual indicator showing daily completion percentages.
+* **Habit Garden**: Procedural SVG tree drawing that dynamically grows based on weekly completion rates.
+* **Consistency Calendar**: Interactive calendar view with progress badges, cell heatmaps, and hover tooltips.
+* **Weekly Matrix**: Spreadsheet overview showing Mon–Sun completion records and remarks.
+* **Consistency Chart**: Dynamic SVG line graph plotting consistency trends over the past 7 days.
+* **Streak Leaderboard**: Renders streak values and supports tied competition rankings (🥇, 🥈, 🥉).
+* **Habit Manager**: Panel to add, edit, toggle active status, and assign custom emojis to habits.
+* **Supabase Integration**: Account sync, secure login, password recovery, and automated database backups.
+* **Theme Switching**: client-side toggles for Cyberpunk Neon, Forest Sanctuary, Cosmic Violet, and Minimalist Light.
+* **Sound Feedback**: Sound effects synthesizer built with Web Audio API for interactive clicks.
 
 ---
 
 ## 💻 Technical Architecture
 
 * **Frontend Layout**: Semantic HTML5 markup.
-* **Styling System**: CSS Variables, flexbox, and grid systems.
-* **Application Logic**: Vanilla ES6 JavaScript (DOM manipulation, procedural SVG render pipelines).
+* **Styling System**: CSS Variables, flexbox, and grid layouts.
+* **Application Logic**: Vanilla ES6 JavaScript (DOM manipulation, procedural SVG rendering pipelines).
 * **Database Backend**: Supabase integration for authentication sessions and cloud data syncing.
 * **Offline Backup**: LocalStorage API storage for backup save states.
 
