@@ -9,16 +9,16 @@
   --bg-gradient: radial-gradient(circle at 50% 0%, #151a30 0%, #080b13 70%);
   --panel-bg: rgba(17, 24, 39, 0.7);
   --panel-border: rgba(255, 255, 255, 0.08);
-  --panel-glow: rgba(139, 92, 246, 0.15);
+  --panel-glow: rgba(59, 130, 246, 0.15);
   
   --text-main: #f3f4f6;
   --text-muted: #9ca3af;
   --text-dark: #1f2937;
   
-  --color-primary: #ec4899; /* neon pink */
-  --color-primary-glow: rgba(236, 72, 153, 0.3);
-  --color-secondary: #8b5cf6; /* neon purple */
-  --color-secondary-glow: rgba(139, 92, 246, 0.3);
+  --color-primary: #3b82f6; /* neon blue */
+  --color-primary-glow: rgba(59, 130, 246, 0.3);
+  --color-secondary: #60a5fa; /* neon light blue */
+  --color-secondary-glow: rgba(96, 165, 250, 0.3);
   
   --gold: #f59e0b;
   --gold-glow: rgba(245, 158, 11, 0.4);
