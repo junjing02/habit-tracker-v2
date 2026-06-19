@@ -1592,7 +1592,9 @@ class AppController {
         authUserSection.style.pointerEvents = 'none';
         authSectionTitle.textContent = 'Account Login (Setup Needed)';
         loginForm.style.display = 'flex';
-        this.recoveryForm.style.display = 'none';
+        if (this.recoveryForm) {
+          this.recoveryForm.style.display = 'none';
+        }
         loggedInProfile.style.display = 'none';
         window.db.notifySyncStatus('Offline');
         if (blocker) {
@@ -1609,7 +1611,9 @@ class AppController {
         authSectionTitle.textContent = 'Reset Your Password';
         loginForm.style.display = 'none';
         loggedInProfile.style.display = 'none';
-        this.recoveryForm.style.display = 'flex';
+        if (this.recoveryForm) {
+          this.recoveryForm.style.display = 'flex';
+        }
         
         // Auto-open modal so they can type password immediately
         if (authModal) {
@@ -1621,7 +1625,9 @@ class AppController {
       }
  
       authSectionTitle.textContent = 'Account Login';
-      this.recoveryForm.style.display = 'none';
+      if (this.recoveryForm) {
+        this.recoveryForm.style.display = 'none';
+      }
  
       if (user) {
         loginForm.style.display = 'none';

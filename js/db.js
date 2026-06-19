@@ -77,6 +77,9 @@ class HabitDatabase {
       } else {
         this.saveProfile();
       }
+      if (!this.profile.habitStreaks) {
+        this.profile.habitStreaks = {};
+      }
     } catch (e) {
       console.error("Error loading Habit database", e);
     }
