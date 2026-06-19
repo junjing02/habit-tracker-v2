@@ -441,22 +441,40 @@ class AppController {
 
     // 3. Sound Toggle & Theme Toggle
     const soundBtn = document.getElementById('btn-toggle-sound');
-    soundBtn.addEventListener('click', () => {
+    const drawerSoundBtn = document.getElementById('drawer-btn-toggle-sound');
+
+    const updateSoundUI = () => {
+      const iconText = this.sound.enabled ? '🔊' : '🔇';
+      if (soundBtn) {
+        const soundIcon = soundBtn.querySelector('i');
+        if (soundIcon) soundIcon.textContent = iconText;
+      }
+      if (drawerSoundBtn) {
+        const drawerSoundIcon = drawerSoundBtn.querySelector('i');
+        if (drawerSoundIcon) drawerSoundIcon.textContent = iconText;
+      }
+    };
+
+    const toggleSound = () => {
       this.sound.enabled = !this.sound.enabled;
       window.db.profile.soundEnabled = this.sound.enabled;
       window.db.saveProfile();
-      
-      const soundIcon = soundBtn.querySelector('i');
-      if (this.sound.enabled) {
-        soundIcon.textContent = '🔊';
+      updateSoundUI();
+      if (this.sound.enabled && typeof this.sound.playCheck === 'function') {
         this.sound.playCheck();
-      } else {
-        soundIcon.textContent = '🔇';
       }
-    });
+    };
+
+    if (soundBtn) {
+      soundBtn.addEventListener('click', toggleSound);
+    }
+    if (drawerSoundBtn) {
+      drawerSoundBtn.addEventListener('click', toggleSound);
+    }
 
     const themeSelect = document.getElementById('theme-selector');
     const landingThemeSelect = document.getElementById('landing-theme-selector');
+    const drawerThemeSelect = document.getElementById('drawer-theme-selector');
 
     const changeTheme = (selectedTheme) => {
       document.body.setAttribute('data-theme', selectedTheme);
@@ -466,6 +484,7 @@ class AppController {
       // Sync dropdown values
       if (themeSelect) themeSelect.value = selectedTheme;
       if (landingThemeSelect) landingThemeSelect.value = selectedTheme;
+      if (drawerThemeSelect) drawerThemeSelect.value = selectedTheme;
       
       if (this.sound && typeof this.sound.playClick === 'function') {
         this.sound.playClick();
@@ -484,9 +503,15 @@ class AppController {
       });
     }
 
+    if (drawerThemeSelect) {
+      drawerThemeSelect.addEventListener('change', (e) => {
+        changeTheme(e.target.value);
+      });
+    }
+
     // Load initial configurations
     this.sound.enabled = window.db.profile.soundEnabled;
-    soundBtn.querySelector('i').textContent = this.sound.enabled ? '🔊' : '🔇';
+    updateSoundUI();
     
     // Normalize saved theme to either dark (cyberpunk) or light
     let initialTheme = window.db.profile.theme;
@@ -496,6 +521,7 @@ class AppController {
     window.db.profile.theme = initialTheme;
     if (themeSelect) themeSelect.value = initialTheme;
     if (landingThemeSelect) landingThemeSelect.value = initialTheme;
+    if (drawerThemeSelect) drawerThemeSelect.value = initialTheme;
     document.body.setAttribute('data-theme', initialTheme);
 
     // 4. Modal Triggers (Redirects click to switch to Manage Habits tab)

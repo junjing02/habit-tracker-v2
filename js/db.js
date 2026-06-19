@@ -127,6 +127,20 @@ class HabitDatabase {
   saveProfile() {
     if (this.guestSandboxMode) return;
     localStorage.setItem(DB_KEYS.PROFILE, JSON.stringify(this.profile));
+    
+    if (window.supabaseMgr && window.supabaseMgr.isAuthenticated()) {
+      window.supabaseMgr.client.from('profiles').upsert({
+        user_id: window.supabaseMgr.currentUser.id,
+        theme: this.profile.theme,
+        sound_enabled: this.profile.soundEnabled,
+        current_streak: this.profile.currentStreak,
+        longest_streak: this.profile.longestStreak,
+        last_active_date: this.profile.lastActiveDate,
+        habit_streaks: this.profile.habitStreaks
+      }).then(({ error }) => {
+        if (error) console.error("Cloud update profile failed", error);
+      });
+    }
   }
 
   // Sync with Supabase Database

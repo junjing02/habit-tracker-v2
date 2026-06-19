@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aura Habit - Routine & Streak Tracker</title>
   <meta name="description" content="Build habits, grow your virtual tree, and track daily consistency. A gorgeous, simplified multi-view routine manager.">
-  <link rel="stylesheet" href="css/style.css?v=2.0.7">
+  <link rel="stylesheet" href="css/style.css?v=2.0.8">
 </head>
 <body>
 
@@ -39,6 +39,26 @@
         <svg viewBox="0 0 16 16"><path d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"/></svg>
         Analytics
       </button>
+    </div>
+
+    <!-- Mobile Drawer Preferences -->
+    <div class="drawer-settings" style="margin-top: auto; border-top: 1px solid var(--panel-border); padding-top: 20px; display: flex; flex-direction: column; gap: 16px;">
+      <h4 style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin: 0;">Preferences</h4>
+      
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-main);">Theme</span>
+        <select id="drawer-theme-selector" class="theme-select-element" style="background: var(--input-bg); border: 1px solid var(--panel-border); border-radius: 8px; padding: 4px 10px; font-weight: 700; cursor: pointer; color: var(--text-main); font-size: 0.8rem; outline: none;">
+          <option value="cyberpunk">Dark</option>
+          <option value="light">Light</option>
+        </select>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-main);">Sound Effects</span>
+        <button class="sound-panel-btn" id="drawer-btn-toggle-sound" title="Toggle Sound Synthesizer" style="width: 36px; height: 36px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 1rem; border-radius: 8px; cursor: pointer; background: var(--panel-bg); border: 1px solid var(--panel-border); color: var(--text-main);">
+          <i>🔊</i>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -239,7 +259,7 @@
           </button>
 
           <!-- Theme Selector -->
-          <div class="header-status-pill" style="padding: 4px 10px;">
+          <div class="header-status-pill" id="theme-selector-pill" style="padding: 4px 10px;">
             <select id="theme-selector" class="theme-select-element">
               <option value="cyberpunk">Dark</option>
               <option value="light">Light</option>
@@ -737,10 +757,10 @@
 
   <!-- Supabase Integration -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js?v=2.0.7"></script>
+  <script src="js/supabase.js?v=2.0.8"></script>
 
   <!-- Main JavaScript modules -->
-  <script src="js/db.js?v=2.0.7"></script>
-  <script src="js/app.js?v=2.0.7"></script>
+  <script src="js/db.js?v=2.0.8"></script>
+  <script src="js/app.js?v=2.0.8"></script>
 </body>
 </html>

@@ -2116,6 +2116,12 @@ body {
     flex-wrap: nowrap; /* Keep widgets inline */
     align-items: center;
   }
+
+  /* Hide sound toggle and theme selector from top header on mobile */
+  #btn-toggle-sound,
+  #theme-selector-pill {
+    display: none !important;
+  }
   
   .header-status-pill, .sound-panel-btn {
     height: 30px;
