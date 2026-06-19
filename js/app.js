@@ -905,32 +905,53 @@ class AppController {
 
       const rate = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
-      // Add cell progress coloring class
+      // Add cell progress coloring class based on 5 different tiers
       if (totalCount > 0 && cellDateStr <= todayStr) {
-        if (rate === 100) {
-          cell.classList.add('cell-perfect');
-        } else if (rate > 0) {
-          cell.classList.add('cell-partial');
+        if (rate > 80) {
+          cell.classList.add('cell-lvl-5');
+        } else if (rate > 60) {
+          cell.classList.add('cell-lvl-4');
+        } else if (rate > 40) {
+          cell.classList.add('cell-lvl-3');
+        } else if (rate > 20) {
+          cell.classList.add('cell-lvl-2');
         } else {
-          cell.classList.add('cell-zero');
+          cell.classList.add('cell-lvl-1');
         }
       }
 
-      // Habits circular progress badge
+      // Habits circular mini progress ring status indicator
       let progressRingHtml = '';
       if (totalCount > 0 && cellDateStr <= todayStr) {
-        let badgeColorClass = 'badge-zero';
-        if (rate === 100) {
-          badgeColorClass = 'badge-perfect';
-        } else if (rate > 0) {
-          badgeColorClass = 'badge-partial';
+        let lvlClass = 'ring-lvl-1';
+        if (rate > 80) {
+          lvlClass = 'ring-lvl-5';
+        } else if (rate > 60) {
+          lvlClass = 'ring-lvl-4';
+        } else if (rate > 40) {
+          lvlClass = 'ring-lvl-3';
+        } else if (rate > 20) {
+          lvlClass = 'ring-lvl-2';
         }
-        progressRingHtml = `<span class="calendar-day-badge ${badgeColorClass}">${completedCount}/${totalCount}</span>`;
+
+        const circ = 50.27;
+        const offset = circ - (rate / 100 * circ);
+        
+        progressRingHtml = `
+          <svg class="calendar-progress-ring ${lvlClass}" width="20" height="20" viewBox="0 0 20 20" title="${completedCount}/${totalCount} completed">
+            <circle class="ring-bg" cx="10" cy="10" r="8"></circle>
+            <circle class="ring-bar" cx="10" cy="10" r="8" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"></circle>
+          </svg>
+        `;
       }
 
+      const todayTag = cellDateStr === todayStr ? `<span class="calendar-today-tag">Today</span>` : '';
       cell.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-          <span class="calendar-day-num">${d}</span>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span class="calendar-day-num">${d}</span>
+            ${todayTag}
+          </div>
           ${progressRingHtml}
         </div>
       `;

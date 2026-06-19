@@ -1745,40 +1745,114 @@ body {
 }
 
 .calendar-day-cell.today-cell {
-  border-color: var(--color-primary);
-  background: var(--today-cell-bg);
-  box-shadow: 0 0 12px var(--color-primary-glow);
+  border: 2px solid var(--color-primary) !important;
+  box-shadow: 0 0 16px var(--color-primary-glow) !important;
+}
+.today-cell .calendar-day-num {
+  color: var(--color-primary) !important;
 }
 
-/* Progress-colored calendar day cells */
-.calendar-day-cell.cell-perfect {
-  background: rgba(16, 185, 129, 0.08);
-  border-color: rgba(16, 185, 129, 0.25);
-}
-.calendar-day-cell.cell-perfect:hover {
-  background: rgba(16, 185, 129, 0.14);
-  border-color: #10b981;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
-}
-
-.calendar-day-cell.cell-partial {
-  background: rgba(245, 158, 11, 0.06);
-  border-color: rgba(245, 158, 11, 0.2);
-}
-.calendar-day-cell.cell-partial:hover {
-  background: rgba(245, 158, 11, 0.12);
-  border-color: #f59e0b;
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+.calendar-today-tag {
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 1px 5px;
+  border-radius: 4px;
+  box-shadow: 0 0 6px var(--color-primary-glow);
+  line-height: 1.2;
 }
 
-.calendar-day-cell.cell-zero {
-  background: rgba(244, 63, 94, 0.06);
-  border-color: rgba(244, 63, 94, 0.2);
+/* Calendar cell and progress ring levels (5 tiers) */
+.calendar-progress-ring {
+  transform: rotate(-90deg);
 }
-.calendar-day-cell.cell-zero:hover {
+.calendar-progress-ring circle {
+  fill: none;
+  stroke-width: 2.5;
+}
+.calendar-progress-ring .ring-bg {
+  stroke: rgba(255, 255, 255, 0.08);
+}
+.calendar-progress-ring .ring-bar {
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.35s ease;
+}
+
+/* Level 1: 0% - 20% (Red) */
+.calendar-progress-ring.ring-lvl-1 .ring-bar {
+  stroke: #f43f5e;
+  filter: drop-shadow(0 0 3px rgba(244, 63, 94, 0.4));
+}
+.calendar-day-cell.cell-lvl-1 {
+  background: rgba(244, 63, 94, 0.05);
+  border-color: rgba(244, 63, 94, 0.15);
+}
+.calendar-day-cell.cell-lvl-1:hover {
   background: rgba(244, 63, 94, 0.12);
   border-color: #f43f5e;
   box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
+}
+
+/* Level 2: 21% - 40% (Orange) */
+.calendar-progress-ring.ring-lvl-2 .ring-bar {
+  stroke: #f97316;
+  filter: drop-shadow(0 0 3px rgba(249, 115, 22, 0.4));
+}
+.calendar-day-cell.cell-lvl-2 {
+  background: rgba(249, 115, 22, 0.05);
+  border-color: rgba(249, 115, 22, 0.15);
+}
+.calendar-day-cell.cell-lvl-2:hover {
+  background: rgba(249, 115, 22, 0.12);
+  border-color: #f97316;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+}
+
+/* Level 3: 41% - 60% (Yellow) */
+.calendar-progress-ring.ring-lvl-3 .ring-bar {
+  stroke: #eab308;
+  filter: drop-shadow(0 0 3px rgba(234, 179, 8, 0.4));
+}
+.calendar-day-cell.cell-lvl-3 {
+  background: rgba(234, 179, 8, 0.04);
+  border-color: rgba(234, 179, 8, 0.15);
+}
+.calendar-day-cell.cell-lvl-3:hover {
+  background: rgba(234, 179, 8, 0.1);
+  border-color: #eab308;
+  box-shadow: 0 4px 12px rgba(234, 179, 8, 0.3);
+}
+
+/* Level 4: 61% - 80% (Lime) */
+.calendar-progress-ring.ring-lvl-4 .ring-bar {
+  stroke: #84cc16;
+  filter: drop-shadow(0 0 3px rgba(132, 204, 22, 0.4));
+}
+.calendar-day-cell.cell-lvl-4 {
+  background: rgba(132, 204, 22, 0.05);
+  border-color: rgba(132, 204, 22, 0.15);
+}
+.calendar-day-cell.cell-lvl-4:hover {
+  background: rgba(132, 204, 22, 0.12);
+  border-color: #84cc16;
+  box-shadow: 0 4px 12px rgba(132, 204, 22, 0.3);
+}
+
+/* Level 5: 81% - 100% (Green) */
+.calendar-progress-ring.ring-lvl-5 .ring-bar {
+  stroke: #10b981;
+  filter: drop-shadow(0 0 3px rgba(16, 185, 129, 0.4));
+}
+.calendar-day-cell.cell-lvl-5 {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+.calendar-day-cell.cell-lvl-5:hover {
+  background: rgba(16, 185, 129, 0.14);
+  border-color: #10b981;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
 }
 
 
@@ -1957,41 +2031,7 @@ body {
   accent-color: var(--color-primary);
   cursor: pointer;
 }
-/* Ensure svg progress ring in calendar has clean transition */
-.calendar-progress-ring circle {
-  transition: stroke-dashoffset 0.35s ease;
-}
-
-/* Row selection highlight inside habits manager */
-#manager-table tbody tr.selected-row {
-  background-color: var(--color-primary-glow);
-}
-
-/* Calendar completion fraction badge styles */
-.calendar-day-badge {
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 10px;
-  transition: all 0.2s ease;
-  font-family: var(--font-body);
-}
-.calendar-day-badge.badge-zero {
-  background: rgba(244, 63, 94, 0.12);
-  color: #f43f5e;
-  border: 1px solid rgba(244, 63, 94, 0.2);
-}
-.calendar-day-badge.badge-partial {
-  background: rgba(245, 158, 11, 0.12);
-  color: #f59e0b;
-  border: 1px solid rgba(245, 158, 11, 0.2);
-}
-.calendar-day-badge.badge-perfect {
-  background: rgba(16, 185, 129, 0.15);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  box-shadow: 0 0 6px rgba(16, 185, 129, 0.2);
-}
+/* Calendar progress indicators configured above */
 
 /* Fix z-index stacking so overlays open on top of the manager modal */
 #habit-modal, #confirm-delete-modal, #remark-modal, #auth-modal {
