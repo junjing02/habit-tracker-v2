@@ -1748,6 +1748,38 @@ body {
   box-shadow: 0 0 12px var(--color-primary-glow);
 }
 
+/* Progress-colored calendar day cells */
+.calendar-day-cell.cell-perfect {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+.calendar-day-cell.cell-perfect:hover {
+  background: rgba(16, 185, 129, 0.14);
+  border-color: #10b981;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+}
+
+.calendar-day-cell.cell-partial {
+  background: rgba(245, 158, 11, 0.06);
+  border-color: rgba(245, 158, 11, 0.2);
+}
+.calendar-day-cell.cell-partial:hover {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: #f59e0b;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.calendar-day-cell.cell-zero {
+  background: rgba(244, 63, 94, 0.06);
+  border-color: rgba(244, 63, 94, 0.2);
+}
+.calendar-day-cell.cell-zero:hover {
+  background: rgba(244, 63, 94, 0.12);
+  border-color: #f43f5e;
+  box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
+}
+
+
 .calendar-day-num {
   font-weight: 800;
   font-size: 0.95rem;
@@ -1948,9 +1980,9 @@ body {
   border: 1px solid rgba(244, 63, 94, 0.2);
 }
 .calendar-day-badge.badge-partial {
-  background: var(--color-primary-glow);
-  color: var(--color-primary);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.2);
 }
 .calendar-day-badge.badge-perfect {
   background: rgba(16, 185, 129, 0.15);

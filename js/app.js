@@ -222,14 +222,23 @@ class AppController {
   initEvents() {
     // 0. Capturing event listener to prompt login when guest clicks anything interactive
     document.addEventListener('click', (e) => {
-      // If logged in, let it proceed
-      if (window.supabaseMgr && window.supabaseMgr.isAuthenticated()) {
+      // Safe check for Supabase Auth state
+      let isLoggedIn = false;
+      try {
+        if (window.supabaseMgr && typeof window.supabaseMgr.isAuthenticated === 'function') {
+          isLoggedIn = window.supabaseMgr.isAuthenticated();
+        }
+      } catch (err) {
+        console.error("Auth check failed", err);
+      }
+
+      if (isLoggedIn) {
         return;
       }
 
       const target = e.target;
       const isInteractive = target.closest(
-        '.view-tab, #btn-add-habit, .checkbox-check, .matrix-checkbox, .btn-note-action, .matrix-note-indicator, .today-btn, .date-btn, .calendar-day-cell, #btn-add-habit-today, #btn-toggle-sound, #theme-selector, #cloud-sync-pill, #btn-quick-add-submit, #btn-manager-add-habit, #btn-add-habit-footer, #btn-matrix-prev, #btn-matrix-next, #btn-matrix-today, #btn-cal-prev, #btn-cal-next, #btn-cal-today'
+        'button, input, select, textarea, a, [role="button"], .calendar-day-cell, .matrix-note-indicator, .habit-name-cell, .chart-point, #cloud-sync-pill'
       );
       
       const isInsideAuthModal = target.closest('#auth-modal');
@@ -896,6 +905,17 @@ class AppController {
 
       const rate = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
+      // Add cell progress coloring class
+      if (totalCount > 0 && cellDateStr <= todayStr) {
+        if (rate === 100) {
+          cell.classList.add('cell-perfect');
+        } else if (rate > 0) {
+          cell.classList.add('cell-partial');
+        } else {
+          cell.classList.add('cell-zero');
+        }
+      }
+
       // Habits circular progress badge
       let progressRingHtml = '';
       if (totalCount > 0 && cellDateStr <= todayStr) {
@@ -1150,7 +1170,10 @@ class AppController {
       const x = padding + (idx * (chartWidth / 6));
       const y = padding + chartHeight - (rate * chartHeight);
       return `
-        <circle cx="${x}" cy="${y}" r="5" fill="var(--color-primary)" stroke="var(--bg-color)" stroke-width="2" style="cursor: pointer; filter: drop-shadow(0 0 4px var(--color-primary-glow))" class="chart-point" data-idx="${idx}" data-rate="${rate}" />
+        <!-- Aesthetic visible node dot -->
+        <circle cx="${x}" cy="${y}" r="5" fill="var(--color-primary)" stroke="var(--bg-color)" stroke-width="2" pointer-events="none" style="filter: drop-shadow(0 0 4px var(--color-primary-glow))" />
+        <!-- Invisible larger hit target area for easy hover/tap on top -->
+        <circle cx="${x}" cy="${y}" r="18" fill="none" pointer-events="all" style="cursor: pointer;" class="chart-point" data-idx="${idx}" data-rate="${rate}" />
       `;
     }).join('');
 
@@ -1168,8 +1191,8 @@ class AppController {
         <path d="M ${padding},${padding + chartHeight} L ${points.join(' L ')} L ${width - padding},${padding + chartHeight} Z" fill="url(#chart-area-grad)" />
         <polyline points="${points.join(' ')}" fill="none" stroke="var(--color-primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
         
-        ${nodes}
         ${labelsHtml}
+        ${nodes}
       </svg>
     `;
 
