@@ -1578,7 +1578,14 @@ class AppController {
     const configSection = document.getElementById('auth-config-section');
     if (configSection && window.supabaseMgr && window.supabaseMgr.defaultUrl && window.supabaseMgr.defaultAnonKey) {
       configSection.style.display = 'none';
-      const updateAuthUI = (user, event) => {
+      if (authSectionTitle) {
+        authSectionTitle.textContent = 'Account Login';
+      }
+    }
+
+    const blocker = document.getElementById('interaction-blocker');
+
+    const updateAuthUI = (user, event) => {
       const isConfigured = window.supabaseMgr && window.supabaseMgr.isConfigured();
       if (!isConfigured) {
         authUserSection.style.opacity = '0.5';
@@ -1658,7 +1665,7 @@ class AppController {
       window.supabaseMgr.onAuthStateChange((user, event) => {
         updateAuthUI(user, event);
       });
-
+    }
 
     // Click Blocker to open login modal
     if (blocker) {
