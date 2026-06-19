@@ -117,6 +117,17 @@ class SupabaseManager {
               }
             });
           }
+        }).catch(err => {
+          console.error("Error checking initial session", err);
+          this.currentUser = null;
+          this.initialSessionChecked = true;
+          this.authCallbacks.forEach(cb => {
+            try {
+              cb(null, 'INITIAL');
+            } catch (e) {
+              console.error("Error in auth callback on error", e);
+            }
+          });
         });
 
         return true;

@@ -426,6 +426,7 @@ body {
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   box-shadow: 0 4px 14px var(--color-primary-glow);
   transition: all 0.2s;

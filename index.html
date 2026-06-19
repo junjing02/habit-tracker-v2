@@ -577,7 +577,7 @@
   <div class="modal-overlay" id="auth-modal">
     <div class="modal-content" style="max-width: 420px;">
       <div class="modal-header">
-        <h3 class="modal-title">☁️ Cloud Sync Settings</h3>
+        <h3 class="modal-title">Log In or Sign Up</h3>
         <button class="modal-close" id="btn-close-auth-modal">
           <svg viewBox="0 0 16 16" fill="currentColor"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>
         </button>
@@ -586,7 +586,7 @@
       <div class="modal-body" style="display: flex; flex-direction: column; gap: 16px;">
         <!-- Connection Config Section -->
         <div id="auth-config-section" style="display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid var(--panel-border); padding-bottom: 16px;">
-          <h4 style="font-size: 0.85rem; font-weight: 700; margin: 0; color: var(--text-main);">1. Connection Settings</h4>
+          <h4 style="font-size: 0.85rem; font-weight: 700; margin: 0; color: var(--text-main);">Connection Settings</h4>
           <div class="form-group" style="margin-bottom: 10px;">
             <label class="form-label" for="supabase-url-input">Supabase Project URL</label>
             <input type="text" class="form-input" id="supabase-url-input" placeholder="https://your-project.supabase.co" autocomplete="off" style="width: 100%; box-sizing: border-box;">
@@ -602,7 +602,7 @@
 
         <!-- Authentication section -->
         <div id="auth-user-section" style="display: flex; flex-direction: column; gap: 12px;">
-          <h4 style="font-size: 0.85rem; font-weight: 700; margin: 0; color: var(--text-main);" id="auth-section-title">2. Account Login</h4>
+          <h4 style="font-size: 0.85rem; font-weight: 700; margin: 0; color: var(--text-main); display: none;" id="auth-section-title">Log In or Sign Up</h4>
           
           <!-- State: Logged Out -->
           <form id="login-form" style="display: flex; flex-direction: column; gap: 12px;">
@@ -615,7 +615,12 @@
                   <label class="form-label" for="auth-password-input" style="margin-bottom: 0;">Password</label>
                   <a href="#" id="btn-forgot-password" style="font-size: 0.75rem; color: var(--color-primary); font-weight: 700; text-decoration: none;">Forgot Password?</a>
                 </div>
-                <input type="password" class="form-input" id="auth-password-input" placeholder="••••••••" required autocomplete="current-password" style="width: 100%; box-sizing: border-box;">
+                <div class="password-input-container" style="position: relative; display: flex; align-items: center; width: 100%;">
+                  <input type="password" class="form-input" id="auth-password-input" placeholder="••••••••" required autocomplete="current-password" style="width: 100%; box-sizing: border-box; padding-right: 40px;">
+                  <button type="button" id="btn-toggle-password" style="position: absolute; right: 10px; background: transparent; border: none; cursor: pointer; color: var(--text-muted); font-size: 0.9rem; padding: 4px; display: flex; align-items: center; justify-content: center;" title="Toggle Password Visibility">
+                    👁️
+                  </button>
+                </div>
               </div>
             <div style="display: flex; gap: 10px; margin-top: 8px;">
               <button type="submit" class="btn-primary" id="btn-login" style="flex-grow: 1;">Login</button>
@@ -627,7 +632,12 @@
           <form id="recovery-form" style="display: none; flex-direction: column; gap: 12px;">
             <div class="form-group">
               <label class="form-label" for="recovery-password-input">New Password</label>
-              <input type="password" class="form-input" id="recovery-password-input" placeholder="Min 6 characters" required autocomplete="new-password" style="width: 100%; box-sizing: border-box;">
+              <div class="password-input-container" style="position: relative; display: flex; align-items: center; width: 100%;">
+                <input type="password" class="form-input" id="recovery-password-input" placeholder="Min 6 characters" required autocomplete="new-password" style="width: 100%; box-sizing: border-box; padding-right: 40px;">
+                <button type="button" id="btn-toggle-recovery-password" style="position: absolute; right: 10px; background: transparent; border: none; cursor: pointer; color: var(--text-muted); font-size: 0.9rem; padding: 4px; display: flex; align-items: center; justify-content: center;" title="Toggle Password Visibility">
+                  👁️
+                </button>
+              </div>
             </div>
             <button type="submit" class="btn-primary" id="btn-update-password" style="width: 100%; margin-top: 8px;">Update Password</button>
           </form>

@@ -1777,6 +1777,25 @@ class AppController {
       });
     }
 
+    // Password visibility toggle listeners
+    const btnTogglePassword = document.getElementById('btn-toggle-password');
+    if (btnTogglePassword) {
+      btnTogglePassword.addEventListener('click', () => {
+        const type = authPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        authPasswordInput.setAttribute('type', type);
+        btnTogglePassword.textContent = type === 'password' ? '👁️' : '🙈';
+      });
+    }
+
+    const btnToggleRecoveryPassword = document.getElementById('btn-toggle-recovery-password');
+    if (btnToggleRecoveryPassword) {
+      btnToggleRecoveryPassword.addEventListener('click', () => {
+        const type = this.recoveryPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        this.recoveryPasswordInput.setAttribute('type', type);
+        btnToggleRecoveryPassword.textContent = type === 'password' ? '👁️' : '🙈';
+      });
+    }
+
     // Click Blocker to open login modal
     if (blocker) {
       blocker.addEventListener('click', () => {
