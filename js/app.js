@@ -456,19 +456,47 @@ class AppController {
     });
 
     const themeSelect = document.getElementById('theme-selector');
-    themeSelect.addEventListener('change', (e) => {
-      const selectedTheme = e.target.value;
+    const landingThemeSelect = document.getElementById('landing-theme-selector');
+
+    const changeTheme = (selectedTheme) => {
       document.body.setAttribute('data-theme', selectedTheme);
       window.db.profile.theme = selectedTheme;
       window.db.saveProfile();
-      this.sound.playClick();
-    });
+      
+      // Sync dropdown values
+      if (themeSelect) themeSelect.value = selectedTheme;
+      if (landingThemeSelect) landingThemeSelect.value = selectedTheme;
+      
+      if (this.sound && typeof this.sound.playClick === 'function') {
+        this.sound.playClick();
+      }
+    };
+
+    if (themeSelect) {
+      themeSelect.addEventListener('change', (e) => {
+        changeTheme(e.target.value);
+      });
+    }
+
+    if (landingThemeSelect) {
+      landingThemeSelect.addEventListener('change', (e) => {
+        changeTheme(e.target.value);
+      });
+    }
 
     // Load initial configurations
     this.sound.enabled = window.db.profile.soundEnabled;
     soundBtn.querySelector('i').textContent = this.sound.enabled ? '🔊' : '🔇';
-    themeSelect.value = window.db.profile.theme;
-    document.body.setAttribute('data-theme', window.db.profile.theme);
+    
+    // Normalize saved theme to either dark (cyberpunk) or light
+    let initialTheme = window.db.profile.theme;
+    if (initialTheme !== 'light') {
+      initialTheme = 'cyberpunk';
+    }
+    window.db.profile.theme = initialTheme;
+    if (themeSelect) themeSelect.value = initialTheme;
+    if (landingThemeSelect) landingThemeSelect.value = initialTheme;
+    document.body.setAttribute('data-theme', initialTheme);
 
     // 4. Modal Triggers (Redirects click to switch to Manage Habits tab)
     document.getElementById('btn-add-habit').addEventListener('click', () => this.openManagerModal());

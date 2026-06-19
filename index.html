@@ -61,7 +61,11 @@
           <a href="#features-anchor" class="landing-nav-link">Features</a>
           <a href="#garden-anchor" class="landing-nav-link">Virtual Garden</a>
         </nav>
-        <div class="landing-actions">
+        <div class="landing-actions" style="display: flex; align-items: center; gap: 12px;">
+          <select id="landing-theme-selector" class="form-select" style="background: transparent; border: 1px solid var(--landing-btn-nav-login-border); border-radius: 20px; padding: 4px 10px; font-weight: 600; cursor: pointer; color: var(--text-main); font-size: 0.8rem; outline: none;">
+            <option value="cyberpunk">Dark Mode</option>
+            <option value="light">Light Mode</option>
+          </select>
           <button class="landing-btn-nav-login" id="landing-btn-nav-login">Sign In</button>
         </div>
       </div>
@@ -237,10 +241,8 @@
           <!-- Theme Selector -->
           <div class="header-status-pill" style="padding: 4px 10px;">
             <select id="theme-selector" class="form-select" style="background: transparent; border: none; padding: 4px; font-weight: 700; cursor: pointer; color: var(--text-main); font-size: 0.8rem;">
-              <option value="cyberpunk">Cyberpunk Neon</option>
-              <option value="forest">Forest Sanctuary</option>
-              <option value="cosmic">Cosmic Violet</option>
-              <option value="light">Minimalist Light</option>
+              <option value="cyberpunk">Dark Mode</option>
+              <option value="light">Light Mode</option>
             </select>
           </div>
 
