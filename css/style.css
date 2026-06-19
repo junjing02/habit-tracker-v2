@@ -2148,9 +2148,9 @@ body {
 
 /* --- Premium Mobile Redesign --- */
 @media (max-width: 600px) {
-  /* 1. Sticky Bottom Nav Padding on Body with iOS Safe Area support */
+  /* 1. Reset Body Padding as Bottom Nav is removed */
   body {
-    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important;
+    padding-bottom: 0 !important;
   }
   
   .app-container {
@@ -2236,46 +2236,14 @@ body {
     border-radius: var(--border-radius-md);
   }
 
-  /* 3. Sticky Bottom Navigation Bar with iOS safe-area support */
+  /* 3. Hide bottom nav bar completely on mobile */
   .views-container {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: var(--panel-bg);
-    background-image: var(--bg-gradient);
-    border-top: 1px solid var(--panel-border);
-    border-radius: 0;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    padding-top: 8px;
-    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
-    z-index: 1000;
-    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(16px);
-    box-sizing: border-box;
+    display: none !important;
   }
   
-  .view-tab {
-    flex-direction: column;
-    gap: 4px;
-    font-size: 0.65rem;
-    padding: 6px 0;
-    justify-content: center;
-    align-items: center;
-    background: transparent !important;
-    border-radius: 0;
-    color: var(--text-muted);
-    box-shadow: none !important;
-  }
-  
-  .view-tab svg {
-    width: 20px;
-    height: 20px;
-  }
-  
-  .view-tab.active {
-    color: var(--color-primary);
+  /* Show Hamburger Menu Toggle in Header on Mobile */
+  .hamburger-menu-btn {
+    display: block;
   }
   
   .view-tab.active svg {
@@ -3309,4 +3277,160 @@ body {
 
 .mock-tree-svg {
   height: 100%;
+}
+
+/* ------------------------------------------------------------- */
+/* PREMIUM MOBILE SLIDING SIDEBAR DRAWER */
+/* ------------------------------------------------------------- */
+
+/* Hamburger button in header top */
+.hamburger-menu-btn {
+  display: none; /* Hidden on desktop */
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 8px;
+  line-height: 1;
+  transition: transform 0.2s;
+}
+
+.hamburger-menu-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Sidebar Drawer Overlay */
+.drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.drawer-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Sidebar Drawer Container */
+.sidebar-drawer {
+  position: fixed;
+  top: 0;
+  left: -280px;
+  width: 280px;
+  height: 100%;
+  background: var(--panel-bg);
+  background-image: var(--bg-gradient);
+  border-right: 1px solid var(--panel-border);
+  z-index: 2000;
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+.sidebar-drawer.open {
+  left: 0;
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.drawer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-title);
+  font-weight: 800;
+  font-size: 1.25rem;
+}
+
+.btn-close-drawer {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.btn-close-drawer:hover {
+  opacity: 1;
+}
+
+.drawer-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Sidebar view tabs vertical layout */
+.drawer-menu .view-tab {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: none !important;
+  box-sizing: border-box;
+}
+
+[data-theme="light"] .drawer-menu .view-tab {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+.drawer-menu .view-tab svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.drawer-menu .view-tab:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-main);
+}
+
+[data-theme="light"] .drawer-menu .view-tab:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.drawer-menu .view-tab.active {
+  background: linear-gradient(135deg, var(--color-primary-glow) 0%, var(--color-secondary-glow) 100%);
+  border-color: var(--color-primary);
+  color: var(--text-main);
+  box-shadow: var(--shadow-sm) !important;
 }

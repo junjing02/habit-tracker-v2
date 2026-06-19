@@ -368,8 +368,47 @@ class AppController {
         const view = e.currentTarget.dataset.view;
         this.switchView(view);
         this.sound.playClick();
+
+        // Close mobile sidebar if tab was clicked inside it
+        if (e.currentTarget.closest('.sidebar-drawer')) {
+          const drawer = document.getElementById('sidebar-drawer');
+          const overlay = document.getElementById('drawer-overlay');
+          if (drawer) drawer.classList.remove('open');
+          if (overlay) overlay.classList.remove('open');
+        }
       });
     });
+
+    // Mobile Sidebar Drawer Actions
+    const btnOpenSidebar = document.getElementById('btn-open-sidebar');
+    const btnCloseSidebar = document.getElementById('btn-close-sidebar');
+    const drawerOverlay = document.getElementById('drawer-overlay');
+    const sidebarDrawer = document.getElementById('sidebar-drawer');
+
+    if (btnOpenSidebar && sidebarDrawer && drawerOverlay) {
+      btnOpenSidebar.addEventListener('click', () => {
+        sidebarDrawer.classList.add('open');
+        drawerOverlay.classList.add('open');
+        if (this.sound && typeof this.sound.playClick === 'function') {
+          this.sound.playClick();
+        }
+      });
+    }
+
+    const closeSidebar = () => {
+      if (sidebarDrawer) sidebarDrawer.classList.remove('open');
+      if (drawerOverlay) drawerOverlay.classList.remove('open');
+      if (this.sound && typeof this.sound.playClick === 'function') {
+        this.sound.playClick();
+      }
+    };
+
+    if (btnCloseSidebar) {
+      btnCloseSidebar.addEventListener('click', closeSidebar);
+    }
+    if (drawerOverlay) {
+      drawerOverlay.addEventListener('click', closeSidebar);
+    }
 
     // 2. Date Navigation
     document.getElementById('btn-date-prev').addEventListener('click', () => {
@@ -557,6 +596,7 @@ class AppController {
       }
       this.guestSandboxMode = false;
       window.db.guestSandboxMode = false;
+      window.db.sandboxInitialized = false; // Reset sandbox state
       const targetView = hash.replace('#', '');
       if (['dashboard', 'matrix', 'calendar', 'analytics'].includes(targetView)) {
         this.switchView(targetView, false);
@@ -567,6 +607,7 @@ class AppController {
       // If logged out
       if (hash === '#demo') {
         this.guestSandboxMode = true;
+        window.db.sandboxInitialized = false; // Force re-initialization on fresh demo entry
         window.db.initSandboxMode();
         
         const landingEl = document.getElementById('landing-page');
@@ -576,7 +617,7 @@ class AppController {
         this.switchView('dashboard', false);
       } else if (hash.startsWith('#demo-')) {
         this.guestSandboxMode = true;
-        window.db.initSandboxMode();
+        window.db.initSandboxMode(); // Will load cleanly without wiping memory since sandboxInitialized is true
         
         const landingEl = document.getElementById('landing-page');
         const appContainerEl = document.querySelector('.app-container');
@@ -593,6 +634,7 @@ class AppController {
         // Show landing page
         this.guestSandboxMode = false;
         window.db.guestSandboxMode = false;
+        window.db.sandboxInitialized = false; // Reset sandbox state
         
         const landingEl = document.getElementById('landing-page');
         const appContainerEl = document.querySelector('.app-container');

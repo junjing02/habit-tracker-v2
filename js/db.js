@@ -37,6 +37,7 @@ class HabitDatabase {
       habitStreaks: {} // Format: { 'habitId': { current: Int, longest: Int } }
     };
     this.guestSandboxMode = false;
+    this.sandboxInitialized = false;
 
     this.loadFromStorage();
 
@@ -94,6 +95,8 @@ class HabitDatabase {
 
   initSandboxMode() {
     this.guestSandboxMode = true;
+    if (this.sandboxInitialized) return;
+    this.sandboxInitialized = true;
     this.habits = [
       { id: 'h-guest-1', name: 'Habit 1', emoji: '🌱', createdAt: 1420070400000, active: true },
       { id: 'h-guest-2', name: 'Habit 2', emoji: '💧', createdAt: 1420070400000, active: true },
