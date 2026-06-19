@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aura Habit - Routine & Streak Tracker</title>
   <meta name="description" content="Build habits, grow your virtual tree, and track daily consistency. A gorgeous, simplified multi-view routine manager.">
-  <link rel="stylesheet" href="css/style.css?v=2.0.5">
+  <link rel="stylesheet" href="css/style.css?v=2.0.6">
 </head>
 <body>
 
@@ -240,9 +240,9 @@
 
           <!-- Theme Selector -->
           <div class="header-status-pill" style="padding: 4px 10px;">
-            <select id="theme-selector" class="form-select" style="background: transparent; border: none; padding: 4px; font-weight: 700; cursor: pointer; color: var(--text-main); font-size: 0.8rem;">
-              <option value="cyberpunk">Dark Mode</option>
-              <option value="light">Light Mode</option>
+            <select id="theme-selector" class="theme-select-element">
+              <option value="cyberpunk">Dark</option>
+              <option value="light">Light</option>
             </select>
           </div>
 
@@ -641,28 +641,62 @@
         <div id="auth-user-section" style="display: flex; flex-direction: column; gap: 12px;">
           <h4 style="font-size: 0.85rem; font-weight: 700; margin: 0; color: var(--text-main); display: none;" id="auth-section-title">Log In or Sign Up</h4>
           
-          <!-- State: Logged Out -->
+          <!-- State: Logged Out - Login Form -->
           <form id="login-form" style="display: flex; flex-direction: column; gap: 12px;">
             <div class="form-group">
               <label class="form-label" for="auth-email-input">Email</label>
               <input type="email" class="form-input" id="auth-email-input" placeholder="you@example.com" required autocomplete="email" style="width: 100%; box-sizing: border-box;">
             </div>
-              <div class="form-group">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                  <label class="form-label" for="auth-password-input" style="margin-bottom: 0;">Password</label>
-                  <a href="#" id="btn-forgot-password" style="font-size: 0.75rem; color: var(--color-primary); font-weight: 700; text-decoration: none;">Forgot Password?</a>
-                </div>
-                <div class="password-input-container" style="position: relative; display: flex; align-items: center; width: 100%;">
-                  <input type="password" class="form-input" id="auth-password-input" placeholder="••••••••" required autocomplete="current-password" style="width: 100%; box-sizing: border-box; padding-right: 40px;">
-                  <button type="button" id="btn-toggle-password" style="position: absolute; right: 10px; background: transparent; border: none; cursor: pointer; color: var(--text-muted); font-size: 0.9rem; padding: 4px; display: flex; align-items: center; justify-content: center;" title="Toggle Password Visibility">
-                    👁️
-                  </button>
-                </div>
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <label class="form-label" for="auth-password-input" style="margin-bottom: 0;">Password</label>
+                <a href="#" id="btn-forgot-password" style="font-size: 0.75rem; color: var(--color-primary); font-weight: 700; text-decoration: none;">Forgot Password?</a>
               </div>
-            <div style="display: flex; gap: 10px; margin-top: 8px;">
-              <button type="submit" class="btn-primary" id="btn-login" style="flex-grow: 1;">Login</button>
-              <button type="button" class="btn-secondary" id="btn-signup-submit" style="flex-grow: 1;">Sign Up</button>
+              <div class="password-input-container" style="position: relative; display: flex; align-items: center; width: 100%;">
+                <input type="password" class="form-input" id="auth-password-input" placeholder="••••••••" required autocomplete="current-password" style="width: 100%; box-sizing: border-box; padding-right: 40px;">
+                <button type="button" id="btn-toggle-password" style="position: absolute; right: 10px; background: transparent; border: none; cursor: pointer; color: var(--text-muted); font-size: 0.9rem; padding: 4px; display: flex; align-items: center; justify-content: center;" title="Toggle Password Visibility">
+                  👁️
+                </button>
+              </div>
             </div>
+            <button type="submit" class="btn-primary" id="btn-login" style="width: 100%; margin-top: 8px;">Login</button>
+            <p style="font-size: 0.8rem; text-align: center; color: var(--text-muted); margin-top: 8px;">
+              Don't have an account? <a href="#" id="link-show-signup" style="color: var(--color-primary); font-weight: 700; text-decoration: none;">Create Account</a>
+            </p>
+          </form>
+
+          <!-- State: Logged Out - Signup Form -->
+          <form id="signup-form" style="display: none; flex-direction: column; gap: 12px;">
+            <div class="form-group">
+              <label class="form-label" for="signup-username-input">Username</label>
+              <input type="text" class="form-input" id="signup-username-input" placeholder="Your username" required autocomplete="username" style="width: 100%; box-sizing: border-box;">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="signup-email-input">Email</label>
+              <input type="email" class="form-input" id="signup-email-input" placeholder="you@example.com" required autocomplete="email" style="width: 100%; box-sizing: border-box;">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="signup-password-input">Password</label>
+              <div class="password-input-container" style="position: relative; display: flex; align-items: center; width: 100%;">
+                <input type="password" class="form-input" id="signup-password-input" placeholder="Min 6 characters" required autocomplete="new-password" style="width: 100%; box-sizing: border-box; padding-right: 40px;">
+                <button type="button" id="btn-toggle-signup-password" style="position: absolute; right: 10px; background: transparent; border: none; cursor: pointer; color: var(--text-muted); font-size: 0.9rem; padding: 4px; display: flex; align-items: center; justify-content: center;" title="Toggle Password Visibility">
+                  👁️
+                </button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="signup-confirm-password-input">Confirm Password</label>
+              <div class="password-input-container" style="position: relative; display: flex; align-items: center; width: 100%;">
+                <input type="password" class="form-input" id="signup-confirm-password-input" placeholder="Re-enter password" required autocomplete="new-password" style="width: 100%; box-sizing: border-box; padding-right: 40px;">
+                <button type="button" id="btn-toggle-signup-confirm-password" style="position: absolute; right: 10px; background: transparent; border: none; cursor: pointer; color: var(--text-muted); font-size: 0.9rem; padding: 4px; display: flex; align-items: center; justify-content: center;" title="Toggle Password Visibility">
+                  👁️
+                </button>
+              </div>
+            </div>
+            <button type="submit" class="btn-primary" id="btn-signup-submit" style="width: 100%; margin-top: 8px;">Sign Up</button>
+            <p style="font-size: 0.8rem; text-align: center; color: var(--text-muted); margin-top: 8px;">
+              Already have an account? <a href="#" id="link-show-login" style="color: var(--color-primary); font-weight: 700; text-decoration: none;">Log In</a>
+            </p>
           </form>
 
           <!-- State: Password Recovery (Update Password) -->
@@ -703,10 +737,10 @@
 
   <!-- Supabase Integration -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js?v=2.0.5"></script>
+  <script src="js/supabase.js?v=2.0.6"></script>
 
   <!-- Main JavaScript modules -->
-  <script src="js/db.js?v=2.0.5"></script>
-  <script src="js/app.js?v=2.0.5"></script>
+  <script src="js/db.js?v=2.0.6"></script>
+  <script src="js/app.js?v=2.0.6"></script>
 </body>
 </html>

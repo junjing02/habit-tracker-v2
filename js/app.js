@@ -1839,7 +1839,18 @@ class AppController {
     const loginForm = document.getElementById('login-form');
     const authEmailInput = document.getElementById('auth-email-input');
     const authPasswordInput = document.getElementById('auth-password-input');
-    const btnSignupSubmit = document.getElementById('btn-signup-submit');
+    
+    // Split Signup Form Elements
+    const signupForm = document.getElementById('signup-form');
+    const signupUsernameInput = document.getElementById('signup-username-input');
+    const signupEmailInput = document.getElementById('signup-email-input');
+    const signupPasswordInput = document.getElementById('signup-password-input');
+    const signupConfirmPasswordInput = document.getElementById('signup-confirm-password-input');
+    const btnToggleSignupPassword = document.getElementById('btn-toggle-signup-password');
+    const btnToggleSignupConfirmPassword = document.getElementById('btn-toggle-signup-confirm-password');
+    const linkShowSignup = document.getElementById('link-show-signup');
+    const linkShowLogin = document.getElementById('link-show-login');
+
     const loggedInProfile = document.getElementById('logged-in-profile');
     const loggedInEmail = document.getElementById('logged-in-email');
     const btnSyncNow = document.getElementById('btn-sync-now');
@@ -1872,6 +1883,7 @@ class AppController {
         authUserSection.style.pointerEvents = 'none';
         authSectionTitle.textContent = 'Account Login (Setup Needed)';
         loginForm.style.display = 'flex';
+        if (signupForm) signupForm.style.display = 'none';
         if (this.recoveryForm) {
           this.recoveryForm.style.display = 'none';
         }
@@ -1892,6 +1904,7 @@ class AppController {
       if (event === 'PASSWORD_RECOVERY') {
         authSectionTitle.textContent = 'Reset Your Password';
         loginForm.style.display = 'none';
+        if (signupForm) signupForm.style.display = 'none';
         loggedInProfile.style.display = 'none';
         if (this.recoveryForm) {
           this.recoveryForm.style.display = 'flex';
@@ -1922,8 +1935,13 @@ class AppController {
         window.db.syncWithCloud();
 
         loginForm.style.display = 'none';
+        if (signupForm) signupForm.style.display = 'none';
         loggedInProfile.style.display = 'flex';
-        loggedInEmail.textContent = user.email;
+        
+        // Show username or email in profile section
+        const displayName = (user.user_metadata && user.user_metadata.username) ? user.user_metadata.username : user.email;
+        loggedInEmail.textContent = displayName;
+        
         window.db.notifySyncStatus('Connected');
         
         // Hide landing page, show app container
@@ -1944,6 +1962,7 @@ class AppController {
       } else {
         // Logged Out
         loginForm.style.display = 'flex';
+        if (signupForm) signupForm.style.display = 'none';
         loggedInProfile.style.display = 'none';
         
         if (this.guestSandboxMode) {
@@ -2079,6 +2098,42 @@ class AppController {
       });
     }
 
+    // Form Toggle Listeners
+    if (linkShowSignup) {
+      linkShowSignup.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (loginForm) loginForm.style.display = 'none';
+        if (signupForm) signupForm.style.display = 'flex';
+        authStatusMessage.textContent = '';
+      });
+    }
+
+    if (linkShowLogin) {
+      linkShowLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (signupForm) signupForm.style.display = 'none';
+        if (loginForm) loginForm.style.display = 'flex';
+        authStatusMessage.textContent = '';
+      });
+    }
+
+    // Password visibility toggle listeners for signup
+    if (btnToggleSignupPassword) {
+      btnToggleSignupPassword.addEventListener('click', () => {
+        const type = signupPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        signupPasswordInput.setAttribute('type', type);
+        btnToggleSignupPassword.textContent = type === 'password' ? '👁️' : '🙈';
+      });
+    }
+
+    if (btnToggleSignupConfirmPassword) {
+      btnToggleSignupConfirmPassword.addEventListener('click', () => {
+        const type = signupConfirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        signupConfirmPasswordInput.setAttribute('type', type);
+        btnToggleSignupConfirmPassword.textContent = type === 'password' ? '👁️' : '🙈';
+      });
+    }
+
     // Login Submit
     if (loginForm) {
       loginForm.addEventListener('submit', async (e) => {
@@ -2095,21 +2150,39 @@ class AppController {
           authEmailInput.value = '';
           authPasswordInput.value = '';
         } catch (err) {
-          authStatusMessage.textContent = `❌ Login Error: ${err.message}`;
+          let friendlyError = err.message;
+          if (err.message && err.message.toLowerCase().includes('invalid login credentials')) {
+            friendlyError = 'No account found matching these credentials, or incorrect password.';
+          }
+          authStatusMessage.textContent = `❌ Login Error: ${friendlyError}`;
           authStatusMessage.style.color = 'var(--color-danger)';
         }
       });
     }
 
     // Sign Up Submit
-    if (btnSignupSubmit) {
-      btnSignupSubmit.addEventListener('click', async (e) => {
+    if (signupForm) {
+      signupForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const email = authEmailInput.value.trim();
-        const password = authPasswordInput.value;
+        const username = signupUsernameInput.value.trim();
+        const email = signupEmailInput.value.trim();
+        const password = signupPasswordInput.value;
+        const confirmPassword = signupConfirmPasswordInput.value;
         
-        if (!email || !password || password.length < 6) {
-          authStatusMessage.textContent = '❌ Valid Email and Password (min 6 chars) required to sign up.';
+        if (!username) {
+          authStatusMessage.textContent = '❌ Username is required.';
+          authStatusMessage.style.color = 'var(--color-danger)';
+          return;
+        }
+
+        if (password.length < 6) {
+          authStatusMessage.textContent = '❌ Password must be at least 6 characters.';
+          authStatusMessage.style.color = 'var(--color-danger)';
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          authStatusMessage.textContent = '❌ Passwords do not match.';
           authStatusMessage.style.color = 'var(--color-danger)';
           return;
         }
@@ -2118,11 +2191,13 @@ class AppController {
         authStatusMessage.style.color = 'var(--text-muted)';
 
         try {
-          await window.supabaseMgr.signup(email, password);
-          authStatusMessage.textContent = '✅ Check email for confirmation link!';
+          await window.supabaseMgr.signup(email, password, username);
+          authStatusMessage.textContent = '✅ Account created! Please check your email for the confirmation link.';
           authStatusMessage.style.color = 'var(--color-primary)';
-          authEmailInput.value = '';
-          authPasswordInput.value = '';
+          signupUsernameInput.value = '';
+          signupEmailInput.value = '';
+          signupPasswordInput.value = '';
+          signupConfirmPasswordInput.value = '';
         } catch (err) {
           authStatusMessage.textContent = `❌ Signup Error: ${err.message}`;
           authStatusMessage.style.color = 'var(--color-danger)';

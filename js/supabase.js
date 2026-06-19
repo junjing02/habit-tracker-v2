@@ -163,12 +163,17 @@ class SupabaseManager {
   }
 
   // Sign up a new user
-  async signup(email, password) {
+  async signup(email, password, username) {
     if (!this.isConfigured()) throw new Error("Supabase is not configured.");
     
     const { data, error } = await this.client.auth.signUp({
       email,
-      password
+      password,
+      options: {
+        data: {
+          username: username
+        }
+      }
     });
 
     if (error) throw error;

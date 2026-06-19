@@ -299,6 +299,22 @@ body {
   font-size: 1.1rem;
 }
 
+.theme-select-element {
+  background: transparent;
+  border: none;
+  padding: 2px 4px;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--text-main);
+  font-size: 0.8rem;
+  outline: none;
+  font-family: inherit;
+}
+.theme-select-element option {
+  background-color: var(--dropdown-bg);
+  color: var(--text-main);
+}
+
 /* Nav Row & View Switcher */
 .nav-row {
   display: flex;
@@ -2067,7 +2083,7 @@ body {
 
   /* 2. Header Layout Optimization */
   .header {
-    gap: 12px !important;
+    gap: 10px !important;
   }
   
   .header-top {
@@ -2076,46 +2092,60 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    gap: 8px;
+    gap: 6px;
     border-bottom: 1px solid var(--panel-border);
-    padding-bottom: 12px;
+    padding-bottom: 10px;
   }
   
   .brand-section {
-    gap: 8px;
+    gap: 4px;
   }
   
   .logo-icon {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
   
   .app-title {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
   }
 
   /* Compact top status row on mobile */
   .game-widgets-container {
-    gap: 8px;
+    gap: 6px;
     justify-content: flex-end;
     flex-wrap: nowrap; /* Keep widgets inline */
+    align-items: center;
   }
   
-  .header-status-pill {
-    padding: 6px 8px;
+  .header-status-pill, .sound-panel-btn {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
     font-size: 0.75rem;
-    border-radius: var(--border-radius-sm);
+    border-radius: 8px;
+    box-sizing: border-box;
     white-space: nowrap;
+    margin: 0;
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    box-shadow: var(--shadow-sm);
   }
   
   .sound-panel-btn {
     width: 30px;
-    height: 30px;
     padding: 0;
+    flex-shrink: 0;
+  }
+
+  .theme-select-element {
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    padding: 0 !important;
+    height: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 0.85rem;
-    flex-shrink: 0;
   }
 
   /* Toolbar switcher alignment */

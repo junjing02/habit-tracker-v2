@@ -367,7 +367,19 @@ class HabitDatabase {
       if (status === 'Offline') {
         statusEl.textContent = 'Sign In';
       } else if (status === 'Connected') {
-        statusEl.textContent = 'Connected';
+        let username = 'Connected';
+        if (window.supabaseMgr && window.supabaseMgr.currentUser) {
+          const user = window.supabaseMgr.currentUser;
+          if (user.user_metadata && user.user_metadata.username) {
+            username = user.user_metadata.username;
+          } else if (user.email) {
+            username = user.email.split('@')[0];
+          }
+        }
+        if (username.length > 12) {
+          username = username.slice(0, 10) + '..';
+        }
+        statusEl.textContent = username;
       } else {
         statusEl.textContent = status;
       }
