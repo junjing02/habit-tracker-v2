@@ -2995,4 +2995,228 @@ body {
   }
 }
 
+/* ------------------------------------------------------------- */
+/* MOCK APP SCREEN PREVIEW SYSTEM (FOR LANDING) */
+/* ------------------------------------------------------------- */
+.preview-device {
+  width: 100%;
+  max-width: 720px; /* Make it wider to show the split layout nicely! */
+  background: rgba(17, 24, 39, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: var(--shadow-lg), 0 0 40px rgba(0, 0, 0, 0.4) inset;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 
+.mock-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mock-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mock-brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mock-widgets {
+  display: flex;
+  gap: 8px;
+}
+
+.mock-pill {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mock-nav-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mock-nav-tabs {
+  display: flex;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px;
+  border-radius: 8px;
+  gap: 2px;
+}
+
+.mock-tab {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.mock-tab.active {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main);
+}
+
+.mock-btn-manage {
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--text-main);
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.mock-content-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 16px;
+}
+
+@media (max-width: 580px) {
+  .mock-content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mock-checklist-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mock-date-navigator {
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 6px 12px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mock-habits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mock-habit-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+}
+
+.mock-habit-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mock-habit-emoji {
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+}
+
+.mock-habit-name {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.mock-checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  color: transparent;
+  transition: all 0.2s ease;
+}
+
+.mock-checkbox.checked {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  border-color: transparent;
+  color: #fff;
+}
+
+.mock-garden-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mock-card {
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mock-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-top-color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+}
+
+.mock-garden-card {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.mock-tree-container {
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin-top: 4px;
+}
+
+.mock-tree-svg {
+  height: 100%;
+}

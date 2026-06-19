@@ -534,7 +534,7 @@ class AppController {
   }
 
   renderHeader() {
-    const isAuthenticated = window.supabaseMgr && window.supabaseMgr.isAuthenticated();
+    const isAuthenticated = (window.supabaseMgr && window.supabaseMgr.isAuthenticated()) || this.guestSandboxMode;
     const profile = window.db.profile;
     this.streakVal.textContent = `${isAuthenticated ? (profile.currentStreak || 0) : 0} Days`;
 
@@ -575,7 +575,7 @@ class AppController {
 
   // Dashboard Checklist
   renderDashboard() {
-    const isAuthenticated = window.supabaseMgr && window.supabaseMgr.isAuthenticated();
+    const isAuthenticated = (window.supabaseMgr && window.supabaseMgr.isAuthenticated()) || this.guestSandboxMode;
     const dateStr = window.db.getFormattedDate(this.currentDate);
     const dayRecords = isAuthenticated ? (window.db.history[dateStr] || {}) : {};
     

@@ -54,37 +54,88 @@
     <!-- Visual Teaser Section -->
     <section class="landing-preview-section">
       <div class="preview-device">
-        <div class="preview-screen-header">
-          <span style="color: var(--color-primary); font-weight: 700;">🔥 Streak: 7 Days</span>
-          <span style="color: var(--color-secondary); font-weight: 700;">🌿 Completion: 100%</span>
+        <!-- Mock App Header -->
+        <div class="mock-header">
+          <div class="mock-header-top">
+            <div class="mock-brand">
+              <span>🌿</span>
+              <span style="font-weight: 800; font-family: var(--font-title); font-size: 0.95rem;">Aura Habit</span>
+            </div>
+            <div class="mock-widgets">
+              <div class="mock-pill">🔥 7 Days</div>
+              <div class="mock-pill">🔊</div>
+              <div class="mock-pill">☁️ Offline</div>
+            </div>
+          </div>
+          <div class="mock-nav-row">
+            <div class="mock-nav-tabs">
+              <span class="mock-tab active">Today's Focus</span>
+              <span class="mock-tab">Weekly Matrix</span>
+              <span class="mock-tab">Calendar</span>
+            </div>
+            <span class="mock-btn-manage">⚙️ Manage</span>
+          </div>
         </div>
-        <div class="preview-habits-list">
-          <div class="preview-habit-item">
-            <span class="preview-habit-emoji">🌱</span>
-            <span class="preview-habit-name">Habit 1</span>
-            <div class="preview-checkbox checked">✓</div>
+
+        <!-- Mock App Content Area (Dashboard View Split Layout) -->
+        <div class="mock-content-grid">
+          <!-- Left: Checklist -->
+          <div class="mock-checklist-panel">
+            <div class="mock-date-navigator">
+              <span style="font-weight: 700; font-size: 0.75rem;">Today's Focus</span>
+            </div>
+            <div class="mock-habits-list">
+              <div class="mock-habit-card">
+                <div class="mock-habit-meta">
+                  <span class="mock-habit-emoji">🌱</span>
+                  <span class="mock-habit-name">Habit 1</span>
+                </div>
+                <div class="mock-checkbox checked">✓</div>
+              </div>
+              <div class="mock-habit-card">
+                <div class="mock-habit-meta">
+                  <span class="mock-habit-emoji">💧</span>
+                  <span class="mock-habit-name">Habit 2</span>
+                </div>
+                <div class="mock-checkbox checked">✓</div>
+              </div>
+              <div class="mock-habit-card">
+                <div class="mock-habit-meta">
+                  <span class="mock-habit-emoji">🏃‍♂️</span>
+                  <span class="mock-habit-name">Habit 3</span>
+                </div>
+                <div class="mock-checkbox"></div>
+              </div>
+            </div>
           </div>
-          <div class="preview-habit-item">
-            <span class="preview-habit-emoji">💧</span>
-            <span class="preview-habit-name">Habit 2</span>
-            <div class="preview-checkbox checked">✓</div>
+
+          <!-- Right: Summary Card & Garden Card -->
+          <div class="mock-garden-panel" id="garden-anchor">
+            <!-- Progress Card -->
+            <div class="mock-card">
+              <div style="display: flex; flex-direction: column; gap: 2px;">
+                <span style="font-size: 0.55rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Completion</span>
+                <span style="font-size: 0.95rem; font-weight: 800; font-family: var(--font-title); color: var(--color-primary);">66%</span>
+              </div>
+              <!-- Mini Circle -->
+              <div class="mock-circle">🌿</div>
+            </div>
+
+            <!-- Garden Card -->
+            <div class="mock-card mock-garden-card">
+              <span style="font-size: 0.6rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Habit Garden</span>
+              <div class="mock-tree-container">
+                <svg viewBox="0 0 100 100" class="mock-tree-svg">
+                  <path d="M50 90 L50 65" stroke="#10b981" stroke-width="4" stroke-linecap="round"></path>
+                  <path d="M50 65 Q38 50 42 35" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round"></path>
+                  <path d="M50 65 Q62 50 58 40" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round"></path>
+                  <circle cx="42" cy="35" r="5" fill="#ec4899" opacity="0.8"></circle>
+                  <circle cx="58" cy="40" r="4.5" fill="#8b5cf6" opacity="0.8"></circle>
+                  <circle cx="50" cy="55" r="3.5" fill="#f59e0b" opacity="0.8"></circle>
+                </svg>
+              </div>
+            </div>
           </div>
-          <div class="preview-habit-item">
-            <span class="preview-habit-emoji">🏃‍♂️</span>
-            <span class="preview-habit-name">Habit 3</span>
-            <div class="preview-checkbox"></div>
-          </div>
-        </div>
-        <!-- Mock Tree Container -->
-        <div class="preview-tree-container" id="garden-anchor">
-          <svg viewBox="0 0 100 100" class="preview-tree-svg">
-            <path d="M50 90 L50 60" stroke="#10b981" stroke-width="4" stroke-linecap="round"></path>
-            <path d="M50 60 Q35 45 40 30" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round"></path>
-            <path d="M50 60 Q65 45 60 35" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round"></path>
-            <circle cx="40" cy="30" r="6" fill="#ec4899" opacity="0.8"></circle>
-            <circle cx="60" cy="35" r="5" fill="#8b5cf6" opacity="0.8"></circle>
-            <circle cx="50" cy="50" r="4" fill="#f59e0b" opacity="0.8"></circle>
-          </svg>
         </div>
       </div>
     </section>
