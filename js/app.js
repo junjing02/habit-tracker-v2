@@ -251,6 +251,26 @@ class AppController {
       landingBtnNavLogin.addEventListener('click', openAuthModal);
     }
 
+    // Landing Page Mock Tabs Switcher
+    const mockTabs = document.querySelectorAll('.mock-tab');
+    const mockViews = document.querySelectorAll('.mock-content-view');
+    mockTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        if (this.sound) this.sound.playClick();
+        mockTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        const targetView = tab.getAttribute('data-mock-tab');
+        mockViews.forEach(view => {
+          if (view.id === `mock-view-${targetView}`) {
+            view.style.display = (targetView === 'calendar' || targetView === 'analytics') ? 'flex' : 'block';
+          } else {
+            view.style.display = 'none';
+          }
+        });
+      });
+    });
+
     // Heading Brand Logo Click Routing
     const brandLogoBtn = document.getElementById('brand-logo-btn');
     if (brandLogoBtn) {

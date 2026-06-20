@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aura Habit - Routine & Streak Tracker</title>
   <meta name="description" content="Build habits, grow your virtual tree, and track daily consistency. A gorgeous, simplified multi-view routine manager.">
-  <link rel="stylesheet" href="css/style.css?v=2.1.9">
+  <link rel="stylesheet" href="css/style.css?v=2.2.0">
 </head>
 <body>
 
@@ -123,74 +123,219 @@
           </div>
           <div class="mock-nav-row">
             <div class="mock-nav-tabs">
-              <span class="mock-tab active">Today's Focus</span>
-              <span class="mock-tab">Weekly Matrix</span>
-              <span class="mock-tab">Calendar</span>
+              <span class="mock-tab active" data-mock-tab="dashboard" style="cursor: pointer;">Today's Focus</span>
+              <span class="mock-tab" data-mock-tab="matrix" style="cursor: pointer;">Weekly Matrix</span>
+              <span class="mock-tab" data-mock-tab="calendar" style="cursor: pointer;">Calendar</span>
+              <span class="mock-tab" data-mock-tab="analytics" style="cursor: pointer;">Analytics</span>
             </div>
-            <span class="mock-btn-manage">⚙️ Manage</span>
+            <span class="mock-btn-manage">⚙️ Settings</span>
           </div>
         </div>
 
-        <!-- Mock App Content Area (Dashboard View Split Layout) -->
-        <div class="mock-content-grid">
-          <!-- Left: Checklist -->
-          <div class="mock-checklist-panel">
-            <div class="mock-date-navigator">
-              <span style="font-weight: 700; font-size: 0.75rem;">Today's Focus</span>
-            </div>
-            <div class="mock-habits-list">
-              <div class="mock-habit-card">
-                <div class="mock-habit-meta">
-                  <span class="mock-habit-emoji">🌱</span>
-                  <span class="mock-habit-name">Habit 1</span>
+        <!-- Mock App Content Area (Switchable Tab Views) -->
+        <div class="mock-views-wrapper" style="width: 100%; box-sizing: border-box; min-height: 200px;">
+          
+          <!-- View 1: Today's Focus Split Layout -->
+          <div class="mock-content-view" id="mock-view-dashboard">
+            <div class="mock-content-grid">
+              <!-- Left: Checklist -->
+              <div class="mock-checklist-panel">
+                <div class="mock-date-navigator">
+                  <span style="font-weight: 700; font-size: 0.75rem;">Today's Focus</span>
                 </div>
-                <div class="mock-checkbox checked">✓</div>
+                <div class="mock-habits-list">
+                  <div class="mock-habit-card">
+                    <div class="mock-habit-meta">
+                      <span class="mock-habit-emoji">🌱</span>
+                      <span class="mock-habit-name">Watering Flowers</span>
+                    </div>
+                    <div class="mock-checkbox checked">✓</div>
+                  </div>
+                  <div class="mock-habit-card">
+                    <div class="mock-habit-meta">
+                      <span class="mock-habit-emoji">💧</span>
+                      <span class="mock-habit-name">Drink Water</span>
+                    </div>
+                    <div class="mock-checkbox checked">✓</div>
+                  </div>
+                  <div class="mock-habit-card">
+                    <div class="mock-habit-meta">
+                      <span class="mock-habit-emoji">🏃‍♂️</span>
+                      <span class="mock-habit-name">Evening Run</span>
+                    </div>
+                    <div class="mock-checkbox"></div>
+                  </div>
+                </div>
               </div>
-              <div class="mock-habit-card">
-                <div class="mock-habit-meta">
-                  <span class="mock-habit-emoji">💧</span>
-                  <span class="mock-habit-name">Habit 2</span>
+
+              <!-- Right: Summary Card & Garden Card -->
+              <div class="mock-garden-panel" id="garden-anchor">
+                <!-- Progress Card -->
+                <div class="mock-card">
+                  <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <span style="font-size: 0.55rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Completion</span>
+                    <span style="font-size: 0.95rem; font-weight: 800; font-family: var(--font-title); color: var(--color-primary);">66%</span>
+                  </div>
+                  <!-- Mini Circle -->
+                  <div class="mock-circle">🌿</div>
                 </div>
-                <div class="mock-checkbox checked">✓</div>
-              </div>
-              <div class="mock-habit-card">
-                <div class="mock-habit-meta">
-                  <span class="mock-habit-emoji">🏃‍♂️</span>
-                  <span class="mock-habit-name">Habit 3</span>
+
+                <!-- Garden Card -->
+                <div class="mock-card mock-garden-card">
+                  <span style="font-size: 0.6rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Habit Garden</span>
+                  <div class="mock-tree-container">
+                    <svg viewBox="0 0 100 100" class="mock-tree-svg">
+                      <path d="M50 90 L50 65" stroke="#10b981" stroke-width="4" stroke-linecap="round"></path>
+                      <path d="M50 65 Q38 50 42 35" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round"></path>
+                      <path d="M50 65 Q62 50 58 40" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round"></path>
+                      <circle cx="42" cy="35" r="5" fill="#ec4899" opacity="0.8"></circle>
+                      <circle cx="58" cy="40" r="4.5" fill="#8b5cf6" opacity="0.8"></circle>
+                      <circle cx="50" cy="55" r="3.5" fill="#f59e0b" opacity="0.8"></circle>
+                    </svg>
+                  </div>
                 </div>
-                <div class="mock-checkbox"></div>
               </div>
             </div>
           </div>
 
-          <!-- Right: Summary Card & Garden Card -->
-          <div class="mock-garden-panel" id="garden-anchor">
-            <!-- Progress Card -->
-            <div class="mock-card">
-              <div style="display: flex; flex-direction: column; gap: 2px;">
-                <span style="font-size: 0.55rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Completion</span>
-                <span style="font-size: 0.95rem; font-weight: 800; font-family: var(--font-title); color: var(--color-primary);">66%</span>
-              </div>
-              <!-- Mini Circle -->
-              <div class="mock-circle">🌿</div>
+          <!-- View 2: Weekly Matrix Mockup -->
+          <div class="mock-content-view" id="mock-view-matrix" style="display: none; padding: 16px;">
+            <div class="mock-matrix-container" style="background: var(--landing-inner-bg); border: 1px solid var(--landing-border); border-radius: 12px; padding: 10px; width: 100%; box-sizing: border-box; overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 0.7rem; color: var(--text-main);">
+                <thead>
+                  <tr style="border-bottom: 1px solid var(--landing-border-strong); opacity: 0.8;">
+                    <th style="text-align: left; padding: 6px; font-weight: 800;">Habit</th>
+                    <th style="text-align: center; padding: 6px; font-weight: 800;">Mon</th>
+                    <th style="text-align: center; padding: 6px; font-weight: 800;">Tue</th>
+                    <th style="text-align: center; padding: 6px; font-weight: 800;">Wed</th>
+                    <th style="text-align: center; padding: 6px; font-weight: 800;">Thu</th>
+                    <th style="text-align: center; padding: 6px; font-weight: 800;">Fri</th>
+                    <th style="text-align: center; padding: 6px; font-weight: 800;">Sat</th>
+                    <th style="text-align: center; padding: 6px; font-weight: 800;">Sun</th>
+                    <th style="text-align: center; padding: 6px; font-weight: 800;">%</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="border-bottom: 1px solid var(--landing-border-subtle);">
+                    <td style="padding: 8px 4px; font-weight: 700; white-space: nowrap;">💧 Drink Water</td>
+                    <td style="text-align: center;"><div class="mock-checkbox-cell checked"></div></td>
+                    <td style="text-align: center;"><div class="mock-checkbox-cell checked"></div></td>
+                    <td style="text-align: center;"><div class="mock-checkbox-cell checked"></div></td>
+                    <td style="text-align: center;"><div class="mock-checkbox-cell checked"></div></td>
+                    <td style="text-align: center;"><div class="mock-checkbox-cell checked"></div></td>
+                    <td style="text-align: center;"><div class="mock-checkbox-cell checked"></div></td>
+                    <td style="text-align: center;"><div class="mock-checkbox-cell checked"></div></td>
+                    <td style="text-align: center; font-weight: 800; color: #10b981;">100%</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid var(--landing-border-subtle);">
+                    <td style="padding: 8px 4px; font-weight: 700; white-space: nowrap;">🏃‍♂️ Evening Run</td>
+                    <td style="text-align: center;"><div class="mock-checkbox-cell checked"></div></td>
+                    <td style="text-align: center;"><div class="mock-checkbox-cell checked"></div></td>
+                    <td style="text-align: center;"><div class="mock-checkbox-cell"></div></td>
+                    <td style="text-align: center;"><div class="mock-checkbox-cell checked"></div></td>
+                    <td style="text-align: center;"><div class="mock-checkbox-cell checked"></div></td>
+                    <td style="text-align: center;"><div class="mock-checkbox-cell"></div></td>
+                    <td style="text-align: center;"><div class="mock-checkbox-cell checked"></div></td>
+                    <td style="text-align: center; font-weight: 800; color: var(--color-primary);">71%</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 8px 4px; font-weight: 700; white-space: nowrap;">🧘 Reading</td>
+                    <td style="text-align: center;"><div class="mock-checkbox-cell checked"></div></td>
+                    <td style="text-align: center;"><div class="mock-checkbox-cell"></div></td>
+                    <td style="text-align: center;"><div class="mock-checkbox-cell checked"></div></td>
+                    <td style="text-align: center;"><div class="mock-checkbox-cell"></div></td>
+                    <td style="text-align: center;"><div class="mock-checkbox-cell checked"></div></td>
+                    <td style="text-align: center;"><div class="mock-checkbox-cell"></div></td>
+                    <td style="text-align: center;"><div class="mock-checkbox-cell"></div></td>
+                    <td style="text-align: center; font-weight: 800; color: var(--text-muted);">42%</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
+          </div>
 
-            <!-- Garden Card -->
-            <div class="mock-card mock-garden-card">
-              <span style="font-size: 0.6rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Habit Garden</span>
-              <div class="mock-tree-container">
-                <svg viewBox="0 0 100 100" class="mock-tree-svg">
-                  <path d="M50 90 L50 65" stroke="#10b981" stroke-width="4" stroke-linecap="round"></path>
-                  <path d="M50 65 Q38 50 42 35" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round"></path>
-                  <path d="M50 65 Q62 50 58 40" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round"></path>
-                  <circle cx="42" cy="35" r="5" fill="#ec4899" opacity="0.8"></circle>
-                  <circle cx="58" cy="40" r="4.5" fill="#8b5cf6" opacity="0.8"></circle>
-                  <circle cx="50" cy="55" r="3.5" fill="#f59e0b" opacity="0.8"></circle>
-                </svg>
+          <!-- View 3: Calendar View Mockup -->
+          <div class="mock-content-view" id="mock-view-calendar" style="display: none; padding: 16px; flex-direction: column; gap: 8px;">
+            <div style="text-align: center; font-weight: 800; font-family: var(--font-title); font-size: 0.75rem; color: var(--text-main); margin-bottom: 2px;">
+              June 2026
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; width: 100%; box-sizing: border-box;">
+              <!-- Weekday headers -->
+              <span style="font-size: 0.5rem; text-align: center; font-weight: 700; color: var(--text-muted);">M</span>
+              <span style="font-size: 0.5rem; text-align: center; font-weight: 700; color: var(--text-muted);">T</span>
+              <span style="font-size: 0.5rem; text-align: center; font-weight: 700; color: var(--text-muted);">W</span>
+              <span style="font-size: 0.5rem; text-align: center; font-weight: 700; color: var(--text-muted);">T</span>
+              <span style="font-size: 0.5rem; text-align: center; font-weight: 700; color: var(--text-muted);">F</span>
+              <span style="font-size: 0.5rem; text-align: center; font-weight: 700; color: var(--text-muted);">S</span>
+              <span style="font-size: 0.5rem; text-align: center; font-weight: 700; color: var(--text-muted);">S</span>
+              
+              <!-- Dates -->
+              <div class="mock-cal-cell mock-cal-lvl-5">1</div>
+              <div class="mock-cal-cell mock-cal-lvl-4">2</div>
+              <div class="mock-cal-cell mock-cal-lvl-3">3</div>
+              <div class="mock-cal-cell mock-cal-lvl-5">4</div>
+              <div class="mock-cal-cell mock-cal-lvl-1">5</div>
+              <div class="mock-cal-cell mock-cal-lvl-2">6</div>
+              <div class="mock-cal-cell mock-cal-lvl-4">7</div>
+              
+              <div class="mock-cal-cell mock-cal-lvl-5">8</div>
+              <div class="mock-cal-cell mock-cal-lvl-5">9</div>
+              <div class="mock-cal-cell mock-cal-lvl-3">10</div>
+              <div class="mock-cal-cell mock-cal-lvl-4">11</div>
+              <div class="mock-cal-cell mock-cal-lvl-5">12</div>
+              <div class="mock-cal-cell mock-cal-lvl-1">13</div>
+              <div class="mock-cal-cell mock-cal-lvl-2">14</div>
+              
+              <div class="mock-cal-cell mock-cal-lvl-4">15</div>
+              <div class="mock-cal-cell mock-cal-lvl-5">16</div>
+              <div class="mock-cal-cell mock-cal-lvl-5">17</div>
+              <div class="mock-cal-cell mock-cal-lvl-3">18</div>
+              <div class="mock-cal-cell mock-cal-lvl-5" style="border: 1px solid var(--color-primary); box-shadow: 0 0 6px var(--color-primary-glow);">19</div>
+              <div class="mock-cal-cell">20</div>
+              <div class="mock-cal-cell">21</div>
+            </div>
+          </div>
+
+          <!-- View 4: Analytics Mockup -->
+          <div class="mock-content-view" id="mock-view-analytics" style="display: none; padding: 16px; flex-direction: column; gap: 10px;">
+            <!-- SVG Line Graph Mock -->
+            <div style="background: var(--landing-inner-bg); border: 1px solid var(--landing-border); border-radius: 10px; padding: 8px; height: 65px; position: relative; box-sizing: border-box;">
+              <span style="font-size: 0.5rem; font-weight: 800; color: var(--text-muted); position: absolute; top: 4px; left: 8px;">Completion Rate (Last 7 Days)</span>
+              <svg viewBox="0 0 100 40" style="width: 100%; height: 100%; display: block; margin-top: 4px;">
+                <line x1="0" y1="30" x2="100" y2="30" stroke="var(--landing-border)" stroke-width="0.5" stroke-dasharray="2 2"></line>
+                <line x1="0" y1="15" x2="100" y2="15" stroke="var(--landing-border)" stroke-width="0.5" stroke-dasharray="2 2"></line>
+                <path d="M5 32 L20 22 L35 15 L50 25 L65 10 L80 14 L95 5" fill="none" stroke="var(--color-primary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                <circle cx="5" cy="32" r="1" fill="var(--color-primary)"></circle>
+                <circle cx="20" cy="22" r="1" fill="var(--color-primary)"></circle>
+                <circle cx="35" cy="15" r="1" fill="var(--color-primary)"></circle>
+                <circle cx="50" cy="25" r="1" fill="var(--color-primary)"></circle>
+                <circle cx="65" cy="10" r="1" fill="var(--color-primary)"></circle>
+                <circle cx="80" cy="14" r="1" fill="var(--color-primary)"></circle>
+                <circle cx="95" cy="5" r="1" fill="var(--color-primary)"></circle>
+              </svg>
+            </div>
+            
+            <!-- Rankings Mock -->
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <span style="font-size: 0.5rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 2px;">Individual Streaks</span>
+              
+              <div style="background: var(--landing-inner-bg); border: 1px solid var(--landing-border); border-radius: 8px; padding: 4px 10px; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span style="font-size: 0.85rem;">🥇</span>
+                  <span style="font-size: 0.65rem; font-weight: 700; color: var(--text-main);">Drink Water</span>
+                </div>
+                <span style="font-size: 0.65rem; font-weight: 800; color: var(--color-primary);">🔥 14 Days</span>
+              </div>
+              
+              <div style="background: var(--landing-inner-bg); border: 1px solid var(--landing-border); border-radius: 8px; padding: 4px 10px; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span style="font-size: 0.85rem;">🥈</span>
+                  <span style="font-size: 0.65rem; font-weight: 700; color: var(--text-main);">Evening Run</span>
+                </div>
+                <span style="font-size: 0.65rem; font-weight: 800; color: var(--color-primary);">🔥 7 Days</span>
               </div>
             </div>
           </div>
-        </div>
       </div>
     </section>
 
@@ -761,10 +906,10 @@
 
   <!-- Supabase Integration -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js?v=2.1.9"></script>
+  <script src="js/supabase.js?v=2.2.0"></script>
 
   <!-- Main JavaScript modules -->
-  <script src="js/db.js?v=2.1.9"></script>
-  <script src="js/app.js?v=2.1.9"></script>
+  <script src="js/db.js?v=2.2.0"></script>
+  <script src="js/app.js?v=2.2.0"></script>
 </body>
 </html>
