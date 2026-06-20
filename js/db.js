@@ -460,6 +460,7 @@ class HabitDatabase {
   notifySyncStatus(status) {
     const statusEl = document.getElementById('cloud-sync-status');
     const iconEl = document.getElementById('cloud-sync-icon');
+    const footerSyncEl = document.getElementById('app-sync-status-indicator');
     if (statusEl) {
       if (status === 'Offline') {
         statusEl.textContent = 'Sign In';
@@ -490,6 +491,39 @@ class HabitDatabase {
         iconEl.textContent = '🔄';
       } else if (status === 'Sync Error') {
         iconEl.textContent = '🔴';
+      }
+    }
+
+    // Update the app status footer indicator
+    if (footerSyncEl) {
+      if (status === 'Offline') {
+        footerSyncEl.textContent = 'Guest Sandbox';
+        footerSyncEl.style.color = 'var(--text-muted)';
+        footerSyncEl.style.textShadow = 'none';
+      } else if (status === 'Connected') {
+        let username = '';
+        if (window.supabaseMgr && window.supabaseMgr.currentUser) {
+          const user = window.supabaseMgr.currentUser;
+          if (user.user_metadata && user.user_metadata.username) {
+            username = ' (' + user.user_metadata.username + ')';
+          } else if (user.email) {
+            username = ' (' + user.email.split('@')[0] + ')';
+          }
+        }
+        footerSyncEl.textContent = 'Synced to Cloud' + username;
+        footerSyncEl.style.color = 'var(--color-primary)';
+        footerSyncEl.style.textShadow = '0 0 8px var(--color-primary-glow)';
+      } else if (status === 'Syncing...') {
+        footerSyncEl.textContent = 'Syncing...';
+        footerSyncEl.style.color = 'var(--color-secondary)';
+        footerSyncEl.style.textShadow = '0 0 8px var(--color-secondary-glow)';
+      } else if (status === 'Sync Error') {
+        footerSyncEl.textContent = 'Sync Error';
+        footerSyncEl.style.color = '#ef4444';
+        footerSyncEl.style.textShadow = '0 0 8px rgba(239, 68, 68, 0.4)';
+      } else {
+        footerSyncEl.textContent = status;
+        footerSyncEl.style.color = 'var(--color-primary)';
       }
     }
   }
