@@ -3658,3 +3658,67 @@ body {
 .mock-cal-lvl-3 { background: rgba(59, 130, 246, 0.45) !important; color: #fff !important; }
 .mock-cal-lvl-4 { background: rgba(59, 130, 246, 0.65) !important; color: #fff !important; }
 .mock-cal-lvl-5 { background: rgba(59, 130, 246, 0.85) !important; color: #fff !important; }
+
+/* Landing Page Showcase Mobile Optimization */
+@media (max-width: 768px) {
+  .preview-device {
+    padding: 10px !important;
+    border-radius: 16px !important;
+    gap: 8px !important;
+  }
+  
+  .preview-device .nav-row {
+    display: flex !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 4px !important;
+    justify-content: center !important;
+    width: 100% !important;
+    gap: 6px !important;
+  }
+
+  .preview-device .views-container {
+    display: flex !important;
+    background: var(--views-container-bg) !important;
+    padding: 4px !important;
+    border-radius: 10px !important;
+    border: 1px solid var(--panel-border) !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    max-width: 100% !important;
+    flex-wrap: nowrap !important;
+    gap: 4px !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+
+  .preview-device .views-container::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .preview-device .view-tab {
+    flex: 0 0 auto !important;
+    font-size: 0.75rem !important;
+    padding: 6px 10px !important;
+    gap: 4px !important;
+    border-radius: 6px !important;
+  }
+  
+  .preview-device .view-tab svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+  
+  .mock-content-view {
+    padding: 12px !important;
+  }
+
+  .preview-device .calendar-weekdays {
+    font-size: 0.7rem !important;
+    margin-bottom: 8px !important;
+    padding-bottom: 4px !important;
+  }
+  
+  .preview-device .calendar-day-num {
+    font-size: 0.7rem !important;
+  }
+}
