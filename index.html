@@ -723,14 +723,21 @@
           </form>
 
           <!-- State: Logged In -->
-          <div id="logged-in-profile" style="display: none; flex-direction: column; gap: 10px;">
+          <div id="logged-in-profile" style="display: none; flex-direction: column; gap: 12px;">
             <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0;">
               Logged in as <strong id="logged-in-email" style="color: var(--text-main)"></strong>
             </p>
-            <div style="display: flex; gap: 10px; margin-top: 8px;">
-              <button class="btn-primary" id="btn-sync-now" style="flex-grow: 1;">
-                🔄 Sync Now
-              </button>
+            
+            <!-- Update Username field -->
+            <div style="display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--panel-border); padding-top: 10px;">
+              <label class="form-label" for="username-update-input" style="font-size: 0.75rem;">Username</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" class="form-input" id="username-update-input" placeholder="Enter new username" style="flex-grow: 1; padding: 6px 10px; font-size: 0.85rem;">
+                <button type="button" class="btn-primary" id="btn-update-username" style="padding: 6px 12px; font-size: 0.8rem; flex-shrink: 0; width: auto; min-width: 60px;">Save</button>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 4px; border-top: 1px solid var(--panel-border); padding-top: 10px;">
               <button class="btn-danger" id="btn-logout" style="flex-grow: 1;">
                 Logout
               </button>
@@ -746,10 +753,10 @@
 
   <!-- Supabase Integration -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js?v=2.1.5"></script>
+  <script src="js/supabase.js?v=2.1.6"></script>
 
   <!-- Main JavaScript modules -->
-  <script src="js/db.js?v=2.1.5"></script>
-  <script src="js/app.js?v=2.1.5"></script>
+  <script src="js/db.js?v=2.1.6"></script>
+  <script src="js/app.js?v=2.1.6"></script>
 </body>
 </html>

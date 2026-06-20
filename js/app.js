@@ -1883,7 +1883,8 @@ class AppController {
 
     const loggedInProfile = document.getElementById('logged-in-profile');
     const loggedInEmail = document.getElementById('logged-in-email');
-    const btnSyncNow = document.getElementById('btn-sync-now');
+    const btnUpdateUsername = document.getElementById('btn-update-username');
+    const usernameUpdateInput = document.getElementById('username-update-input');
     const btnLogout = document.getElementById('btn-logout');
     const authStatusMessage = document.getElementById('auth-status-message');
     const authSectionTitle = document.getElementById('auth-section-title');
@@ -1971,6 +1972,9 @@ class AppController {
         // Show username or email in profile section
         const displayName = (user.user_metadata && user.user_metadata.username) ? user.user_metadata.username : user.email;
         loggedInEmail.textContent = displayName;
+        if (usernameUpdateInput) {
+          usernameUpdateInput.value = (user.user_metadata && user.user_metadata.username) ? user.user_metadata.username : '';
+        }
         
         window.db.notifySyncStatus('Connected');
         
@@ -2296,14 +2300,30 @@ class AppController {
       });
     }
 
-    // Manual Sync Now
-    if (btnSyncNow) {
-      btnSyncNow.addEventListener('click', async () => {
-        authStatusMessage.textContent = 'Syncing...';
+    // Update Username
+    if (btnUpdateUsername && usernameUpdateInput) {
+      btnUpdateUsername.addEventListener('click', async () => {
+        const newUsername = usernameUpdateInput.value.trim();
+        if (!newUsername) {
+          authStatusMessage.textContent = '⚠️ Username cannot be empty.';
+          authStatusMessage.style.color = 'var(--color-danger)';
+          return;
+        }
+
+        authStatusMessage.textContent = 'Updating username...';
         authStatusMessage.style.color = 'var(--text-muted)';
-        await window.db.syncWithCloud();
-        authStatusMessage.textContent = '✅ Synchronization complete!';
-        authStatusMessage.style.color = 'var(--color-primary)';
+        
+        try {
+          await window.supabaseMgr.updateUsername(newUsername);
+          authStatusMessage.textContent = '✅ Username updated successfully!';
+          authStatusMessage.style.color = 'var(--color-primary)';
+          
+          // Re-render user pill in header
+          window.db.notifySyncStatus('Connected');
+        } catch (err) {
+          authStatusMessage.textContent = `❌ Update Failed: ${err.message}`;
+          authStatusMessage.style.color = 'var(--color-danger)';
+        }
       });
     }
   }

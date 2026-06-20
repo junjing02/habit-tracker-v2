@@ -228,6 +228,20 @@ class SupabaseManager {
     if (error) throw error;
     return data;
   }
+
+  // Update username for currently signed-in user
+  async updateUsername(username) {
+    if (!this.isConfigured()) throw new Error("Supabase is not configured.");
+    
+    const { data, error } = await this.client.auth.updateUser({
+      data: { username: username }
+    });
+    
+    if (error) throw error;
+    
+    this.currentUser = data.user;
+    return data;
+  }
 }
 
 const supabaseMgr = new SupabaseManager();
