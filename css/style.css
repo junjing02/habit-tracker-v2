@@ -89,10 +89,10 @@
   --bg-color: #f8fafc;
   --bg-gradient: linear-gradient(135deg, #ffffff 0%, #edf2f7 100%);
   --panel-bg: rgba(255, 255, 255, 0.95);
-  --panel-border: rgba(0, 0, 0, 0.08);
+  --panel-border: rgba(0, 0, 0, 0.15); /* Improved border contrast in light mode */
   --panel-glow: rgba(59, 130, 246, 0.04);
   --text-main: #1e293b;
-  --text-muted: #64748b;
+  --text-muted: #475569; /* Improved text contrast in light mode */
   --color-primary: #3b82f6; /* Modern Blue */
   --color-primary-glow: rgba(59, 130, 246, 0.12);
   --color-secondary: #2563eb;
@@ -445,7 +445,7 @@ body {
 }
 
 .btn-secondary:hover {
-  background: rgba(255,255,255,0.05);
+  background: var(--input-bg);
   border-color: var(--text-muted);
 }
 
@@ -1466,14 +1466,13 @@ body {
 /* Emoji List Picker */
 .emoji-selector {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(9, 1fr);
   gap: 6px;
-  background: rgba(0,0,0,0.25);
+  background: var(--input-bg);
   border: 1px solid var(--panel-border);
   border-radius: var(--border-radius-sm);
   padding: 10px;
-  max-height: 120px;
-  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .emoji-option {
@@ -1481,7 +1480,7 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 1.25rem;
-  height: 36px;
+  aspect-ratio: 1;
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.15s, transform 0.1s;
