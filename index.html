@@ -108,54 +108,25 @@
     <!-- Visual Teaser Section -->
     <section class="landing-preview-section">
       <div class="preview-device">
-        <!-- Mock App Header -->
-        <div class="mock-header">
-          <div class="mock-header-top">
-            <div class="brand-section">
-              <span class="logo-icon" style="font-size: 1.5rem; animation: none;">🌿</span>
-              <span style="font-weight: 800; font-family: var(--font-title); font-size: 1.25rem; color: var(--text-main);">Aura Habit</span>
-            </div>
-            
-            <div class="game-widgets-container" style="gap: 8px;">
-              <div class="header-status-pill">
-                <span>🔥</span> 7 Days
-              </div>
-              <button class="sound-panel-btn" style="cursor: default; pointer-events: none;">
-                <i>🔊</i>
-              </button>
-              <div class="header-status-pill">
-                <select class="theme-select-element" style="pointer-events: none;">
-                  <option>Dark</option>
-                </select>
-              </div>
-              <div class="header-status-pill">
-                <span>👤</span> Guest Mode
-              </div>
-              <button class="btn-primary" style="cursor: default; pointer-events: none;">
-                <span>⚙️</span> <span class="btn-text">Settings</span>
-              </button>
-            </div>
-          </div>
-          
-          <div class="nav-row">
-            <div class="views-container">
-              <button class="view-tab mock-tab active" data-mock-tab="dashboard">
-                <svg viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M8 13A5 5 0 1 1 8 3a5 5 0 0 1 0 10zm0 1A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"/><path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/><circle cx="8" cy="8" r="1.5"/></svg>
-                Today's Focus
-              </button>
-              <button class="view-tab mock-tab" data-mock-tab="matrix">
-                <svg viewBox="0 0 16 16"><path d="M0 1.5A1.5 1.5 0 0 1 1.5 0h13A1.5 1.5 0 0 1 16 1.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13zM1.5 1a.5.5 0 0 0-.5.5v13a.5.5 0 0 0 .5.5H5V1H1.5zM6 15h4V1H6v14zm5 0h3.5a.5.5 0 0 0 .5-.5v-13a.5.5 0 0 0-.5-.5H11v14z"/></svg>
-                Weekly Matrix
-              </button>
-              <button class="view-tab mock-tab" data-mock-tab="calendar">
-                <svg viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/></svg>
-                Calendar View
-              </button>
-              <button class="view-tab mock-tab" data-mock-tab="analytics">
-                <svg viewBox="0 0 16 16"><path d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"/></svg>
-                Analytics
-              </button>
-            </div>
+        <!-- Mock App View Switcher (Starting from Navigation Bar) -->
+        <div class="nav-row" style="border-bottom: 1px solid var(--panel-border); padding-bottom: 12px; margin-bottom: 8px;">
+          <div class="views-container">
+            <button class="view-tab mock-tab active" data-mock-tab="dashboard">
+              <svg viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M8 13A5 5 0 1 1 8 3a5 5 0 0 1 0 10zm0 1A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"/><path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/><circle cx="8" cy="8" r="1.5"/></svg>
+              Today's Focus
+            </button>
+            <button class="view-tab mock-tab" data-mock-tab="matrix">
+              <svg viewBox="0 0 16 16"><path d="M0 1.5A1.5 1.5 0 0 1 1.5 0h13A1.5 1.5 0 0 1 16 1.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13zM1.5 1a.5.5 0 0 0-.5.5v13a.5.5 0 0 0 .5.5H5V1H1.5zM6 15h4V1H6v14zm5 0h3.5a.5.5 0 0 0 .5-.5v-13a.5.5 0 0 0-.5-.5H11v14z"/></svg>
+              Weekly Matrix
+            </button>
+            <button class="view-tab mock-tab" data-mock-tab="calendar">
+              <svg viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/></svg>
+              Calendar View
+            </button>
+            <button class="view-tab mock-tab" data-mock-tab="analytics">
+              <svg viewBox="0 0 16 16"><path d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"/></svg>
+              Analytics
+            </button>
           </div>
         </div>
 

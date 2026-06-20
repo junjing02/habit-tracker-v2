@@ -28,15 +28,3 @@ A client-side routine tracker and streak manager built with vanilla web technolo
 Access the live deployed application at:
 👉 **[Live App URL](https://junjing02.github.io/habit-tracker-v2/)**
 
-### Local Setup
-To run the project locally:
-
-1. Clone the repository:
-   ```bash
-   git clone git@github.com:junjing02/habit-tracker-v2.git
-   ```
-2. Navigate to the project directory:
-   ```bash
-   cd habit-tracker-v2
-   ```
-3. Open `index.html` in your web browser.

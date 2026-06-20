@@ -3,6 +3,17 @@
  * Orchestrates rendering, page views, habit tree growth, custom charts, Web Audio sounds, canvas confetti, remark modals, and calendar grids.
  */
 
+// HTML Escaping Utility for XSS Prevention
+function escapeHTML(str) {
+  if (typeof str !== 'string') return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 // Sound Manager Instance
 class SoundEffectManager {
   constructor() {
@@ -864,9 +875,9 @@ class AppController {
       const meta = document.createElement('div');
       meta.className = 'habit-meta';
       meta.innerHTML = `
-        <div class="habit-emoji-wrapper">${habit.emoji}</div>
+        <div class="habit-emoji-wrapper">${escapeHTML(habit.emoji)}</div>
         <div class="habit-details">
-          <span class="habit-card-name">${habit.name}</span>
+          <span class="habit-card-name">${escapeHTML(habit.name)}</span>
         </div>
       `;
       card.appendChild(meta);
@@ -891,7 +902,7 @@ class AppController {
           const target = e.currentTarget;
           this.tooltipTimeout = setTimeout(() => {
             const rect = target.getBoundingClientRect();
-            this.showTooltip(`Note: "${remarkText}"`, rect.left + rect.width / 2, rect.top - 6);
+            this.showTooltip(`Note: "${escapeHTML(remarkText)}"`, rect.left + rect.width / 2, rect.top - 6);
           }, 400);
         });
         noteBtn.addEventListener('mouseleave', () => {
@@ -912,7 +923,7 @@ class AppController {
           const target = e.currentTarget;
           this.tooltipTimeout = setTimeout(() => {
             const rect = target.getBoundingClientRect();
-            this.showTooltip(`Note: "${remarkText}"`, rect.left + rect.width / 2, rect.top - 6);
+            this.showTooltip(`Note: "${escapeHTML(remarkText)}"`, rect.left + rect.width / 2, rect.top - 6);
           }, 400);
         });
         noteBtn.addEventListener('mouseleave', () => {
@@ -1003,8 +1014,8 @@ class AppController {
           <tr>
             <td>
               <div class="habit-name-cell" data-id="${habit.id}">
-                <span>${habit.emoji}</span>
-                <span class="habit-name-text" style="font-weight: 700;">${habit.name}</span>
+                <span>${escapeHTML(habit.emoji)}</span>
+                <span class="habit-name-text" style="font-weight: 700;">${escapeHTML(habit.name)}</span>
               </div>
             </td>
         `;
@@ -1064,7 +1075,7 @@ class AppController {
             cellInner = `
               <div class="matrix-cell-content">
                 <button class="matrix-checkbox ${isCompleted ? 'checked' : ''}" data-date="${dateStr}" data-id="${habit.id}"></button>
-                <span class="${classVal}" style="visibility: ${visibilityVal}" data-id="${habit.id}" data-date="${dateStr}" data-remark="${remarkText || ''}">${noteContent}</span>
+                <span class="${classVal}" style="visibility: ${visibilityVal}" data-id="${habit.id}" data-date="${dateStr}" data-remark="${escapeHTML(remarkText || '')}">${noteContent}</span>
               </div>
             `;
             rowHtml += `<td>${cellInner}</td>`;
@@ -1118,7 +1129,7 @@ class AppController {
           const target = e.currentTarget;
           this.tooltipTimeout = setTimeout(() => {
             const rect = target.getBoundingClientRect();
-            this.showTooltip(`Note: "${remark}"`, rect.left + rect.width / 2, rect.top - 6);
+            this.showTooltip(`Note: "${escapeHTML(remark)}"`, rect.left + rect.width / 2, rect.top - 6);
           }, 400);
         });
         ind.addEventListener('mouseleave', () => {
@@ -1260,7 +1271,7 @@ class AppController {
               const rec = dayRecords[h.id];
               const completed = rec && typeof rec === 'object' ? rec.completed : Boolean(rec);
               if (!completed) {
-                failedTasks.push(`${h.emoji} ${h.name}`);
+                failedTasks.push(`${escapeHTML(h.emoji)} ${escapeHTML(h.name)}`);
               }
             });
 
@@ -1402,8 +1413,8 @@ class AppController {
 
       card.innerHTML = `
         <div class="habit-manager-card-left">
-          <div class="habit-manager-card-emoji">${habit.emoji}</div>
-          <span class="habit-manager-card-name">${habit.name}</span>
+          <div class="habit-manager-card-emoji">${escapeHTML(habit.emoji)}</div>
+          <span class="habit-manager-card-name">${escapeHTML(habit.name)}</span>
         </div>
         <div class="habit-manager-card-actions">
           <button class="card-action-btn edit-btn" title="Edit details" data-id="${habit.id}">
@@ -1537,7 +1548,7 @@ class AppController {
             const completed = rec && typeof rec === 'object' ? rec.completed : Boolean(rec);
             if (!completed) {
               const remarkText = (rec && typeof rec === 'object') ? (rec.remark || '') : '';
-              failedTasks.push(`• ${h.emoji} ${h.name}${remarkText ? ' <i>(' + remarkText + ')</i>' : ''}`);
+              failedTasks.push(`• ${escapeHTML(h.emoji)} ${escapeHTML(h.name)}${remarkText ? ' <i>(' + escapeHTML(remarkText) + ')</i>' : ''}`);
             }
           });
 
@@ -1812,7 +1823,7 @@ class AppController {
     const habit = window.db.habits.find(h => h.id === habitId);
     if (!habit) return;
 
-    this.remarkHabitTitle.innerHTML = `<span style="margin-right:6px;">${habit.emoji}</span> ${habit.name}`;
+    this.remarkHabitTitle.innerHTML = `<span style="margin-right:6px;">${escapeHTML(habit.emoji)}</span> ${escapeHTML(habit.name)}`;
     
     const dateObj = new Date(dateStr + "T00:00:00");
     const dateLabelStr = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
