@@ -213,7 +213,7 @@ class AppController {
     this.contextMenu = document.getElementById('habit-context-menu');
 
     // Habits Manager panel bindings
-    this.managerTableBody = document.getElementById('manager-table-body');
+    this.managerTableBody = document.getElementById('manager-habits-list');
     this.btnManagerAddHabit = document.getElementById('btn-manager-add-habit');
 
     // Calendar Navigator labels
@@ -1356,63 +1356,59 @@ class AppController {
   }
 
   // Habits Manager Renderer
-  // Habits Manager Renderer
   renderHabitsManager() {
     this.managerTableBody.innerHTML = '';
     const activeHabits = window.db.getActiveHabits();
 
     if (activeHabits.length === 0) {
       this.managerTableBody.innerHTML = `
-        <tr>
-          <td colspan="3">
-            <div class="empty-state" style="padding: 20px; text-align: center;">
-              <span class="empty-state-icon" style="font-size: 2rem; display: block; margin-bottom: 8px;">📭</span>
-              <p class="empty-state-desc" style="color: var(--text-muted); margin: 0;">No habits configured yet.</p>
-            </div>
-          </td>
-        </tr>
+        <div class="empty-state" style="padding: 40px 20px; text-align: center; border: 1px dashed var(--panel-border); border-radius: 12px; margin-top: 10px; width: 100%; box-sizing: border-box;">
+          <span class="empty-state-icon" style="font-size: 2.5rem; display: block; margin-bottom: 12px; filter: grayscale(0.5);">📭</span>
+          <p class="empty-state-desc" style="color: var(--text-muted); margin: 0; font-size: 0.9rem;">No habits configured yet.</p>
+        </div>
       `;
       return;
     }
 
     activeHabits.forEach(habit => {
-      const row = document.createElement('tr');
-      row.style.cursor = 'pointer';
+      const card = document.createElement('div');
+      card.className = 'habit-manager-card';
+      card.style.cursor = 'pointer';
 
-      row.innerHTML = `
-        <td class="manager-emoji-cell" style="width: 60px; text-align: center;">
-          <div class="manager-emoji-wrapper">${habit.emoji}</div>
-        </td>
-        <td>
-          <span style="font-weight: 700; font-size: 0.95rem; color: var(--text-main);">${habit.name}</span>
-        </td>
-        <td style="width: 100px; text-align: right; padding-right: 16px;">
-          <div class="row-actions" style="display: flex; gap: 8px; justify-content: flex-end;">
-            <button class="row-action-btn edit-btn" title="Edit details" data-id="${habit.id}" style="background: none; border: none; cursor: pointer; padding: 4px; font-size: 0.9rem;">✏️</button>
-            <button class="row-action-btn delete-btn" title="Delete habit" data-id="${habit.id}" style="background: none; border: none; cursor: pointer; padding: 4px; font-size: 0.9rem;">🗑️</button>
-          </div>
-        </td>
+      card.innerHTML = `
+        <div class="habit-manager-card-left">
+          <div class="habit-manager-card-emoji">${habit.emoji}</div>
+          <span class="habit-manager-card-name">${habit.name}</span>
+        </div>
+        <div class="habit-manager-card-actions">
+          <button class="card-action-btn edit-btn" title="Edit details" data-id="${habit.id}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="action-icon"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+          </button>
+          <button class="card-action-btn delete-btn" title="Delete habit" data-id="${habit.id}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="action-icon"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+          </button>
+        </div>
       `;
 
-      // Allow clicking the row to open the edit modal (extremely friendly and intuitive)
-      row.addEventListener('click', (e) => {
-        if (e.target.closest('.row-action-btn')) {
+      // Allow clicking the card to open the edit modal
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('.card-action-btn')) {
           return; // Don't trigger when clicking actions
         }
         this.openHabitModal(habit.id);
       });
 
       // Wire up inline action buttons
-      row.querySelector('.edit-btn').addEventListener('click', (e) => {
+      card.querySelector('.edit-btn').addEventListener('click', (e) => {
         e.stopPropagation();
         this.openHabitModal(habit.id);
       });
-      row.querySelector('.delete-btn').addEventListener('click', (e) => {
+      card.querySelector('.delete-btn').addEventListener('click', (e) => {
         e.stopPropagation();
         this.openDeleteConfirmModal(habit.id);
       });
 
-      this.managerTableBody.appendChild(row);
+      this.managerTableBody.appendChild(card);
     });
   }
 

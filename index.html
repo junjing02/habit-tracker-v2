@@ -259,7 +259,7 @@
           </button>
 
           <!-- Theme Selector -->
-          <div class="header-status-pill" id="theme-selector-pill" style="padding: 4px 10px;">
+          <div class="header-status-pill" id="theme-selector-pill">
             <select id="theme-selector" class="theme-select-element">
               <option value="cyberpunk">Dark</option>
               <option value="light">Light</option>
@@ -611,20 +611,9 @@
           </button>
         </div>
 
-        <!-- Table Container -->
-        <div class="table-container" style="margin-top: 8px; flex-grow: 1; max-height: 50vh; overflow-y: auto; border: 1px solid var(--panel-border); border-radius: var(--border-radius-sm); background: var(--overlay-bg-container);">
-          <table class="matrix-table" id="manager-table" style="width: 100%; border-collapse: collapse; table-layout: fixed;">
-            <thead>
-              <tr style="border-bottom: 2px solid var(--panel-border); background: var(--overlay-bg-th);">
-                <th style="width: 60px; text-align: center; padding: 10px 8px; font-weight: 700; color: var(--text-muted);">Icon</th>
-                <th style="text-align: left; padding: 10px 8px; font-weight: 700; color: var(--text-muted);">Habit Name</th>
-                <th style="width: 100px; text-align: right; padding: 10px 8px; font-weight: 700; color: var(--text-muted); padding-right: 16px;">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="manager-table-body">
-              <!-- Rendered dynamically by JS -->
-            </tbody>
-          </table>
+        <!-- Modern Card List Container -->
+        <div class="habit-manager-list" id="manager-habits-list">
+          <!-- Rendered dynamically by JS -->
         </div>
       </div>
     </div>
@@ -757,10 +746,10 @@
 
   <!-- Supabase Integration -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js?v=2.0.9"></script>
+  <script src="js/supabase.js?v=2.1.0"></script>
 
   <!-- Main JavaScript modules -->
-  <script src="js/db.js?v=2.0.9"></script>
-  <script src="js/app.js?v=2.0.9"></script>
+  <script src="js/db.js?v=2.1.0"></script>
+  <script src="js/app.js?v=2.1.0"></script>
 </body>
 </html>

@@ -24,6 +24,13 @@ const PRESET_HABITS = [
   { id: 'h-preset-tidyroom', name: 'Tidy up the room', emoji: '🧹', createdAt: 1420070400000, active: true }
 ];
 
+const getSystemDefaultTheme = () => {
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+    return 'light';
+  }
+  return 'cyberpunk';
+};
+
 class HabitDatabase {
   constructor() {
     this.habits = [];
@@ -32,7 +39,7 @@ class HabitDatabase {
       currentStreak: 0,
       longestStreak: 0,
       soundEnabled: false,
-      theme: 'cyberpunk',
+      theme: getSystemDefaultTheme(),
       lastActiveDate: '',
       habitStreaks: {} // Format: { 'habitId': { current: Int, longest: Int } }
     };
@@ -43,12 +50,17 @@ class HabitDatabase {
 
     // Listen to Supabase Auth State changes to trigger syncing
     if (window.supabaseMgr) {
-      window.supabaseMgr.onAuthStateChange((user) => {
+      window.supabaseMgr.onAuthStateChange((user, event) => {
         if (user) {
           this.syncWithCloud();
         } else {
-          // Logged out: clear user data and reset to defaults
-          this.clearLocalUserData();
+          // Only clear local user data if it's an explicit sign out event
+          if (event === 'SIGNED_OUT') {
+            this.clearLocalUserData();
+          } else {
+            // Otherwise, load whatever we have in local storage
+            this.loadFromStorage();
+          }
           if (window.app && typeof window.app.renderAll === 'function') {
             window.app.renderAll();
           }
@@ -107,7 +119,7 @@ class HabitDatabase {
       currentStreak: 0,
       longestStreak: 0,
       soundEnabled: false,
-      theme: 'cyberpunk',
+      theme: getSystemDefaultTheme(),
       lastActiveDate: '',
       habitStreaks: {}
     };
@@ -881,7 +893,7 @@ class HabitDatabase {
       currentStreak: 0,
       longestStreak: 0,
       soundEnabled: false,
-      theme: 'cyberpunk',
+      theme: getSystemDefaultTheme(),
       lastActiveDate: '',
       habitStreaks: {}
     };
@@ -897,7 +909,7 @@ class HabitDatabase {
         window.supabaseMgr.client.from('habits').delete().eq('user_id', userId),
         window.supabaseMgr.client.from('profiles').upsert({
           user_id: userId,
-          theme: 'cyberpunk',
+          theme: getSystemDefaultTheme(),
           sound_enabled: false,
           current_streak: 0,
           longest_streak: 0,

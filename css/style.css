@@ -275,14 +275,17 @@ body {
   background: var(--panel-bg);
   border: 1px solid var(--panel-border);
   backdrop-filter: blur(var(--glass-blur));
-  padding: 8px 14px;
-  border-radius: var(--border-radius-md);
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   font-size: 0.85rem;
   font-weight: 600;
   box-shadow: var(--shadow-sm);
+  box-sizing: border-box;
 }
 
 .header-status-pill.clickable {
@@ -302,13 +305,16 @@ body {
 .theme-select-element {
   background: transparent;
   border: none;
-  padding: 2px 4px;
+  padding: 0;
   font-weight: 700;
   cursor: pointer;
   color: var(--text-main);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   outline: none;
   font-family: inherit;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 .theme-select-element option {
   background-color: var(--dropdown-bg);
@@ -1268,6 +1274,107 @@ body {
   height: 20px;
 }
 
+/* Redesigned Habit Manager Card list */
+.habit-manager-list {
+  margin-top: 8px;
+  flex-grow: 1;
+  max-height: 52vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.habit-manager-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.habit-manager-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.habit-manager-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--overlay-bg-container);
+  border: 1px solid var(--panel-border);
+  padding: 12px 16px;
+  border-radius: 12px;
+  transition: transform 0.2s, border-color 0.2s, background-color 0.2s;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+.habit-manager-card:hover {
+  border-color: var(--color-primary-glow);
+  background: rgba(255, 255, 255, 0.02);
+  transform: translateY(-1px);
+}
+
+.habit-manager-card-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.habit-manager-card-emoji {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.habit-manager-card-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-main);
+}
+
+.habit-manager-card-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.card-action-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.card-action-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.card-action-btn.edit-btn:hover {
+  color: var(--color-primary);
+}
+
+.card-action-btn.delete-btn:hover {
+  color: var(--color-danger);
+}
+
+.action-icon {
+  width: 16px;
+  height: 16px;
+}
+
 .modal-body {
   padding: 24px;
   display: flex;
@@ -1532,9 +1639,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px;
-  border-radius: var(--border-radius-sm);
+  height: 38px;
+  width: 38px;
+  padding: 0;
+  border-radius: 10px;
   transition: all 0.2s;
+  box-sizing: border-box;
 }
 
 .sound-panel-btn:hover {
