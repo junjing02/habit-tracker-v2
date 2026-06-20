@@ -1219,12 +1219,10 @@ class AppController {
         `;
       }
 
-      const todayTag = cellDateStr === todayStr ? `<span class="calendar-today-tag">Today</span>` : '';
       cell.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
           <div style="display: flex; align-items: center; gap: 6px;">
             <span class="calendar-day-num">${d}</span>
-            ${todayTag}
           </div>
           ${progressRingHtml}
         </div>
@@ -1321,7 +1319,7 @@ class AppController {
 
       groups.forEach((group, groupIdx) => {
         const rank = groupIdx + 1;
-        let rankBadgeContent = `${rank}`;
+        let rankBadgeContent = `#${rank}`;
 
         if (rank === 1) rankBadgeContent = '🥇';
         else if (rank === 2) rankBadgeContent = '🥈';
@@ -1332,7 +1330,6 @@ class AppController {
             <div class="rank-group-header">
               <div class="rank-title-wrapper">
                 <span class="rank-medal">${rankBadgeContent}</span>
-                <span>Rank ${rank}</span>
               </div>
               <div class="streak-badge">
                 <span>🔥</span> ${group.streak} Day${group.streak === 1 ? '' : 's'}

@@ -298,6 +298,22 @@ body {
   border-color: var(--color-primary);
 }
 
+#btn-add-habit {
+  height: 38px;
+  padding: 0 16px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-sizing: border-box;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+
 .header-status-pill i {
   font-size: 1.1rem;
 }
@@ -2011,7 +2027,7 @@ body {
 .matrix-checkbox {
   width: 24px !important;
   height: 24px !important;
-  border-radius: 50%;
+  border-radius: 6px;
   border: 2px solid var(--checkbox-border-color);
   background: var(--checkbox-bg);
   cursor: pointer;
@@ -2263,27 +2279,25 @@ body {
     align-items: center;
   }
 
-  /* Toolbar switcher alignment */
+  /* Hide navigation switcher row completely on mobile */
   .nav-row {
-    border: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .toolbar-actions {
-    display: flex;
-    width: 100%;
-    margin-top: 4px;
-    margin-bottom: 4px;
-    box-sizing: border-box;
+    display: none !important;
   }
   
   #btn-add-habit {
-    width: 100%;
+    height: 30px !important;
+    width: 30px !important;
+    padding: 0 !important;
+    border-radius: 8px !important;
+    font-size: 0.85rem !important;
+    flex-shrink: 0;
+    display: inline-flex !important;
+    align-items: center;
     justify-content: center;
-    padding: 12px 16px;
-    font-size: 0.9rem;
-    border-radius: var(--border-radius-md);
+  }
+
+  #btn-add-habit .btn-text {
+    display: none !important;
   }
 
   /* 3. Hide bottom nav bar completely on mobile */
@@ -2308,9 +2322,10 @@ body {
     box-sizing: border-box;
   }
   
-  .today-habits-section {
-    width: 100%;
-    box-sizing: border-box;
+  .today-habits-section, .garden-section {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
   }
   
   .today-habit-card {
@@ -2596,16 +2611,33 @@ body {
   /* Compact content wrapper */
   .matrix-cell-content {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2px !important;
+    height: 30px !important;
+    position: relative;
+    width: 100%;
+  }
+
+  .matrix-checkbox {
+    width: 22px !important;
+    height: 22px !important;
+    border-radius: 5px !important;
+    border-width: 1.5px !important;
+  }
+
+  .matrix-checkbox.checked::after {
+    width: 4px !important;
+    height: 8px !important;
+    border-width: 0 1.5px 1.5px 0 !important;
   }
 
   /* Small note indicators on mobile */
   .matrix-note-indicator {
-    font-size: 0.7rem !important;
-    margin-top: 1px !important;
+    top: -2px !important;
+    right: -2px !important;
+    font-size: 0.6rem !important;
+    margin: 0 !important;
+    padding: 2px !important;
   }
 
   /* 2. Calendar View Sizing */
