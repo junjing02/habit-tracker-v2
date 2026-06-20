@@ -265,11 +265,54 @@ class AppController {
     // Landing Page Mock Tabs Switcher
     const mockTabs = document.querySelectorAll('.mock-tab');
     const mockViews = document.querySelectorAll('.mock-content-view');
+    const mockDrawerTabs = document.querySelectorAll('.mock-drawer-tab');
+    const mockHamburgerTrigger = document.getElementById('mock-hamburger-trigger');
+    const mockCloseDrawerBtn = document.getElementById('mock-close-drawer-btn');
+    const mockDrawerOverlay = document.getElementById('mock-drawer-overlay');
+    const mockSidebarDrawer = document.getElementById('mock-sidebar-drawer');
+
+    const closeMockDrawer = () => {
+      if (mockSidebarDrawer && mockDrawerOverlay) {
+        mockSidebarDrawer.classList.remove('open');
+        mockDrawerOverlay.classList.remove('open');
+      }
+    };
+
+    const openMockDrawer = () => {
+      if (mockSidebarDrawer && mockDrawerOverlay) {
+        mockSidebarDrawer.classList.add('open');
+        mockDrawerOverlay.classList.add('open');
+      }
+      if (this.sound) this.sound.playClick();
+    };
+
+    if (mockHamburgerTrigger) {
+      mockHamburgerTrigger.addEventListener('click', openMockDrawer);
+    }
+    if (mockCloseDrawerBtn) {
+      mockCloseDrawerBtn.addEventListener('click', () => {
+        closeMockDrawer();
+        if (this.sound) this.sound.playClick();
+      });
+    }
+    if (mockDrawerOverlay) {
+      mockDrawerOverlay.addEventListener('click', closeMockDrawer);
+    }
+
     mockTabs.forEach(tab => {
       tab.addEventListener('click', () => {
         if (this.sound) this.sound.playClick();
         mockTabs.forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
+
+        // Synchronize with drawer tabs
+        mockDrawerTabs.forEach(dt => {
+          if (dt.getAttribute('data-mock-tab') === tab.getAttribute('data-mock-tab')) {
+            dt.classList.add('active');
+          } else {
+            dt.classList.remove('active');
+          }
+        });
         
         const targetView = tab.getAttribute('data-mock-tab');
         mockViews.forEach(view => {
@@ -279,6 +322,34 @@ class AppController {
             view.style.display = 'none';
           }
         });
+      });
+    });
+
+    mockDrawerTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        if (this.sound) this.sound.playClick();
+        mockDrawerTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Synchronize with desktop mockTabs
+        mockTabs.forEach(dt => {
+          if (dt.getAttribute('data-mock-tab') === tab.getAttribute('data-mock-tab')) {
+            dt.classList.add('active');
+          } else {
+            dt.classList.remove('active');
+          }
+        });
+
+        const targetView = tab.getAttribute('data-mock-tab');
+        mockViews.forEach(view => {
+          if (view.id === `mock-view-${targetView}`) {
+            view.style.display = (targetView === 'calendar' || targetView === 'analytics') ? 'flex' : 'block';
+          } else {
+            view.style.display = 'none';
+          }
+        });
+
+        closeMockDrawer();
       });
     });
 

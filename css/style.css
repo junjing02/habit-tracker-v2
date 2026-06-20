@@ -3139,6 +3139,8 @@ body {
 /* MOCK APP SCREEN PREVIEW SYSTEM (FOR LANDING) */
 /* ------------------------------------------------------------- */
 .preview-device {
+  position: relative;
+  overflow: hidden;
   width: 100%;
   max-width: 1200px; /* Make it wider to show the split layout nicely! */
   background: var(--landing-device-bg);
@@ -3659,55 +3661,235 @@ body {
 .mock-cal-lvl-4 { background: rgba(59, 130, 246, 0.65) !important; color: #fff !important; }
 .mock-cal-lvl-5 { background: rgba(59, 130, 246, 0.85) !important; color: #fff !important; }
 
+/* Premium Hover Effect for Showcase View Switcher Tabs (Desktop) */
+.preview-device .view-tab {
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.preview-device .view-tab:hover {
+  color: var(--text-main) !important;
+  background: var(--landing-inner-bg-hover) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.preview-device .view-tab.active {
+  background: var(--panel-bg) !important;
+  color: var(--color-primary) !important;
+  box-shadow: var(--shadow-sm) !important;
+  transform: none !important;
+}
+
+.preview-device .view-tab:active {
+  transform: scale(0.96);
+}
+
+/* Hide mock mobile header and drawer elements by default on desktop */
+.mock-mobile-header {
+  display: none;
+}
+
+.mock-drawer-overlay {
+  display: none;
+}
+
+.mock-sidebar-drawer {
+  display: none;
+}
+
 /* Landing Page Showcase Mobile Optimization */
 @media (max-width: 768px) {
   .preview-device {
-    padding: 10px !important;
+    padding: 12px !important;
     border-radius: 16px !important;
-    gap: 8px !important;
+    gap: 12px !important;
   }
   
+  /* Hide the desktop nav switcher row on mobile, as requested */
   .preview-device .nav-row {
-    display: flex !important;
-    padding-bottom: 8px !important;
-    margin-bottom: 4px !important;
-    justify-content: center !important;
-    width: 100% !important;
-    gap: 6px !important;
-  }
-
-  .preview-device .views-container {
-    display: flex !important;
-    background: var(--views-container-bg) !important;
-    padding: 4px !important;
-    border-radius: 10px !important;
-    border: 1px solid var(--panel-border) !important;
-    overflow-x: auto !important;
-    white-space: nowrap !important;
-    max-width: 100% !important;
-    flex-wrap: nowrap !important;
-    gap: 4px !important;
-    -webkit-overflow-scrolling: touch !important;
-    scrollbar-width: none !important;
-  }
-
-  .preview-device .views-container::-webkit-scrollbar {
     display: none !important;
   }
 
-  .preview-device .view-tab {
-    flex: 0 0 auto !important;
-    font-size: 0.75rem !important;
-    padding: 6px 10px !important;
-    gap: 4px !important;
-    border-radius: 6px !important;
+  /* Show mock mobile header */
+  .mock-mobile-header {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--panel-border);
+    padding-bottom: 10px;
+    margin-bottom: 4px;
+    width: 100%;
+    box-sizing: border-box;
   }
-  
-  .preview-device .view-tab svg {
-    width: 14px !important;
-    height: 14px !important;
+
+  .mock-brand-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
-  
+
+  .mock-hamburger-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.2s;
+  }
+
+  .mock-hamburger-btn:hover {
+    background: var(--landing-inner-bg-hover);
+  }
+
+  .mock-brand-logo-content {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .mock-logo-icon {
+    font-size: 1.15rem;
+  }
+
+  .mock-app-title {
+    font-family: var(--font-title);
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: var(--text-main);
+    letter-spacing: -0.3px;
+  }
+
+  .mock-mobile-widgets {
+    display: flex;
+    gap: 6px;
+  }
+
+  /* Show Mock Mobile Drawer and Overlay */
+  .mock-drawer-overlay {
+    display: block !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: 99;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .mock-drawer-overlay.open {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  .mock-sidebar-drawer {
+    display: flex !important;
+    position: absolute;
+    top: 0;
+    left: -250px; /* Hidden by default */
+    width: 250px;
+    height: 100%;
+    background: var(--panel-bg);
+    background-image: var(--bg-gradient);
+    border-right: 1px solid var(--panel-border);
+    z-index: 100;
+    flex-direction: column;
+    padding: 16px;
+    box-sizing: border-box;
+    transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .mock-sidebar-drawer.open {
+    left: 0 !important;
+  }
+
+  .mock-drawer-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-title);
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--text-main);
+  }
+
+  .mock-close-drawer-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    font-size: 1.25rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+
+  .mock-close-drawer-btn:hover {
+    opacity: 1;
+  }
+
+  .mock-drawer-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mock-drawer-tab {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+  }
+
+  [data-theme="light"] .mock-drawer-tab {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.06);
+    color: var(--text-muted);
+  }
+
+  .mock-drawer-tab svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+  }
+
+  .mock-drawer-tab:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: var(--text-main);
+  }
+
+  [data-theme="light"] .mock-drawer-tab:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: var(--text-main);
+  }
+
+  .mock-drawer-tab.active {
+    background: linear-gradient(135deg, var(--color-primary-glow) 0%, var(--color-secondary-glow) 100%);
+    border-color: var(--color-primary);
+    color: var(--text-main);
+  }
+
   .mock-content-view {
     padding: 12px !important;
   }
