@@ -3662,28 +3662,46 @@ body {
 .mock-cal-lvl-5 { background: rgba(59, 130, 246, 0.85) !important; color: #fff !important; }
 
 /* Premium Hover Effect for Showcase View Switcher Tabs (Desktop) */
-.preview-device .view-tab {
+.preview-device .mock-tab {
   position: relative;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   border-radius: 10px;
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.65rem;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.preview-device .view-tab:hover {
+.preview-device .mock-tab svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.preview-device .mock-tab:hover {
   color: var(--text-main) !important;
   background: var(--landing-inner-bg-hover) !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
 }
 
-.preview-device .view-tab.active {
+.preview-device .mock-tab.active {
   background: var(--panel-bg) !important;
   color: var(--color-primary) !important;
   box-shadow: var(--shadow-sm) !important;
   transform: none !important;
 }
 
-.preview-device .view-tab:active {
+.preview-device .mock-tab:active {
   transform: scale(0.96);
 }
 
