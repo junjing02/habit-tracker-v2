@@ -47,8 +47,8 @@ class HabitDatabase {
         if (user) {
           this.syncWithCloud();
         } else {
-          // Logged out: reload from local storage only
-          this.loadFromStorage();
+          // Logged out: clear user data and reset to defaults
+          this.clearLocalUserData();
           if (window.app && typeof window.app.renderAll === 'function') {
             window.app.renderAll();
           }
@@ -91,6 +91,30 @@ class HabitDatabase {
     } catch (e) {
       console.error("Error loading Habit database", e);
     }
+  }
+
+  clearLocalUserData() {
+    this.guestSandboxMode = false;
+    this.sandboxInitialized = false;
+
+    localStorage.removeItem(DB_KEYS.HABITS);
+    localStorage.removeItem(DB_KEYS.HISTORY);
+    localStorage.removeItem(DB_KEYS.PROFILE);
+
+    this.habits = [...PRESET_HABITS];
+    this.history = {};
+    this.profile = {
+      currentStreak: 0,
+      longestStreak: 0,
+      soundEnabled: false,
+      theme: 'cyberpunk',
+      lastActiveDate: '',
+      habitStreaks: {}
+    };
+
+    this.saveHabits();
+    this.saveHistory();
+    this.saveProfile();
   }
 
   initSandboxMode() {
@@ -185,13 +209,55 @@ class HabitDatabase {
         console.log("Cloud is empty. Uploading local data...");
         this.notifySyncStatus("Uploading data...");
         await this.uploadLocalDataToCloud(userId);
+        
+        // Mark all local habits as synced
+        this.habits.forEach(h => {
+          h.synced = true;
+        });
+        this.saveHabits();
       } else {
         // Cloud has data: merge local data that is missing in cloud
         console.log("Merging local data with cloud data...");
         
         // 1. Merge habits
         const cloudHabitsMap = new Map(cloudHabits.map(h => [h.id, h]));
-        const missingLocalHabits = this.habits.filter(h => !cloudHabitsMap.has(h.id));
+        const missingLocalHabits = [];
+        const habitsToDeleteLocally = [];
+
+        this.habits.forEach(h => {
+          if (!cloudHabitsMap.has(h.id)) {
+            // Unsynced presets or guest sandbox habits should not be uploaded/merged
+            // if the cloud already has habits. They should just be ignored.
+            const isPresetOrGuest = h.id.startsWith('h-preset-') || h.id.startsWith('h-guest-');
+            
+            if (isPresetOrGuest) {
+              // Ignore preset/guest habits
+            } else if (h.synced === true) {
+              // This custom habit was previously synced, but is now missing from the cloud.
+              // This means it was deleted on another device.
+              habitsToDeleteLocally.push(h.id);
+            } else {
+              // This custom habit was created offline and has never been synced.
+              missingLocalHabits.push(h);
+            }
+          }
+        });
+
+        // Delete habits locally that were deleted on another device
+        if (habitsToDeleteLocally.length > 0) {
+          console.log(`Deleting ${habitsToDeleteLocally.length} habits locally that were deleted from cloud...`);
+          const toDeleteSet = new Set(habitsToDeleteLocally);
+          this.habits = this.habits.filter(h => !toDeleteSet.has(h.id));
+          
+          // Also clean up history for these habits
+          for (const date in this.history) {
+            toDeleteSet.forEach(id => {
+              if (this.history[date][id] !== undefined) {
+                delete this.history[date][id];
+              }
+            });
+          }
+        }
         
         if (missingLocalHabits.length > 0) {
           console.log(`Uploading ${missingLocalHabits.length} missing local habits to cloud...`);
@@ -221,13 +287,14 @@ class HabitDatabase {
           }
         }
 
-        // Save merged habits to local storage
+        // Save merged habits to local storage, setting synced = true
         this.habits = cloudHabits.map(h => ({
           id: h.id,
           name: h.name,
           emoji: h.emoji,
           createdAt: Number(h.created_at),
-          active: h.active
+          active: h.active,
+          synced: true
         }));
         this.saveHabits();
 
@@ -275,11 +342,15 @@ class HabitDatabase {
         this.history = {};
         cloudHistory.forEach(item => {
           const dateStr = item.date;
-          if (!this.history[dateStr]) this.history[dateStr] = {};
-          this.history[dateStr][item.habit_id] = {
-            completed: item.completed,
-            remark: item.remark || ''
-          };
+          // Only map history if the habit exists locally (not deleted)
+          const habitExists = this.habits.some(h => h.id === item.habit_id);
+          if (habitExists) {
+            if (!this.history[dateStr]) this.history[dateStr] = {};
+            this.history[dateStr][item.habit_id] = {
+              completed: item.completed,
+              remark: item.remark || ''
+            };
+          }
         });
         this.saveHistory();
 
@@ -442,7 +513,12 @@ class HabitDatabase {
         created_at: newHabit.createdAt,
         active: newHabit.active
       }).then(({ error }) => {
-        if (error) console.error("Cloud insert habit failed", error);
+        if (error) {
+          console.error("Cloud insert habit failed", error);
+        } else {
+          newHabit.synced = true;
+          this.saveHabits();
+        }
       });
     }
 
