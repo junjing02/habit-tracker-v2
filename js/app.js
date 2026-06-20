@@ -1321,33 +1321,21 @@ class AppController {
 
       groups.forEach((group, groupIdx) => {
         const rank = groupIdx + 1;
-        let rankBadgeClass = 'badge-other';
         let rankBadgeContent = `${rank}`;
-        let rankGroupClass = 'rank-other';
 
-        if (rank === 1) {
-          rankBadgeClass = 'badge-1';
-          rankBadgeContent = '🥇';
-          rankGroupClass = 'rank-1';
-        } else if (rank === 2) {
-          rankBadgeClass = 'badge-2';
-          rankBadgeContent = '🥈';
-          rankGroupClass = 'rank-2';
-        } else if (rank === 3) {
-          rankBadgeClass = 'badge-3';
-          rankBadgeContent = '🥉';
-          rankGroupClass = 'rank-3';
-        }
+        if (rank === 1) rankBadgeContent = '🥇';
+        else if (rank === 2) rankBadgeContent = '🥈';
+        else if (rank === 3) rankBadgeContent = '🥉';
 
         listHtml += `
-          <div class="rank-group ${rankGroupClass}">
+          <div class="rank-group">
             <div class="rank-group-header">
               <div class="rank-title-wrapper">
-                <span class="rank-badge ${rankBadgeClass}">${rankBadgeContent}</span>
+                <span class="rank-medal">${rankBadgeContent}</span>
                 <span>Rank ${rank}</span>
               </div>
               <div class="streak-badge">
-                <span class="streak-flame">🔥</span> ${group.streak} Day${group.streak === 1 ? '' : 's'}
+                <span>🔥</span> ${group.streak} Day${group.streak === 1 ? '' : 's'}
               </div>
             </div>
             <div class="rank-group-items">
@@ -1356,7 +1344,7 @@ class AppController {
         group.habits.forEach(habit => {
           listHtml += `
             <div class="rank-habit-item">
-              <span class="rank-habit-emoji-wrapper">${habit.emoji}</span>
+              <span class="rank-habit-emoji">${habit.emoji}</span>
               <span class="rank-habit-name">${habit.name}</span>
             </div>
           `;
