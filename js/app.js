@@ -1317,35 +1317,47 @@ class AppController {
         currentGroup.habits.push(habit);
       });
 
-      let listHtml = `<div class="rankings-container" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">`;
+      let listHtml = `<div class="rankings-container">`;
 
       groups.forEach((group, groupIdx) => {
         const rank = groupIdx + 1;
-        let rankBadge = `${rank}`;
-        if (rank === 1) rankBadge = '🥇';
-        else if (rank === 2) rankBadge = '🥈';
-        else if (rank === 3) rankBadge = '🥉';
+        let rankBadgeClass = 'badge-other';
+        let rankBadgeContent = `${rank}`;
+        let rankGroupClass = 'rank-other';
+
+        if (rank === 1) {
+          rankBadgeClass = 'badge-1';
+          rankBadgeContent = '🥇';
+          rankGroupClass = 'rank-1';
+        } else if (rank === 2) {
+          rankBadgeClass = 'badge-2';
+          rankBadgeContent = '🥈';
+          rankGroupClass = 'rank-2';
+        } else if (rank === 3) {
+          rankBadgeClass = 'badge-3';
+          rankBadgeContent = '🥉';
+          rankGroupClass = 'rank-3';
+        }
 
         listHtml += `
-          <div class="rank-group" style="background: var(--overlay-bg-container); border: 1px solid var(--panel-border); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm);">
-            <div class="rank-group-header" style="background: var(--overlay-bg-th); padding: 8px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--panel-border);">
-              <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 0.9rem; color: var(--text-main);">
-                <span style="font-size: 1.25rem;">${rankBadge}</span>
+          <div class="rank-group ${rankGroupClass}">
+            <div class="rank-group-header">
+              <div class="rank-title-wrapper">
+                <span class="rank-badge ${rankBadgeClass}">${rankBadgeContent}</span>
                 <span>Rank ${rank}</span>
               </div>
-              <div style="font-weight: 800; color: var(--color-primary); font-family: var(--font-title); font-size: 0.9rem; display: flex; align-items: center; gap: 4px;">
-                🔥 ${group.streak} Day${group.streak === 1 ? '' : 's'}
+              <div class="streak-badge">
+                <span class="streak-flame">🔥</span> ${group.streak} Day${group.streak === 1 ? '' : 's'}
               </div>
             </div>
-            <div class="rank-group-items" style="display: flex; flex-direction: column; padding: 4px 0;">
+            <div class="rank-group-items">
         `;
 
-        group.habits.forEach((habit, idx) => {
-          const itemBorder = idx < group.habits.length - 1 ? `border-bottom: 1px solid rgba(128, 128, 128, 0.08);` : '';
+        group.habits.forEach(habit => {
           listHtml += `
-            <div class="rank-habit-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 14px; font-size: 0.9rem; ${itemBorder}">
-              <span style="font-size: 1.25rem; min-width: 24px; text-align: center; display: inline-flex; align-items: center; justify-content: center;">${habit.emoji}</span>
-              <span style="font-weight: 600; color: var(--text-main);">${habit.name}</span>
+            <div class="rank-habit-item">
+              <span class="rank-habit-emoji-wrapper">${habit.emoji}</span>
+              <span class="rank-habit-name">${habit.name}</span>
             </div>
           `;
         });
@@ -1890,6 +1902,12 @@ class AppController {
     const authSectionTitle = document.getElementById('auth-section-title');
     const authUserSection = document.getElementById('auth-user-section');
 
+    const btnEditUsername = document.getElementById('btn-edit-username');
+    const btnCancelEditUsername = document.getElementById('btn-cancel-edit-username');
+    const usernameDisplayWrapper = document.getElementById('username-display-wrapper');
+    const usernameEditWrapper = document.getElementById('username-edit-wrapper');
+    const currentUsernameVal = document.getElementById('current-username-val');
+
     // Hide connection settings if defaults are hardcoded in code
     const configSection = document.getElementById('auth-config-section');
     if (configSection && window.supabaseMgr && window.supabaseMgr.defaultUrl && window.supabaseMgr.defaultAnonKey) {
@@ -1970,11 +1988,16 @@ class AppController {
         loggedInProfile.style.display = 'flex';
         
         // Show username or email in profile section
-        const displayName = (user.user_metadata && user.user_metadata.username) ? user.user_metadata.username : user.email;
-        loggedInEmail.textContent = displayName;
-        if (usernameUpdateInput) {
-          usernameUpdateInput.value = (user.user_metadata && user.user_metadata.username) ? user.user_metadata.username : '';
+        const usernameStr = (user.user_metadata && user.user_metadata.username) ? user.user_metadata.username : (user.email ? user.email.split('@')[0] : 'User');
+        if (currentUsernameVal) {
+          currentUsernameVal.textContent = usernameStr;
         }
+        loggedInEmail.textContent = user.email || usernameStr;
+        if (usernameUpdateInput) {
+          usernameUpdateInput.value = usernameStr;
+        }
+        if (usernameDisplayWrapper) usernameDisplayWrapper.style.display = 'flex';
+        if (usernameEditWrapper) usernameEditWrapper.style.display = 'none';
         
         window.db.notifySyncStatus('Connected');
         
@@ -2300,6 +2323,30 @@ class AppController {
       });
     }
 
+    // Show username edit wrapper
+    if (btnEditUsername) {
+      btnEditUsername.addEventListener('click', () => {
+        if (usernameDisplayWrapper) usernameDisplayWrapper.style.display = 'none';
+        if (usernameEditWrapper) usernameEditWrapper.style.display = 'flex';
+        if (usernameUpdateInput) {
+          usernameUpdateInput.focus();
+          usernameUpdateInput.select();
+        }
+      });
+    }
+
+    // Cancel username editing
+    if (btnCancelEditUsername) {
+      btnCancelEditUsername.addEventListener('click', () => {
+        if (usernameDisplayWrapper) usernameDisplayWrapper.style.display = 'flex';
+        if (usernameEditWrapper) usernameEditWrapper.style.display = 'none';
+        if (usernameUpdateInput && currentUsernameVal) {
+          usernameUpdateInput.value = currentUsernameVal.textContent;
+        }
+        if (authStatusMessage) authStatusMessage.textContent = '';
+      });
+    }
+
     // Update Username
     if (btnUpdateUsername && usernameUpdateInput) {
       btnUpdateUsername.addEventListener('click', async () => {
@@ -2318,6 +2365,12 @@ class AppController {
           authStatusMessage.textContent = '✅ Username updated successfully!';
           authStatusMessage.style.color = 'var(--color-primary)';
           
+          if (currentUsernameVal) {
+            currentUsernameVal.textContent = newUsername;
+          }
+          if (usernameDisplayWrapper) usernameDisplayWrapper.style.display = 'flex';
+          if (usernameEditWrapper) usernameEditWrapper.style.display = 'none';
+
           // Re-render user pill in header
           window.db.notifySyncStatus('Connected');
         } catch (err) {
