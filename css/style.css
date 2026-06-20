@@ -1274,7 +1274,7 @@ body {
   height: 20px;
 }
 
-/* Redesigned Habit Manager Card list */
+/* Redesigned Habit Manager Card list - Compact Version */
 .habit-manager-list {
   margin-top: 8px;
   flex-grow: 1;
@@ -1282,7 +1282,7 @@ body {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
   padding: 2px;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
@@ -1303,8 +1303,8 @@ body {
   justify-content: space-between;
   background: var(--overlay-bg-container);
   border: 1px solid var(--panel-border);
-  padding: 12px 16px;
-  border-radius: 12px;
+  padding: 6px 12px;
+  border-radius: 8px;
   transition: transform 0.2s, border-color 0.2s, background-color 0.2s;
   gap: 12px;
   box-sizing: border-box;
@@ -1319,38 +1319,38 @@ body {
 .habit-manager-card-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .habit-manager-card-emoji {
-  width: 36px;
-  height: 36px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.05);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
+  font-size: 1.05rem;
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .habit-manager-card-name {
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: var(--text-main);
 }
 
 .habit-manager-card-actions {
   display: flex;
-  gap: 10px;
+  gap: 6px;
 }
 
 .card-action-btn {
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 8px;
-  border-radius: 8px;
+  padding: 6px;
+  border-radius: 6px;
   color: var(--text-muted);
   display: flex;
   align-items: center;
@@ -1371,8 +1371,8 @@ body {
 }
 
 .action-icon {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
 }
 
 .modal-body {
