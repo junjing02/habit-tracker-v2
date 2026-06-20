@@ -1299,57 +1299,65 @@ class AppController {
     if (activeHabits.length === 0) {
       statsList.innerHTML = `<span style="color: var(--text-muted); font-size: 0.85rem; text-align: center; display: block; padding: 20px;">No habit streaks to display.</span>`;
     } else {
-      let tableHtml = `
-        <table class="consistency-table">
-          <thead>
-            <tr>
-              <th style="width: 60px; text-align: center;">Rank</th>
-              <th>Habit</th>
-              <th style="width: 90px; text-align: right;">Streak</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
+      // Group habits by their streak value
+      const groups = [];
+      let currentGroup = null;
 
-      let currentRank = 1;
-      let lastStreak = -1;
-
-      activeHabits.forEach((habit, index) => {
+      activeHabits.forEach(habit => {
         const streaks = window.db.profile.habitStreaks[habit.id] || { current: 0 };
         const currentStreakVal = streaks.current;
 
-        if (index > 0 && currentStreakVal < lastStreak) {
-          currentRank++;
+        if (!currentGroup || currentGroup.streak !== currentStreakVal) {
+          currentGroup = {
+            streak: currentStreakVal,
+            habits: []
+          };
+          groups.push(currentGroup);
         }
-        lastStreak = currentStreakVal;
-        const rank = currentRank;
-        
+        currentGroup.habits.push(habit);
+      });
+
+      let listHtml = `<div class="rankings-container" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">`;
+
+      groups.forEach((group, groupIdx) => {
+        const rank = groupIdx + 1;
         let rankBadge = `${rank}`;
         if (rank === 1) rankBadge = '🥇';
         else if (rank === 2) rankBadge = '🥈';
         else if (rank === 3) rankBadge = '🥉';
 
-        tableHtml += `
-          <tr>
-            <td class="text-center" style="font-weight: 800; font-size: 1rem; color: var(--color-primary); text-align: center;">${rankBadge}</td>
-            <td>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 1.25rem;">${habit.emoji}</span>
-                <span style="font-weight: 700; color: var(--text-main);">${habit.name}</span>
+        listHtml += `
+          <div class="rank-group" style="background: var(--overlay-bg-container); border: 1px solid var(--panel-border); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm);">
+            <div class="rank-group-header" style="background: var(--overlay-bg-th); padding: 8px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--panel-border);">
+              <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 0.9rem; color: var(--text-main);">
+                <span style="font-size: 1.25rem;">${rankBadge}</span>
+                <span>Rank ${rank}</span>
               </div>
-            </td>
-            <td style="text-align: right; font-weight: 800; color: var(--color-primary); font-family: var(--font-title); font-size: 1rem;">
-              🔥 ${streaks.current}
-            </td>
-          </tr>
+              <div style="font-weight: 800; color: var(--color-primary); font-family: var(--font-title); font-size: 0.9rem; display: flex; align-items: center; gap: 4px;">
+                🔥 ${group.streak} Day${group.streak === 1 ? '' : 's'}
+              </div>
+            </div>
+            <div class="rank-group-items" style="display: flex; flex-direction: column; padding: 4px 0;">
+        `;
+
+        group.habits.forEach((habit, idx) => {
+          const itemBorder = idx < group.habits.length - 1 ? `border-bottom: 1px solid rgba(128, 128, 128, 0.08);` : '';
+          listHtml += `
+            <div class="rank-habit-item" style="display: flex; align-items: center; gap: 10px; padding: 8px 14px; font-size: 0.9rem; ${itemBorder}">
+              <span style="font-size: 1.25rem; min-width: 24px; text-align: center; display: inline-flex; align-items: center; justify-content: center;">${habit.emoji}</span>
+              <span style="font-weight: 600; color: var(--text-main);">${habit.name}</span>
+            </div>
+          `;
+        });
+
+        listHtml += `
+            </div>
+          </div>
         `;
       });
 
-      tableHtml += `
-          </tbody>
-        </table>
-      `;
-      statsList.innerHTML = tableHtml;
+      listHtml += `</div>`;
+      statsList.innerHTML = listHtml;
     }
 
     this.renderActivityLineChart();
