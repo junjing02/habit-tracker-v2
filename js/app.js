@@ -1319,7 +1319,7 @@ class AppController {
         const currentStreakVal = streaks.current;
 
         if (index > 0 && currentStreakVal < lastStreak) {
-          currentRank = index + 1;
+          currentRank++;
         }
         lastStreak = currentStreakVal;
         const rank = currentRank;
