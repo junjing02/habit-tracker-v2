@@ -812,7 +812,7 @@ class AppController {
           <h4 class="empty-state-title">No Habits Tracked For This Date</h4>
           <p class="empty-state-desc">Configure habits on the Dashboard tab to start tracking.</p>
           <button class="btn-primary" id="btn-add-habit-today">
-            <span>⚙️</span> Habit settings
+            <span>⚙️</span> Settings
           </button>
         </div>
       `;
@@ -973,7 +973,7 @@ class AppController {
       tbodyHtml = `
         <tr>
           <td colspan="9" class="text-center" style="padding: 40px; color: var(--text-muted);">
-            No habits tracked. Click "Habit settings" below.
+            No habits tracked. Click "Settings" below.
           </td>
         </tr>
       `;

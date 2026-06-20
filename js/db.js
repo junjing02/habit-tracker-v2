@@ -216,17 +216,17 @@ class HabitDatabase {
       if (profileErr) throw profileErr;
 
       // Merging Logic:
-      // If cloud is completely empty, upload local data as first sync!
+      // If cloud is completely empty, this is a new user account.
+      // We initialize them with an empty habits list by default.
       if (!cloudHabits || cloudHabits.length === 0) {
-        console.log("Cloud is empty. Uploading local data...");
-        this.notifySyncStatus("Uploading data...");
-        await this.uploadLocalDataToCloud(userId);
-        
-        // Mark all local habits as synced
-        this.habits.forEach(h => {
-          h.synced = true;
-        });
+        console.log("Cloud is empty. Initializing new user account with clean slate...");
+        this.habits = [];
+        this.history = {};
         this.saveHabits();
+        this.saveHistory();
+        
+        this.notifySyncStatus("Initializing...");
+        await this.uploadLocalDataToCloud(userId);
       } else {
         // Cloud has data: merge local data that is missing in cloud
         console.log("Merging local data with cloud data...");
