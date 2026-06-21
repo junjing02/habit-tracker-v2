@@ -52,13 +52,18 @@ class HabitDatabase {
     if (window.supabaseMgr) {
       window.supabaseMgr.onAuthStateChange((user, event) => {
         if (user) {
+          // Load this specific user's scoped local data first to prevent flash of previous user data
+          this.loadFromStorage();
           this.syncWithCloud();
         } else {
-          // Only clear local user data if it's an explicit sign out event
+          // Reset database memory states first to prevent session data leaks
+          this.guestSandboxMode = false;
+          this.sandboxInitialized = false;
+          
           if (event === 'SIGNED_OUT') {
             this.clearLocalUserData();
           } else {
-            // Otherwise, load whatever we have in local storage
+            // Otherwise, load whatever we have in local storage (sandbox/guest keys)
             this.loadFromStorage();
           }
           if (window.app && typeof window.app.renderAll === 'function') {
@@ -69,6 +74,22 @@ class HabitDatabase {
     }
   }
 
+  // Resolves the storage keys dynamically, scoping them by User ID if authenticated
+  getStorageKeys() {
+    let userId = null;
+    if (window.supabaseMgr && window.supabaseMgr.currentUser) {
+      userId = window.supabaseMgr.currentUser.id;
+    }
+    if (userId) {
+      return {
+        HABITS: `${DB_KEYS.HABITS}_${userId}`,
+        HISTORY: `${DB_KEYS.HISTORY}_${userId}`,
+        PROFILE: `${DB_KEYS.PROFILE}_${userId}`
+      };
+    }
+    return DB_KEYS;
+  }
+
   loadFromStorage() {
     // If in sandbox mode, do not reload from storage, load sandbox habits instead
     if (this.guestSandboxMode) {
@@ -76,9 +97,10 @@ class HabitDatabase {
       return;
     }
 
+    const keys = this.getStorageKeys();
     try {
       // 1. Habits
-      const savedHabits = localStorage.getItem(DB_KEYS.HABITS);
+      const savedHabits = localStorage.getItem(keys.HABITS);
       if (savedHabits) {
         this.habits = JSON.parse(savedHabits);
       } else {
@@ -87,11 +109,11 @@ class HabitDatabase {
       }
 
       // 2. History
-      const savedHistory = localStorage.getItem(DB_KEYS.HISTORY);
+      const savedHistory = localStorage.getItem(keys.HISTORY);
       this.history = savedHistory ? JSON.parse(savedHistory) : {};
 
       // 3. Profile
-      const savedProfile = localStorage.getItem(DB_KEYS.PROFILE);
+      const savedProfile = localStorage.getItem(keys.PROFILE);
       if (savedProfile) {
         this.profile = { ...this.profile, ...JSON.parse(savedProfile) };
       } else {
@@ -109,9 +131,10 @@ class HabitDatabase {
     this.guestSandboxMode = false;
     this.sandboxInitialized = false;
 
-    localStorage.removeItem(DB_KEYS.HABITS);
-    localStorage.removeItem(DB_KEYS.HISTORY);
-    localStorage.removeItem(DB_KEYS.PROFILE);
+    const keys = this.getStorageKeys();
+    localStorage.removeItem(keys.HABITS);
+    localStorage.removeItem(keys.HISTORY);
+    localStorage.removeItem(keys.PROFILE);
 
     this.habits = [...PRESET_HABITS];
     this.history = {};
@@ -152,17 +175,20 @@ class HabitDatabase {
 
   saveHabits() {
     if (this.guestSandboxMode) return;
-    localStorage.setItem(DB_KEYS.HABITS, JSON.stringify(this.habits));
+    const keys = this.getStorageKeys();
+    localStorage.setItem(keys.HABITS, JSON.stringify(this.habits));
   }
 
   saveHistory() {
     if (this.guestSandboxMode) return;
-    localStorage.setItem(DB_KEYS.HISTORY, JSON.stringify(this.history));
+    const keys = this.getStorageKeys();
+    localStorage.setItem(keys.HISTORY, JSON.stringify(this.history));
   }
 
   saveProfile() {
     if (this.guestSandboxMode) return;
-    localStorage.setItem(DB_KEYS.PROFILE, JSON.stringify(this.profile));
+    const keys = this.getStorageKeys();
+    localStorage.setItem(keys.PROFILE, JSON.stringify(this.profile));
     
     if (window.supabaseMgr && window.supabaseMgr.isAuthenticated()) {
       window.supabaseMgr.client.from('profiles').upsert({
@@ -917,9 +943,10 @@ class HabitDatabase {
   // Reset database
   resetAllData() {
     if (this.guestSandboxMode) return;
-    localStorage.removeItem(DB_KEYS.HABITS);
-    localStorage.removeItem(DB_KEYS.HISTORY);
-    localStorage.removeItem(DB_KEYS.PROFILE);
+    const keys = this.getStorageKeys();
+    localStorage.removeItem(keys.HABITS);
+    localStorage.removeItem(keys.HISTORY);
+    localStorage.removeItem(keys.PROFILE);
 
     this.habits = [...PRESET_HABITS];
     this.history = {};
