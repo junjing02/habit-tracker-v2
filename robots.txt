@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://junjing02.github.io/habit-tracker-v2/sitemap.xml
