@@ -22,23 +22,14 @@ A client-side routine tracker and streak manager built with vanilla web technolo
 - **Backend & Database:** Supabase (Auth, Cloud Database Sync)
 - **Offline Storage:** LocalStorage API
 
-## Performance & Architecture Highlights
+## Technical Architecture & Metrics
 
-- ⚡ **Sub-100ms Initial Load:** The entire frontend is under 50KB transfer size. It loads, parses, and becomes interactive instantly.
-- 🛠️ **Zero Build Pipeline:** Standard ES6 JavaScript runs natively in the browser. Zero npm dependencies (`node_modules`) means zero vulnerability risks, zero compile steps, and perpetual compatibility.
-- 🔊 **Synthesized Web Audio:** Leverages the native **Web Audio API** to programmatically generate and play chimes on check/uncheck actions, saving bandwidth and asset storage.
-- ☁️ **Edge-Ready Scalability:** Renders fully client-side. The static architecture allows it to be hosted on free CDNs (like GitHub Pages) and scale to millions of users at virtually zero cost.
-- 📴 **Offline-First Resilience:** Works completely offline using local caching via the `LocalStorage API`, then auto-syncs with Supabase when online.
-
-## Technical & Performance Metrics
-
-- 📦 **Bundle Budget:** **< 50 KB** compressed payload for all client assets.
-- 🔊 **Audio Assets Payload:** **0 KB** (audio synthesized dynamically, saving substantial assets load).
-- ⚡ **Time to Interactive (TTI):** **< 100ms** on mobile and desktop platforms.
-- 🚦 **PageSpeed Insights:** **100/100** Core Web Vitals score.
-- 🛡️ **Third-Party Dependencies:** **0** production npm modules (vulnerability-free).
-- 💾 **Runtime Memory Footprint:** **< 15 MB** active JS heap usage.
-- ☁️ **Infrastructure Cost:** **$0.00 / month** static runtime hosting.
+- 🛠️ **Zero-Dependency Engine:** Standard ES6 JavaScript runs natively in the browser with **0 production npm dependencies** (`node_modules`), eliminating vulnerability risks and build pipeline drift.
+- ⚡ **Sub-100ms Load Speed:** Compressed client bundle size is **< 50 KB** (HTML/CSS/JS combined), achieving a perfect **100/100** Core Web Vitals score on PageSpeed Insights.
+- 🔊 **Synthesized Web Audio:** Programmatically compiles and plays chime chimes in-memory via the native **Web Audio API**, resulting in **0 KB of audio asset overhead** (no heavy `.mp3`/`.wav` loads).
+- 📴 **Offline-First Resilience:** Combines local caching via the **LocalStorage API** with cloud sync. The application remains fully functional offline and auto-synchronizes with **Supabase** when online.
+- ☁️ **Edge-Ready Scalability:** Serverless client-side rendering with an infrastructure cost of **$0.00 / month**, scaling to millions of users on free CDNs (like GitHub Pages).
+- 💾 **Minimal Memory Footprint:** Extremely lightweight runtime consuming **< 15 MB** of active JavaScript heap space.
 
 ## Getting Started
 
