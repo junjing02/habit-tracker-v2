@@ -1773,7 +1773,8 @@ class AppController {
   }
 
   calculateWeeklyCompletionRate() {
-    if (window.supabaseMgr && !window.supabaseMgr.isAuthenticated()) {
+    const isAuthenticated = (window.supabaseMgr && window.supabaseMgr.isAuthenticated()) || this.guestSandboxMode;
+    if (!isAuthenticated) {
       return 0;
     }
     let ratesSum = 0;
