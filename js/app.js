@@ -1725,8 +1725,13 @@ class AppController {
         <circle cx="78" cy="102" r="8" fill="${leafFills[0]}" class="tree-leaf" />
         <circle cx="124" cy="86" r="8" fill="${leafFills[1]}" class="tree-leaf" />
         <circle cx="90" cy="78" r="8" fill="${leafFills[2]}" class="tree-leaf" />
+        
+        <circle cx="66" cy="102" r="8.5" fill="${leafFills[3]}" class="tree-leaf" />
+        <circle cx="132" cy="94" r="8.5" fill="${leafFills[4]}" class="tree-leaf" />
+        <circle cx="85" cy="72" r="8" fill="${leafFills[0]}" class="tree-leaf" />
+        <circle cx="110" cy="72" r="8" fill="${leafFills[1]}" class="tree-leaf" />
+        <circle cx="96" cy="56" r="8.5" fill="${leafFills[2]}" class="tree-leaf" />
       `;
-    } else if (stage === 4) {
     } else if (stage === 4) {
       plantContent = `
         <path d="M 100 170 Q 97 115 103 60" class="trunk-branch" stroke-width="7.5" />
@@ -1752,6 +1757,15 @@ class AppController {
         <circle cx="122" cy="60" r="8.5" fill="${leafFills[0]}" class="tree-leaf" />
         <circle cx="110" cy="42" r="8" fill="${leafFills[1]}" class="tree-leaf" />
         
+        <circle cx="58" cy="98" r="9" fill="${leafFills[2]}" class="tree-leaf" />
+        <circle cx="142" cy="98" r="9" fill="${leafFills[3]}" class="tree-leaf" />
+        <circle cx="54" cy="76" r="9.5" fill="${leafFills[4]}" class="tree-leaf" />
+        <circle cx="148" cy="80" r="9.5" fill="${leafFills[0]}" class="tree-leaf" />
+        <circle cx="60" cy="60" r="9" fill="${leafFills[1]}" class="tree-leaf" />
+        <circle cx="130" cy="60" r="9" fill="${leafFills[2]}" class="tree-leaf" />
+        <circle cx="82" cy="48" r="9" fill="${leafFills[3]}" class="tree-leaf" />
+        <circle cx="115" cy="45" r="9" fill="${leafFills[4]}" class="tree-leaf" />
+        
         <g class="tree-flower" transform="translate(55,100) scale(0.9)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
         <g class="tree-flower" transform="translate(142,98) scale(0.8)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
         <g class="tree-flower" transform="translate(58,62) scale(0.9)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
@@ -1759,6 +1773,9 @@ class AppController {
         <g class="tree-flower" transform="translate(98,48) scale(1.0)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
         <g class="tree-flower" transform="translate(74,42) scale(0.8)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
         <g class="tree-flower" transform="translate(130,38) scale(0.8)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <g class="tree-flower" transform="translate(84,52) scale(0.8)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <g class="tree-flower" transform="translate(112,50) scale(0.8)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <g class="tree-flower" transform="translate(95,75) scale(0.9)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
       `;
     } else {
       // Stage 5: Golden Fruit Tree (Max growth!)
@@ -1791,6 +1808,19 @@ class AppController {
         <circle cx="96" cy="32" r="9" fill="${leafFills[4]}" class="tree-leaf" />
         <circle cx="132" cy="28" r="8.5" fill="${leafFills[0]}" class="tree-leaf" />
         
+        <circle cx="42" cy="98" r="9.5" fill="${leafFills[1]}" class="tree-leaf" />
+        <circle cx="150" cy="95" r="9.5" fill="${leafFills[2]}" class="tree-leaf" />
+        <circle cx="38" cy="76" r="9.5" fill="${leafFills[3]}" class="tree-leaf" />
+        <circle cx="158" cy="76" r="9.5" fill="${leafFills[4]}" class="tree-leaf" />
+        <circle cx="44" cy="56" r="9" fill="${leafFills[0]}" class="tree-leaf" />
+        <circle cx="150" cy="52" r="9" fill="${leafFills[1]}" class="tree-leaf" />
+        <circle cx="62" cy="50" r="9" fill="${leafFills[2]}" class="tree-leaf" />
+        <circle cx="132" cy="48" r="9" fill="${leafFills[3]}" class="tree-leaf" />
+        <circle cx="70" cy="32" r="8.5" fill="${leafFills[4]}" class="tree-leaf" />
+        <circle cx="128" cy="25" r="8.5" fill="${leafFills[0]}" class="tree-leaf" />
+        <circle cx="96" cy="24" r="9" fill="${leafFills[1]}" class="tree-leaf" />
+        <circle cx="108" cy="22" r="9" fill="${leafFills[2]}" class="tree-leaf" />
+        
         <g class="tree-flower" transform="translate(38,98) scale(0.9)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
         <g class="tree-flower" transform="translate(150,92) scale(0.8)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
         <g class="tree-flower" transform="translate(36,58) scale(0.9)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
@@ -1798,6 +1828,11 @@ class AppController {
         <g class="tree-flower" transform="translate(98,42) scale(1.0)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
         <g class="tree-flower" transform="translate(65,34) scale(0.8)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
         <g class="tree-flower" transform="translate(128,20) scale(0.8)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <g class="tree-flower" transform="translate(52,82) scale(0.8)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <g class="tree-flower" transform="translate(138,72) scale(0.8)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <g class="tree-flower" transform="translate(84,52) scale(0.8)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <g class="tree-flower" transform="translate(114,48) scale(0.8)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <g class="tree-flower" transform="translate(96,70) scale(0.9)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
         
         <circle cx="16" cy="88" r="7" class="tree-fruit-item tree-fruit" />
         <circle cx="176" cy="82" r="7" class="tree-fruit-item tree-fruit" />
@@ -1806,6 +1841,11 @@ class AppController {
         <circle cx="118" cy="98" r="7.5" class="tree-fruit-item tree-fruit" />
         <circle cx="58" cy="48" r="7" class="tree-fruit-item tree-fruit" />
         <circle cx="134" cy="46" r="7" class="tree-fruit-item tree-fruit" />
+        <circle cx="48" cy="108" r="7" class="tree-fruit-item tree-fruit" />
+        <circle cx="142" cy="102" r="7" class="tree-fruit-item tree-fruit" />
+        <circle cx="98" cy="30" r="7.5" class="tree-fruit-item tree-fruit" />
+        <circle cx="78" cy="42" r="7" class="tree-fruit-item tree-fruit" />
+        <circle cx="118" cy="38" r="7" class="tree-fruit-item tree-fruit" />
       `;
     }
 
