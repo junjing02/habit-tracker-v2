@@ -1717,7 +1717,7 @@ body {
 /* Tree Styling Classes */
 .pot-soil { fill: #523a28; }
 .pot-container { fill: #384252; stroke: var(--panel-border); stroke-width: 1; }
-.trunk-branch { stroke: #6e4e37; stroke-width: 6; stroke-linecap: round; fill: none; }
+.trunk-branch { stroke: #6e4e37; stroke-linecap: round; fill: none; }
 .tree-leaf-element { fill: #10b981; }
 .tree-leaf-mind { fill: #06b6d4; }
 .tree-leaf-work { fill: #8b5cf6; }

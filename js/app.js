@@ -1687,78 +1687,121 @@ class AppController {
 
     if (stage === 0) {
       plantContent = `
-        <circle cx="100" cy="164" r="5" class="seed-element" />
+        <circle cx="100" cy="164" r="6" class="seed-element" />
         <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite" />
       `;
     } else if (stage === 1) {
       plantContent = `
-        <path d="M 100 170 Q 98 150 95 135" stroke="#10b981" stroke-width="4" stroke-linecap="round" fill="none" class="tree-branch" />
-        <path d="M 95 135 Q 83 128 88 122 Q 97 130 95 135" fill="${leafFills[0]}" class="tree-leaf" />
-        <path d="M 95 135 Q 107 130 102 124 Q 95 128 95 135" fill="${leafFills[1]}" class="tree-leaf" />
+        <path d="M 100 170 Q 100 150 100 135" stroke="#10b981" stroke-width="4" stroke-linecap="round" fill="none" class="tree-branch" />
+        <path d="M 100 135 Q 85 130 88 120 Q 98 127 100 135" fill="${leafFills[0]}" class="tree-leaf" />
+        <path d="M 100 135 Q 115 130 112 120 Q 102 127 100 135" fill="${leafFills[1]}" class="tree-leaf" />
       `;
     } else if (stage === 2) {
       plantContent = `
-        <path d="M 100 170 Q 98 135 103 115" class="trunk-branch" stroke-width="5" />
-        <path d="M 100 145 Q 88 138 84 130" stroke="#6e4e37" stroke-width="3" stroke-linecap="round" fill="none" class="tree-branch" />
-        <path d="M 101 133 Q 112 128 116 120" stroke="#6e4e37" stroke-width="3" stroke-linecap="round" fill="none" class="tree-branch" />
-        <circle cx="103" cy="115" r="7" fill="${leafFills[0]}" class="tree-leaf" />
-        <circle cx="84" cy="130" r="6" fill="${leafFills[1]}" class="tree-leaf" />
-        <circle cx="116" cy="120" r="6" fill="${leafFills[2]}" class="tree-leaf" />
-        <circle cx="94" cy="138" r="5" fill="${leafFills[3]}" class="tree-leaf" />
+        <path d="M 100 170 Q 100 130 100 105" class="trunk-branch" stroke-width="5" />
+        <path d="M 100 140 Q 80 135 70 128" stroke="#6e4e37" stroke-width="3" stroke-linecap="round" fill="none" class="tree-branch" />
+        <path d="M 100 140 Q 120 135 130 128" stroke="#6e4e37" stroke-width="3" stroke-linecap="round" fill="none" class="tree-branch" />
+        
+        <circle cx="100" cy="95" r="8" fill="${leafFills[0]}" class="tree-leaf" />
+        <circle cx="70" cy="128" r="8" fill="${leafFills[1]}" class="tree-leaf" />
+        <circle cx="130" cy="128" r="8" fill="${leafFills[2]}" class="tree-leaf" />
+        <circle cx="85" cy="112" r="7" fill="${leafFills[3]}" class="tree-leaf" />
+        <circle cx="115" cy="112" r="7" fill="${leafFills[4]}" class="tree-leaf" />
       `;
     } else if (stage === 3) {
       plantContent = `
-        <path d="M 100 170 Q 97 125 103 95" class="trunk-branch" stroke-width="6" />
-        <path d="M 99 140 Q 82 125 78 110" stroke="#6e4e37" stroke-width="4" stroke-linecap="round" fill="none" class="tree-branch" />
-        <path d="M 101 125 Q 118 115 122 100" stroke="#6e4e37" stroke-width="4" stroke-linecap="round" fill="none" class="tree-branch" />
-        <path d="M 102 108 Q 90 98 88 88" stroke="#6e4e37" stroke-width="3" stroke-linecap="round" fill="none" class="tree-branch" />
-        <circle cx="103" cy="95" r="8" fill="${leafFills[0]}" class="tree-leaf" />
-        <circle cx="78" cy="110" r="7" fill="${leafFills[1]}" class="tree-leaf" />
-        <circle cx="122" cy="100" r="7" fill="${leafFills[2]}" class="tree-leaf" />
-        <circle cx="88" cy="88" r="6" fill="${leafFills[3]}" class="tree-leaf" />
-        <circle cx="91" cy="118" r="6" fill="${leafFills[4]}" class="tree-leaf" />
-        <circle cx="111" cy="112" r="6" fill="${leafFills[0]}" class="tree-leaf" />
+        <path d="M 100 170 Q 100 120 100 80" class="trunk-branch" stroke-width="6" />
+        <path d="M 100 130 Q 70 125 55 115" stroke="#6e4e37" stroke-width="4.5" stroke-linecap="round" fill="none" class="tree-branch" />
+        <path d="M 100 130 Q 130 125 145 115" stroke="#6e4e37" stroke-width="4.5" stroke-linecap="round" fill="none" class="tree-branch" />
+        <path d="M 100 105 Q 75 100 60 88" stroke="#6e4e37" stroke-width="3.5" stroke-linecap="round" fill="none" class="tree-branch" />
+        <path d="M 100 105 Q 125 100 140 88" stroke="#6e4e37" stroke-width="3.5" stroke-linecap="round" fill="none" class="tree-branch" />
+        
+        <circle cx="100" cy="65" r="9" fill="${leafFills[0]}" class="tree-leaf" />
+        <circle cx="55" cy="115" r="9" fill="${leafFills[1]}" class="tree-leaf" />
+        <circle cx="145" cy="115" r="9" fill="${leafFills[2]}" class="tree-leaf" />
+        <circle cx="60" cy="88" r="9" fill="${leafFills[3]}" class="tree-leaf" />
+        <circle cx="140" cy="88" r="9" fill="${leafFills[4]}" class="tree-leaf" />
+        
+        <circle cx="78" cy="108" r="8" fill="${leafFills[0]}" class="tree-leaf" />
+        <circle cx="122" cy="108" r="8" fill="${leafFills[1]}" class="tree-leaf" />
+        <circle cx="80" cy="82" r="8" fill="${leafFills[2]}" class="tree-leaf" />
+        <circle cx="120" cy="82" r="8" fill="${leafFills[3]}" class="tree-leaf" />
       `;
     } else if (stage === 4) {
       plantContent = `
-        <path d="M 100 170 Q 97 120 103 85" class="trunk-branch" stroke-width="7" />
-        <path d="M 99 135 Q 75 120 70 100" stroke="#6e4e37" stroke-width="5" stroke-linecap="round" fill="none" class="tree-branch" />
-        <path d="M 101 120 Q 125 110 128 92" stroke="#6e4e37" stroke-width="5" stroke-linecap="round" fill="none" class="tree-branch" />
-        <path d="M 102 98 Q 85 85 82 72" stroke="#6e4e37" stroke-width="4" stroke-linecap="round" fill="none" class="tree-branch" />
-        <path d="M 102 92 Q 115 80 118 68" stroke="#6e4e37" stroke-width="4" stroke-linecap="round" fill="none" class="tree-branch" />
-        <circle cx="103" cy="85" r="9" fill="${leafFills[0]}" class="tree-leaf" />
-        <circle cx="70" cy="100" r="8" fill="${leafFills[1]}" class="tree-leaf" />
-        <circle cx="128" cy="92" r="8" fill="${leafFills[2]}" class="tree-leaf" />
-        <circle cx="82" cy="72" r="8" fill="${leafFills[3]}" class="tree-leaf" />
-        <circle cx="118" cy="68" r="8" fill="${leafFills[4]}" class="tree-leaf" />
+        <path d="M 100 170 Q 100 115 100 60" class="trunk-branch" stroke-width="7.5" />
+        <path d="M 100 125 Q 65 120 45 110" stroke="#6e4e37" stroke-width="5.5" stroke-linecap="round" fill="none" class="tree-branch" />
+        <path d="M 100 125 Q 135 120 155 110" stroke="#6e4e37" stroke-width="5.5" stroke-linecap="round" fill="none" class="tree-branch" />
+        <path d="M 100 95 Q 60 90 40 75" stroke="#6e4e37" stroke-width="4.5" stroke-linecap="round" fill="none" class="tree-branch" />
+        <path d="M 100 95 Q 140 90 160 75" stroke="#6e4e37" stroke-width="4.5" stroke-linecap="round" fill="none" class="tree-branch" />
+        <path d="M 100 75 Q 75 65 60 52" stroke="#6e4e37" stroke-width="3.5" stroke-linecap="round" fill="none" class="tree-branch" />
+        <path d="M 100 75 Q 125 65 140 52" stroke="#6e4e37" stroke-width="3.5" stroke-linecap="round" fill="none" class="tree-branch" />
         
-        <g class="tree-flower" transform="translate(68,96) scale(0.8)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
-        <g class="tree-flower" transform="translate(126,88) scale(0.8)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
-        <g class="tree-flower" transform="translate(98,80) scale(0.9)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
-        <g class="tree-flower" transform="translate(85,68) scale(0.7)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <circle cx="100" cy="42" r="9" fill="${leafFills[0]}" class="tree-leaf" />
+        <circle cx="45" cy="110" r="10" fill="${leafFills[1]}" class="tree-leaf" />
+        <circle cx="155" cy="110" r="10" fill="${leafFills[2]}" class="tree-leaf" />
+        <circle cx="40" cy="75" r="10" fill="${leafFills[3]}" class="tree-leaf" />
+        <circle cx="160" cy="75" r="10" fill="${leafFills[4]}" class="tree-leaf" />
+        <circle cx="60" cy="52" r="9" fill="${leafFills[0]}" class="tree-leaf" />
+        <circle cx="140" cy="52" r="9" fill="${leafFills[1]}" class="tree-leaf" />
+        
+        <circle cx="70" cy="92" r="9" fill="${leafFills[2]}" class="tree-leaf" />
+        <circle cx="130" cy="92" r="9" fill="${leafFills[3]}" class="tree-leaf" />
+        <circle cx="80" cy="62" r="8" fill="${leafFills[4]}" class="tree-leaf" />
+        <circle cx="120" cy="62" r="8" fill="${leafFills[0]}" class="tree-leaf" />
+        
+        <g class="tree-flower" transform="translate(52,95) scale(0.9)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <g class="tree-flower" transform="translate(148,95) scale(0.9)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <g class="tree-flower" transform="translate(50,62) scale(0.9)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <g class="tree-flower" transform="translate(150,62) scale(0.9)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <g class="tree-flower" transform="translate(100,56) scale(1.0)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <g class="tree-flower" transform="translate(70,42) scale(0.8)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <g class="tree-flower" transform="translate(130,42) scale(0.8)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
       `;
     } else {
-      // Stage 5: Golden Fruit Tree
+      // Stage 5: Golden Fruit Tree (Max growth!)
       plantContent = `
-        <path d="M 100 170 Q 97 120 103 85" class="trunk-branch" stroke="#6e4e37" stroke-width="8" />
-        <path d="M 99 135 Q 72 115 68 95" stroke="#6e4e37" stroke-width="5" stroke-linecap="round" fill="none" class="tree-branch" />
-        <path d="M 101 120 Q 128 105 130 85" stroke="#6e4e37" stroke-width="5" stroke-linecap="round" fill="none" class="tree-branch" />
-        <path d="M 102 98 Q 82 82 78 65" stroke="#6e4e37" stroke-width="4" stroke-linecap="round" fill="none" class="tree-branch" />
-        <path d="M 102 92 Q 118 78 120 62" stroke="#6e4e37" stroke-width="4" stroke-linecap="round" fill="none" class="tree-branch" />
+        <path d="M 100 170 Q 100 110 100 50" class="trunk-branch" stroke-width="9" />
+        <path d="M 100 120 Q 60 115 35 105" stroke="#6e4e37" stroke-width="6.5" stroke-linecap="round" fill="none" class="tree-branch" />
+        <path d="M 100 120 Q 140 115 165 105" stroke="#6e4e37" stroke-width="6.5" stroke-linecap="round" fill="none" class="tree-branch" />
+        <path d="M 100 90 Q 55 85 30 70" stroke="#6e4e37" stroke-width="5.5" stroke-linecap="round" fill="none" class="tree-branch" />
+        <path d="M 100 90 Q 145 85 170 70" stroke="#6e4e37" stroke-width="5.5" stroke-linecap="round" fill="none" class="tree-branch" />
+        <path d="M 100 70 Q 70 60 55 45" stroke="#6e4e37" stroke-width="4.5" stroke-linecap="round" fill="none" class="tree-branch" />
+        <path d="M 100 70 Q 130 60 145 45" stroke="#6e4e37" stroke-width="4.5" stroke-linecap="round" fill="none" class="tree-branch" />
+        <path d="M 100 50 Q 100 40 100 30" stroke="#6e4e37" stroke-width="4" stroke-linecap="round" fill="none" class="tree-branch" />
         
-        <circle cx="103" cy="85" r="10" fill="${leafFills[0]}" class="tree-leaf" />
-        <circle cx="68" cy="95" r="9" fill="${leafFills[1]}" class="tree-leaf" />
-        <circle cx="130" cy="85" r="9" fill="${leafFills[2]}" class="tree-leaf" />
-        <circle cx="78" cy="65" r="8" fill="${leafFills[3]}" class="tree-leaf" />
-        <circle cx="120" cy="62" r="8" fill="${leafFills[4]}" class="tree-leaf" />
+        <circle cx="35" cy="105" r="11" fill="${leafFills[0]}" class="tree-leaf" />
+        <circle cx="165" cy="105" r="11" fill="${leafFills[1]}" class="tree-leaf" />
+        <circle cx="30" cy="70" r="11" fill="${leafFills[2]}" class="tree-leaf" />
+        <circle cx="170" cy="70" r="11" fill="${leafFills[3]}" class="tree-leaf" />
+        <circle cx="55" cy="45" r="10" fill="${leafFills[4]}" class="tree-leaf" />
+        <circle cx="145" cy="45" r="10" fill="${leafFills[0]}" class="tree-leaf" />
+        <circle cx="100" cy="30" r="10" fill="${leafFills[1]}" class="tree-leaf" />
         
-        <g class="tree-flower" transform="translate(68,90) scale(0.8)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
-        <g class="tree-flower" transform="translate(130,80) scale(0.8)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
-        <g class="tree-flower" transform="translate(98,80) scale(0.9)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <circle cx="60" cy="85" r="10" fill="${leafFills[2]}" class="tree-leaf" />
+        <circle cx="140" cy="85" r="10" fill="${leafFills[3]}" class="tree-leaf" />
+        <circle cx="78" cy="65" r="9" fill="${leafFills[4]}" class="tree-leaf" />
+        <circle cx="122" cy="65" r="9" fill="${leafFills[0]}" class="tree-leaf" />
+        <circle cx="68" cy="115" r="9" fill="${leafFills[1]}" class="tree-leaf" />
+        <circle cx="132" cy="115" r="9" fill="${leafFills[2]}" class="tree-leaf" />
+        <circle cx="78" cy="38" r="9" fill="${leafFills[3]}" class="tree-leaf" />
+        <circle cx="122" cy="38" r="9" fill="${leafFills[4]}" class="tree-leaf" />
         
-        <circle cx="103" cy="70" r="7" class="tree-fruit-item tree-fruit" />
-        <circle cx="75" cy="82" r="6" class="tree-fruit-item tree-fruit" />
-        <circle cx="122" cy="72" r="6" class="tree-fruit-item tree-fruit" />
+        <g class="tree-flower" transform="translate(45,95) scale(0.9)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <g class="tree-flower" transform="translate(155,95) scale(0.9)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <g class="tree-flower" transform="translate(42,60) scale(0.9)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <g class="tree-flower" transform="translate(158,60) scale(0.9)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <g class="tree-flower" transform="translate(100,48) scale(1.0)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <g class="tree-flower" transform="translate(88,30) scale(0.8)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        <g class="tree-flower" transform="translate(112,30) scale(0.8)"><circle cx="0" cy="0" r="4"/><circle cx="-5" cy="0" r="3"/><circle cx="5" cy="0" r="3"/><circle cx="0" cy="-5" r="3"/><circle cx="0" cy="5" r="3"/></g>
+        
+        <circle cx="80" cy="105" r="7" class="tree-fruit-item tree-fruit" />
+        <circle cx="120" cy="105" r="7" class="tree-fruit-item tree-fruit" />
+        <circle cx="100" cy="18" r="8" class="tree-fruit-item tree-fruit" />
+        <circle cx="65" cy="52" r="7.5" class="tree-fruit-item tree-fruit" />
+        <circle cx="135" cy="52" r="7.5" class="tree-fruit-item tree-fruit" />
+        <circle cx="20" cy="85" r="7" class="tree-fruit-item tree-fruit" />
+        <circle cx="180" cy="85" r="7" class="tree-fruit-item tree-fruit" />
       `;
     }
 
