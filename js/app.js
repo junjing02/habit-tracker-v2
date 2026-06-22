@@ -807,6 +807,10 @@ class AppController {
 
   // View Swapper
   switchView(viewName, updateHash = true) {
+    // Clear any active tooltips or pending tooltip timeouts on view switch
+    if (this.tooltipTimeout) clearTimeout(this.tooltipTimeout);
+    this.hideTooltip();
+
     this.currentView = viewName;
     
     document.querySelectorAll('.view-tab').forEach(tab => {
@@ -1422,29 +1426,45 @@ class AppController {
       groups.forEach((group, groupIdx) => {
         const rank = groupIdx + 1;
         let rankBadgeContent = `#${rank}`;
+        let rankClass = '';
 
-        if (rank === 1) rankBadgeContent = '🥇';
-        else if (rank === 2) rankBadgeContent = '🥈';
-        else if (rank === 3) rankBadgeContent = '🥉';
+        if (rank === 1) {
+          rankBadgeContent = '🥇';
+          rankClass = 'rank-gold';
+        } else if (rank === 2) {
+          rankBadgeContent = '🥈';
+          rankClass = 'rank-silver';
+        } else if (rank === 3) {
+          rankBadgeContent = '🥉';
+          rankClass = 'rank-bronze';
+        }
 
         listHtml += `
-          <div class="rank-group">
+          <div class="rank-group ${rankClass}">
             <div class="rank-group-header">
               <div class="rank-title-wrapper">
                 <span class="rank-medal">${rankBadgeContent}</span>
+                <span class="rank-number-text">Rank ${rank}</span>
               </div>
               <div class="streak-badge">
-                <span>🔥</span> ${group.streak} Day${group.streak === 1 ? '' : 's'}
+                <span class="streak-fire-icon">🔥</span> ${group.streak} Day${group.streak === 1 ? '' : 's'}
               </div>
             </div>
             <div class="rank-group-items">
         `;
 
         group.habits.forEach(habit => {
+          const streaks = window.db.profile.habitStreaks[habit.id] || { current: 0, longest: 0 };
+          const longest = streaks.longest || 0;
           listHtml += `
             <div class="rank-habit-item">
-              <span class="rank-habit-emoji">${habit.emoji}</span>
-              <span class="rank-habit-name">${habit.name}</span>
+              <div class="rank-habit-left">
+                <span class="rank-habit-emoji">${escapeHTML(habit.emoji)}</span>
+                <span class="rank-habit-name">${escapeHTML(habit.name)}</span>
+              </div>
+              <div class="rank-habit-longest-badge" title="Personal Best Streak">
+                <span>🏆</span> ${longest}d
+              </div>
             </div>
           `;
         });
@@ -1765,6 +1785,8 @@ class AppController {
       });
 
       pt.addEventListener('click', (e) => {
+        if (this.tooltipTimeout) clearTimeout(this.tooltipTimeout);
+        this.hideTooltip();
         const idx = parseInt(e.currentTarget.dataset.idx);
         const dateObj = chartDates[idx];
         this.currentDate = dateObj;

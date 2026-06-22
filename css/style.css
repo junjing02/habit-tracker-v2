@@ -3534,20 +3534,64 @@ body {
 .rank-group {
   background: var(--panel-bg);
   border: 1px solid var(--panel-border);
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
   box-shadow: var(--shadow-sm);
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
 }
 
 .rank-group:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md), 0 0 10px var(--panel-glow);
+}
+
+/* Distinct visual treatments for Gold, Silver, Bronze ranks */
+.rank-group.rank-gold {
+  border-color: rgba(245, 158, 11, 0.35);
+  box-shadow: var(--shadow-sm), 0 0 12px rgba(245, 158, 11, 0.08);
+}
+.rank-group.rank-gold .rank-group-header {
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.12) 0%, rgba(245, 158, 11, 0.03) 100%);
+  border-bottom-color: rgba(245, 158, 11, 0.25);
+}
+.rank-group.rank-gold .rank-medal {
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.5));
+}
+.rank-group.rank-gold .rank-number-text {
+  color: var(--gold) !important;
+  font-weight: 800;
+}
+
+.rank-group.rank-silver {
+  border-color: rgba(148, 163, 184, 0.35);
+  box-shadow: var(--shadow-sm), 0 0 12px rgba(148, 163, 184, 0.08);
+}
+.rank-group.rank-silver .rank-group-header {
+  background: linear-gradient(90deg, rgba(148, 163, 184, 0.12) 0%, rgba(148, 163, 184, 0.03) 100%);
+  border-bottom-color: rgba(148, 163, 184, 0.25);
+}
+.rank-group.rank-silver .rank-medal {
+  filter: drop-shadow(0 0 6px rgba(148, 163, 184, 0.5));
+}
+
+.rank-group.rank-bronze {
+  border-color: rgba(217, 119, 6, 0.35);
+  box-shadow: var(--shadow-sm), 0 0 12px rgba(217, 119, 6, 0.08);
+}
+.rank-group.rank-bronze .rank-group-header {
+  background: linear-gradient(90deg, rgba(217, 119, 6, 0.12) 0%, rgba(217, 119, 6, 0.03) 100%);
+  border-bottom-color: rgba(217, 119, 6, 0.25);
+}
+.rank-group.rank-bronze .rank-medal {
+  filter: drop-shadow(0 0 6px rgba(217, 119, 6, 0.5));
 }
 
 /* Headers */
 .rank-group-header {
   background: var(--overlay-bg-th);
-  padding: 10px 14px;
+  padding: 12px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -3557,46 +3601,69 @@ body {
 .rank-title-wrapper {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-weight: 700;
   font-size: 0.9rem;
   color: var(--text-main);
 }
 
+.rank-number-text {
+  font-family: var(--font-title);
+  letter-spacing: 0.5px;
+}
+
 .rank-medal {
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
 .streak-badge {
-  font-weight: 700;
+  font-weight: 800;
   font-size: 0.85rem;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 10px;
-  border-radius: 6px;
+  padding: 4px 12px;
+  border-radius: 8px;
   background: var(--input-bg);
   border: 1px solid var(--panel-border);
   color: var(--text-main);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.streak-fire-icon {
+  filter: drop-shadow(0 0 4px #ef4444);
 }
 
 /* Habit items list */
 .rank-group-items {
   display: flex;
   flex-direction: column;
-  padding: 4px 0;
+  padding: 2px 0;
 }
 
 .rank-habit-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 14px;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
   font-size: 0.9rem;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.06);
+  border-bottom: 1px solid rgba(128, 128, 128, 0.05);
+  transition: background-color 0.2s ease, padding-left 0.2s ease;
+}
+
+.rank-habit-item:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+  padding-left: 20px;
+}
+
+.rank-habit-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .rank-habit-item:last-child {
@@ -3610,11 +3677,36 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.rank-habit-item:hover .rank-habit-emoji {
+  transform: scale(1.2) rotate(5deg);
 }
 
 .rank-habit-name {
-  font-weight: 600;
   color: var(--text-main);
+  font-weight: 600;
+}
+
+.rank-habit-longest-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--panel-border);
+  padding: 2px 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.rank-habit-item:hover .rank-habit-longest-badge {
+  color: var(--gold);
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.2);
 }
 
 /* Mock views switchable container styles */
