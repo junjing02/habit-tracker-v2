@@ -1096,6 +1096,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+  align-items: start;
 }
 
 @media (max-width: 768px) {
@@ -2073,9 +2074,26 @@ body {
 #analytics-category-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
-  align-items: center; /* Center horizontally */
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 6px;
+  box-sizing: border-box;
+}
+
+#analytics-category-list::-webkit-scrollbar {
+  width: 6px;
+}
+#analytics-category-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+#analytics-category-list::-webkit-scrollbar-thumb {
+  background: var(--panel-border);
+  border-radius: 10px;
+}
+#analytics-category-list::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-glow);
 }
 
 /* Elegant ranked podium streaks consistency table */
