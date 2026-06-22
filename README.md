@@ -8,13 +8,14 @@ A client-side routine tracker and streak manager built with vanilla web technolo
 
 ## Features
 
-- **Guest Sandbox Mode:** Isolated in-memory demo environment requiring no account.
-- **Daily Checklist:** Tracker supporting completion toggles and contextual notes.
-- **Habit Garden:** Procedural SVG tree drawing that dynamically grows based on completion rates.
-- **Consistency Calendar:** Interactive grid heatmap displaying monthly completion statuses.
-- **Weekly Matrix:** Spreadsheet overview of routine history from Monday to Sunday.
-- **Cloud Sync:** Secure login and session backup powered by Supabase.
-- **Theme Switching:** Client-side preference switcher supporting Dark and Light modes.
+- **Guest Mode:** Fully functional local sandbox stored in the browser's `localStorage` (no account required).
+- **Daily Tracker:** Simple checklist for logging habit completion with custom remark notes.
+- **Habit Garden:** Dynamic SVG growth tree that visually scales based on weekly consistency rates.
+- **Consistency Calendar:** Monthly grid heatmap displaying day-by-day habit completion statuses.
+- **Weekly Matrix:** Spreadsheet-style matrix for tracking routines from Monday to Sunday in a tabular layout.
+- **Activity Trends:** Custom interactive SVG trend chart showing 7-day completion rates with detailed hover tooltips listing missed tasks.
+- **Cloud Sync:** Option to sign up/login with Supabase to back up progress and synchronize data across devices.
+- **Theme & Sound Preferences:** Switch between Cyberpunk (Dark) and Minimalist (Light) themes, with toggleable synthesized completion sound effects.
 
 ## Tech Stack
 
@@ -22,18 +23,15 @@ A client-side routine tracker and streak manager built with vanilla web technolo
 - **Backend & Database:** Supabase (Auth, Cloud Database Sync)
 - **Offline Storage:** LocalStorage API
 
-## Technical Architecture & Metrics
+## Technical Architecture
 
-- **Zero-Dependency Engine:** Standard ES6 JavaScript runs natively in the browser with **0 production npm dependencies** (`node_modules`), eliminating vulnerability risks and build pipeline drift.
-- **Sub-100ms Load Speed:** Compressed client bundle size is **< 50 KB** (HTML/CSS/JS combined), achieving a perfect **100/100** Core Web Vitals score on PageSpeed Insights.
-- **Synthesized Web Audio:** Programmatically compiles and plays chime chimes in-memory via the native **Web Audio API**, resulting in **0 KB of audio asset overhead** (no heavy `.mp3`/`.wav` loads).
-- **Offline-First Resilience:** Combines local caching via the **LocalStorage API** with cloud sync. The application remains fully functional offline and auto-synchronizes with **Supabase** when online.
-- **Edge-Ready Scalability:** Serverless client-side rendering with an infrastructure cost of **$0.00 / month**, scaling to millions of users on free CDNs (like GitHub Pages).
-- **Minimal Memory Footprint:** Extremely lightweight runtime consuming **< 15 MB** of active JavaScript heap space.
+- **Zero Build Dependencies:** Written in pure vanilla HTML, CSS, and JS. Zero development or production `npm` dependencies, ensuring no vulnerability risks or build pipeline overhead.
+- **Synthesized Web Audio:** Completing tasks triggers audio chimes synthesized dynamically in-memory via the browser's native **Web Audio API**, eliminating external audio asset requests.
+- **Hybrid Sync Architecture:** Uses the browser's **LocalStorage API** for fast, local-first reads and writes, and backs up to **Supabase** database tables when authenticated.
+- **Ultra Lightweight:** Combined frontend codebase is ~300 KB raw, loading instantly and running directly in any modern web browser without a compile step.
 
 ## Getting Started
 
 ### Live Demo
 Access the live deployed application at:
 **[Live App URL](https://junjing02.github.io/habit-tracker-v2/)**
-

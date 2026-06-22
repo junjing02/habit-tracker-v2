@@ -1107,13 +1107,21 @@ body {
 .chart-card {
   background: var(--panel-bg);
   border: 1px solid var(--panel-border);
-  padding: 20px;
+  padding: 24px;
   border-radius: var(--border-radius-md);
   box-shadow: var(--shadow-md);
   display: flex;
   flex-direction: column;
   gap: 16px;
-  min-height: 300px;
+  min-height: 320px;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.chart-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg), 0 8px 24px var(--panel-glow);
 }
 
 .chart-title {
@@ -1588,18 +1596,26 @@ body {
 /* Tooltip Singleton */
 .tooltip {
   position: fixed;
-  background: #0f172a;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(8px) saturate(180%);
+  -webkit-backdrop-filter: blur(8px) saturate(180%);
   color: #f8fafc;
-  padding: 6px 10px;
-  border-radius: 4px;
+  padding: 10px 14px;
+  border-radius: 12px;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
   pointer-events: none;
   opacity: 0;
   z-index: 1000;
-  transition: opacity 0.15s;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  border: 1px solid rgba(255,255,255,0.1);
+  transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--panel-border);
+  max-width: 260px;
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.5;
+  text-align: left;
+  transform: translateY(4px);
 }
 
 /* Context Dropdown Menu */
@@ -1793,13 +1809,6 @@ body {
   color: var(--color-primary);
 }
 
-.tooltip {
-  max-width: 240px;
-  white-space: normal;
-  word-wrap: break-word;
-  line-height: 1.4;
-  text-align: left;
-}
 
 /* Fixed height layout for weekly matrix cells to avoid vertical jittering */
 .matrix-cell-content {

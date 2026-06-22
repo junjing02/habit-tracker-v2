@@ -1536,75 +1536,191 @@ class AppController {
       return window.db.getDayCompletionRate(str);
     });
 
-    const padding = 30;
+    const paddingLeft = 45;
+    const paddingRight = 25;
+    const paddingTop = 32;
+    const paddingBottom = 35;
+
     const width = container.clientWidth || 400;
     const height = container.clientHeight || 200;
-    const chartWidth = width - padding * 2;
-    const chartHeight = height - padding * 2;
+    const chartWidth = width - paddingLeft - paddingRight;
+    const chartHeight = height - paddingTop - paddingBottom;
 
-    let points = [];
-    let labelsHtml = '';
-
-    rates.forEach((rate, idx) => {
-      const x = padding + (idx * (chartWidth / 6));
-      const y = padding + chartHeight - (rate * chartHeight);
-      points.push(`${x},${y}`);
-
-      const dateLabel = chartDates[idx].toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
-      labelsHtml += `<text x="${x}" y="${height - 8}" fill="var(--text-muted)" font-size="9" text-anchor="middle" font-family="var(--font-body)">${dateLabel}</text>`;
+    const pointsObj = rates.map((rate, idx) => {
+      const x = paddingLeft + (idx * (chartWidth / 6));
+      const y = paddingTop + chartHeight - (rate * chartHeight);
+      return { x, y, rate, idx };
     });
 
-    const gridLines = `
-      <line x1="${padding}" y1="${padding}" x2="${width - padding}" y2="${padding}" stroke="var(--panel-border)" stroke-width="1" />
-      <line x1="${padding}" y1="${padding + chartHeight/2}" x2="${width - padding}" y2="${padding + chartHeight/2}" stroke="var(--panel-border)" stroke-width="1" />
-      <line x1="${padding}" y1="${padding + chartHeight}" x2="${width - padding}" y2="${padding + chartHeight}" stroke="var(--panel-border)" stroke-width="1" />
-      
-      <text x="${padding - 6}" y="${padding + 4}" fill="var(--text-muted)" font-size="9" text-anchor="end" font-family="var(--font-body)">100%</text>
-      <text x="${padding - 6}" y="${padding + chartHeight/2 + 4}" fill="var(--text-muted)" font-size="9" text-anchor="end" font-family="var(--font-body)">50%</text>
-      <text x="${padding - 6}" y="${padding + chartHeight + 4}" fill="var(--text-muted)" font-size="9" text-anchor="end" font-family="var(--font-body)">0%</text>
+    // Helper for smooth cubic Bezier curve calculation
+    const getBezierPath = (pts) => {
+      if (pts.length === 0) return '';
+      let d = `M ${pts[0].x},${pts[0].y}`;
+      for (let i = 0; i < pts.length - 1; i++) {
+        const p0 = pts[i];
+        const p1 = pts[i + 1];
+        const cpX1 = p0.x + (p1.x - p0.x) * 0.4;
+        const cpY1 = p0.y;
+        const cpX2 = p0.x + (p1.x - p0.x) * 0.6;
+        const cpY2 = p1.y;
+        d += ` C ${cpX1},${cpY1} ${cpX2},${cpY2} ${p1.x},${p1.y}`;
+      }
+      return d;
+    };
+
+    const curveD = getBezierPath(pointsObj);
+    
+    // Calculate area path by extending the bezier path to bottom boundaries
+    const firstCIdx = curveD.indexOf(' C ');
+    const bezierSegments = firstCIdx !== -1 ? curveD.substring(firstCIdx) : '';
+    const areaD = `M ${pointsObj[0].x},${paddingTop + chartHeight} L ${pointsObj[0].x},${pointsObj[0].y}${bezierSegments} L ${pointsObj[pointsObj.length - 1].x},${paddingTop + chartHeight} Z`;
+
+    // Draw vertical dotted guidelines for each day to align labels
+    const verticalGridLines = pointsObj.map(pt => {
+      return `<line x1="${pt.x}" y1="${paddingTop}" x2="${pt.x}" y2="${paddingTop + chartHeight}" stroke="var(--panel-border)" stroke-width="0.75" stroke-dasharray="3 6" opacity="0.45" />`;
+    }).join('\n');
+
+    // Horizontal grid lines for benchmarks (0%, 50%, 100%)
+    const horizontalGridLines = `
+      <line x1="${paddingLeft}" y1="${paddingTop}" x2="${width - paddingRight}" y2="${paddingTop}" stroke="var(--panel-border)" stroke-dasharray="4 4" stroke-width="1" opacity="0.6" />
+      <line x1="${paddingLeft}" y1="${paddingTop + chartHeight / 2}" x2="${width - paddingRight}" y2="${paddingTop + chartHeight / 2}" stroke="var(--panel-border)" stroke-dasharray="4 4" stroke-width="1" opacity="0.6" />
+      <line x1="${paddingLeft}" y1="${paddingTop + chartHeight}" x2="${width - paddingRight}" y2="${paddingTop + chartHeight}" stroke="var(--panel-border)" stroke-width="1.2" opacity="0.8" />
     `;
 
-    const nodes = rates.map((rate, idx) => {
-      const x = padding + (idx * (chartWidth / 6));
-      const y = padding + chartHeight - (rate * chartHeight);
+    const axisLabels = `
+      <text x="${paddingLeft - 8}" y="${paddingTop + 4}" fill="var(--text-muted)" font-size="9.5" font-weight="600" text-anchor="end" font-family="var(--font-body)">100%</text>
+      <text x="${paddingLeft - 8}" y="${paddingTop + chartHeight / 2 + 4}" fill="var(--text-muted)" font-size="9.5" font-weight="600" text-anchor="end" font-family="var(--font-body)">50%</text>
+      <text x="${paddingLeft - 8}" y="${paddingTop + chartHeight + 4}" fill="var(--text-muted)" font-size="9.5" font-weight="600" text-anchor="end" font-family="var(--font-body)">0%</text>
+    `;
+
+    const dateLabels = pointsObj.map(pt => {
+      const dateLabel = chartDates[pt.idx].toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+      return `<text x="${pt.x}" y="${height - 10}" fill="var(--text-muted)" font-size="9.5" font-weight="600" text-anchor="middle" font-family="var(--font-body)">${dateLabel}</text>`;
+    }).join('\n');
+
+    const nodes = pointsObj.map(pt => {
       return `
-        <!-- Aesthetic visible node dot -->
-        <circle cx="${x}" cy="${y}" r="5" fill="var(--color-primary)" stroke="var(--bg-color)" stroke-width="2" pointer-events="none" style="filter: drop-shadow(0 0 4px var(--color-primary-glow))" />
-        <!-- Invisible larger hit target area for easy hover/tap on top -->
-        <circle cx="${x}" cy="${y}" r="18" fill="none" pointer-events="all" style="cursor: pointer;" class="chart-point" data-idx="${idx}" data-rate="${rate}" />
+        <g class="chart-node-group" data-idx="${pt.idx}">
+          <circle class="chart-node-glow" cx="${pt.x}" cy="${pt.y}" r="10" fill="var(--color-primary)" opacity="0" pointer-events="none" style="transition: opacity 0.2s ease, r 0.2s ease;" />
+          <circle class="chart-node-core" cx="${pt.x}" cy="${pt.y}" r="4.5" fill="var(--color-primary)" stroke="var(--bg-color)" stroke-width="2.5" pointer-events="none" style="transition: r 0.2s ease, fill 0.2s ease, stroke-width 0.2s ease; filter: drop-shadow(0 0 5px var(--color-primary-glow))" />
+          <text class="chart-value-label" x="${pt.x}" y="${pt.y - 12}" fill="var(--text-muted)" font-size="8.5" font-weight="600" text-anchor="middle" font-family="var(--font-body)" style="opacity: 0.85; transition: opacity 0.2s ease, fill 0.2s ease, transform 0.2s ease; pointer-events: none;">${Math.round(pt.rate * 100)}%</text>
+          <circle cx="${pt.x}" cy="${pt.y}" r="18" fill="transparent" pointer-events="all" class="chart-point" data-idx="${pt.idx}" data-rate="${pt.rate}" style="cursor: pointer;" />
+        </g>
       `;
-    }).join('');
+    }).join('\n');
 
     const svgHtml = `
       <svg width="100%" height="100%" viewBox="0 0 ${width} ${height}" style="overflow: visible;">
         <defs>
           <linearGradient id="chart-area-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="var(--color-primary)" stop-opacity="0.25"/>
-            <stop offset="100%" stop-color="var(--color-primary)" stop-opacity="0"/>
+            <stop offset="0%" stop-color="var(--color-primary)" stop-opacity="0.28"/>
+            <stop offset="100%" stop-color="var(--color-primary)" stop-opacity="0.01"/>
           </linearGradient>
+          
+          <filter id="chart-glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="3.5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
         </defs>
         
-        ${gridLines}
+        ${verticalGridLines}
+        ${horizontalGridLines}
         
-        <path d="M ${padding},${padding + chartHeight} L ${points.join(' L ')} L ${width - padding},${padding + chartHeight} Z" fill="url(#chart-area-grad)" />
-        <polyline points="${points.join(' ')}" fill="none" stroke="var(--color-primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+        <line id="chart-focus-line" x1="0" y1="${paddingTop}" x2="0" y2="${paddingTop + chartHeight}" stroke="var(--color-primary)" stroke-width="1.5" stroke-dasharray="3 3" opacity="0" pointer-events="none" style="transition: opacity 0.15s ease;" />
         
-        ${labelsHtml}
+        <path class="chart-area-fill" d="${areaD}" fill="url(#chart-area-grad)" opacity="0" pointer-events="none" />
+        <path class="chart-line-glow" d="${curveD}" fill="none" stroke="var(--color-primary)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.15" pointer-events="none" filter="url(#chart-glow)" />
+        <path class="chart-line" d="${curveD}" fill="none" stroke="var(--color-primary)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+        
+        ${axisLabels}
+        ${dateLabels}
         ${nodes}
       </svg>
     `;
 
     container.innerHTML = svgHtml;
 
+    // Trigger SVG path draw & area fade animations
+    const pathEl = container.querySelector('.chart-line');
+    const pathGlowEl = container.querySelector('.chart-line-glow');
+    const fillEl = container.querySelector('.chart-area-fill');
+
+    if (pathEl) {
+      const len = pathEl.getTotalLength();
+      pathEl.style.transition = 'none';
+      pathEl.style.strokeDasharray = len;
+      pathEl.style.strokeDashoffset = len;
+      
+      if (pathGlowEl) {
+        pathGlowEl.style.transition = 'none';
+        pathGlowEl.style.strokeDasharray = len;
+        pathGlowEl.style.strokeDashoffset = len;
+      }
+      
+      pathEl.getBoundingClientRect(); // trigger layout reflow
+      
+      pathEl.style.transition = 'stroke-dashoffset 1.2s cubic-bezier(0.25, 1, 0.5, 1)';
+      pathEl.style.strokeDashoffset = '0';
+      if (pathGlowEl) {
+        pathGlowEl.style.transition = 'stroke-dashoffset 1.2s cubic-bezier(0.25, 1, 0.5, 1)';
+        pathGlowEl.style.strokeDashoffset = '0';
+      }
+    }
+
+    if (fillEl) {
+      fillEl.style.transition = 'none';
+      fillEl.style.opacity = '0';
+      fillEl.getBoundingClientRect();
+      fillEl.style.transition = 'opacity 1.5s cubic-bezier(0.25, 1, 0.5, 1)';
+      fillEl.style.opacity = '1';
+    }
+
+    // Attach interactions
     container.querySelectorAll('.chart-point').forEach(pt => {
       pt.addEventListener('mouseenter', (e) => {
         if (window.innerWidth <= 600) return;
         if (this.tooltipTimeout) clearTimeout(this.tooltipTimeout);
         const target = e.currentTarget;
+        
+        const idx = parseInt(target.dataset.idx);
+        const rate = parseFloat(target.dataset.rate);
+        const ptX = pointsObj[idx].x;
+        
+        // Show and update vertical focus guideline
+        const focusLine = container.querySelector('#chart-focus-line');
+        if (focusLine) {
+          focusLine.setAttribute('x1', ptX);
+          focusLine.setAttribute('x2', ptX);
+          focusLine.setAttribute('opacity', '0.45');
+        }
+
+        // Apply interactive active styling to node elements in the hovered group
+        const group = target.closest('.chart-node-group');
+        if (group) {
+          const core = group.querySelector('.chart-node-core');
+          const glow = group.querySelector('.chart-node-glow');
+          const label = group.querySelector('.chart-value-label');
+          if (core) {
+            core.setAttribute('r', '6.5');
+            core.setAttribute('fill', 'var(--color-secondary)');
+            core.setAttribute('stroke-width', '2');
+          }
+          if (glow) {
+            glow.setAttribute('r', '13');
+            glow.style.opacity = '0.35';
+          }
+          if (label) {
+            label.setAttribute('fill', 'var(--text-main)');
+            label.setAttribute('font-weight', '700');
+            label.style.opacity = '1';
+            label.style.transform = 'translateY(-2px)';
+          }
+        }
+
         this.tooltipTimeout = setTimeout(() => {
-          const idx = parseInt(target.dataset.idx);
-          const rate = parseFloat(target.dataset.rate);
-          
           const dateObj = chartDates[idx];
           const dateStr = window.db.getFormattedDate(dateObj);
           
@@ -1623,19 +1739,31 @@ class AppController {
             }
           });
 
-          let tooltipHtml = `<strong>${Math.round(rate * 100)}% Done</strong>`;
+          let tooltipHtml = `<div class="tooltip-header" style="font-weight: 700; margin-bottom: 4px; display: flex; justify-content: space-between; gap: 12px; font-size: 0.8rem;">
+            <span>${chartDates[idx].toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</span>
+            <span style="color: var(--color-primary);">${Math.round(rate * 100)}% Done</span>
+          </div>`;
+          
           if (failedTasks.length > 0) {
-            tooltipHtml += `<br><span style="color:#f43f5e; font-weight:700;">Missed (${failedTasks.length}):</span><br>${failedTasks.join('<br>')}`;
+            tooltipHtml += `<div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 6px; margin-top: 6px;">
+              <span style="color:#f43f5e; font-weight:700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px;">Missed (${failedTasks.length}):</span>
+              <div style="margin-top: 4px; display: flex; flex-direction: column; gap: 3px; font-size: 0.72rem; color: #cbd5e1;">${failedTasks.join('<br>')}</div>
+            </div>`;
           } else if (habitsOnDay.length > 0) {
-            tooltipHtml += `<br><span style="color:#10b981; font-weight:700;">Perfect Day! ✨</span>`;
+            tooltipHtml += `<div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 6px; margin-top: 6px; color:#10b981; font-weight:700; font-size: 0.72rem; display: flex; align-items: center; gap: 4px;">
+              <span>✨</span> Perfect Day!
+            </div>`;
           } else {
-            tooltipHtml += `<br><span style="color:var(--text-muted);">No habits tracked.</span>`;
+            tooltipHtml += `<div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 6px; margin-top: 6px; color:var(--text-muted); font-size: 0.72rem;">
+              No habits active.
+            </div>`;
           }
 
           const rect = target.getBoundingClientRect();
           this.showTooltip(tooltipHtml, rect.left + rect.width / 2, rect.top - 8);
-        }, 400);
+        }, 300);
       });
+
       pt.addEventListener('click', (e) => {
         const idx = parseInt(e.currentTarget.dataset.idx);
         const dateObj = chartDates[idx];
@@ -1643,9 +1771,39 @@ class AppController {
         this.switchView('dashboard');
         this.sound.playClick();
       });
-      pt.addEventListener('mouseleave', () => {
+
+      pt.addEventListener('mouseleave', (e) => {
         if (this.tooltipTimeout) clearTimeout(this.tooltipTimeout);
         this.hideTooltip();
+
+        // Reset focus guideline
+        const focusLine = container.querySelector('#chart-focus-line');
+        if (focusLine) {
+          focusLine.setAttribute('opacity', '0');
+        }
+
+        // Reset node visuals
+        const group = e.currentTarget.closest('.chart-node-group');
+        if (group) {
+          const core = group.querySelector('.chart-node-core');
+          const glow = group.querySelector('.chart-node-glow');
+          const label = group.querySelector('.chart-value-label');
+          if (core) {
+            core.setAttribute('r', '4.5');
+            core.setAttribute('fill', 'var(--color-primary)');
+            core.setAttribute('stroke-width', '2.5');
+          }
+          if (glow) {
+            glow.setAttribute('r', '10');
+            glow.style.opacity = '0';
+          }
+          if (label) {
+            label.setAttribute('fill', 'var(--text-muted)');
+            label.setAttribute('font-weight', '600');
+            label.style.opacity = '0.85';
+            label.style.transform = 'none';
+          }
+        }
       });
     });
   }
@@ -2034,12 +2192,14 @@ class AppController {
   showTooltip(text, x, y) {
     this.tooltip.innerHTML = text;
     this.tooltip.style.left = `${x - this.tooltip.clientWidth / 2}px`;
-    this.tooltip.style.top = `${y - this.tooltip.clientHeight - 4}px`;
+    this.tooltip.style.top = `${y - this.tooltip.clientHeight - 8}px`;
+    this.tooltip.style.transform = 'translateY(0)';
     this.tooltip.style.opacity = 1;
   }
 
   hideTooltip() {
     this.tooltip.style.opacity = 0;
+    this.tooltip.style.transform = 'translateY(4px)';
   }
 
   renderAll() {
