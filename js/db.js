@@ -513,7 +513,14 @@ class HabitDatabase {
     }
     if (iconEl) {
       if (status === 'Connected') {
-        iconEl.textContent = '👤';
+        let avatar = '👤';
+        if (window.supabaseMgr && window.supabaseMgr.currentUser) {
+          const user = window.supabaseMgr.currentUser;
+          if (user.user_metadata && user.user_metadata.avatar) {
+            avatar = user.user_metadata.avatar;
+          }
+        }
+        iconEl.textContent = avatar;
       } else if (status === 'Offline') {
         iconEl.textContent = '👤';
       } else if (status === 'Syncing...') {

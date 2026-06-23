@@ -2383,6 +2383,16 @@ class AppController {
         if (usernameDisplayWrapper) usernameDisplayWrapper.style.display = 'flex';
         if (usernameEditWrapper) usernameEditWrapper.style.display = 'none';
         
+        // Update avatar choice highlighting in UI
+        const activeAvatar = (user.user_metadata && user.user_metadata.avatar) ? user.user_metadata.avatar : '👤';
+        document.querySelectorAll('.avatar-choice-btn').forEach(btn => {
+          if (btn.getAttribute('data-avatar') === activeAvatar) {
+            btn.classList.add('selected-avatar');
+          } else {
+            btn.classList.remove('selected-avatar');
+          }
+        });
+
         window.db.notifySyncStatus('Connected');
         
         // Hide landing page, show app container
@@ -2519,8 +2529,9 @@ class AppController {
       btnForgotPassword.addEventListener('click', async (e) => {
         e.preventDefault();
         const email = authEmailInput.value.trim();
-        if (!email) {
-          authStatusMessage.textContent = '❌ Please enter your email address first.';
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+          authStatusMessage.textContent = '❌ Please enter a valid email address.';
           authStatusMessage.style.color = 'var(--color-danger)';
           return;
         }
@@ -2581,6 +2592,14 @@ class AppController {
         e.preventDefault();
         const email = authEmailInput.value.trim();
         const password = authPasswordInput.value;
+        
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          authStatusMessage.textContent = '❌ Please enter a valid email address.';
+          authStatusMessage.style.color = 'var(--color-danger)';
+          return;
+        }
+
         authStatusMessage.textContent = 'Logging in...';
         authStatusMessage.style.color = 'var(--text-muted)';
 
@@ -2610,8 +2629,15 @@ class AppController {
         const password = signupPasswordInput.value;
         const confirmPassword = signupConfirmPasswordInput.value;
         
-        if (!username) {
-          authStatusMessage.textContent = '❌ Username is required.';
+        if (!username || username.length < 3) {
+          authStatusMessage.textContent = '❌ Username must be at least 3 characters.';
+          authStatusMessage.style.color = 'var(--color-danger)';
+          return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          authStatusMessage.textContent = '❌ Please enter a valid email address.';
           authStatusMessage.style.color = 'var(--color-danger)';
           return;
         }
@@ -2762,6 +2788,63 @@ class AppController {
           authStatusMessage.style.color = 'var(--color-danger)';
         }
       });
+    }
+
+    // Update Avatar choice
+    const avatarButtons = document.querySelectorAll('.avatar-choice-btn');
+    avatarButtons.forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!window.supabaseMgr || !window.supabaseMgr.isAuthenticated()) {
+          authStatusMessage.textContent = '⚠️ You must be logged in to select an avatar.';
+          authStatusMessage.style.color = 'var(--color-danger)';
+          return;
+        }
+
+        const selectedAvatar = btn.getAttribute('data-avatar');
+        authStatusMessage.textContent = 'Updating avatar...';
+        authStatusMessage.style.color = 'var(--text-muted)';
+        
+        try {
+          await window.supabaseMgr.updateAvatar(selectedAvatar);
+          authStatusMessage.textContent = '✅ Avatar updated successfully!';
+          authStatusMessage.style.color = 'var(--color-primary)';
+          
+          // Re-render UI highlights
+          document.querySelectorAll('.avatar-choice-btn').forEach(b => {
+            if (b.getAttribute('data-avatar') === selectedAvatar) {
+              b.classList.add('selected-avatar');
+            } else {
+              b.classList.remove('selected-avatar');
+            }
+          });
+
+          // Trigger sync indicator update to reflect new avatar icon immediately
+          window.db.notifySyncStatus('Connected');
+          if (this.sound && typeof this.sound.playClick === 'function') {
+            this.sound.playClick();
+          }
+        } catch (err) {
+          authStatusMessage.textContent = `❌ Avatar Update Failed: ${err.message}`;
+          authStatusMessage.style.color = 'var(--color-danger)';
+        }
+      });
+    });
+
+    // Parse redirect authentication error parameters from URL hash
+    if (window.location.hash) {
+      const hashParams = new URLSearchParams(window.location.hash.substring(1));
+      const errorMsg = hashParams.get('error_description');
+      if (errorMsg) {
+        authStatusMessage.textContent = `❌ Auth Error: ${decodeURIComponent(errorMsg.replace(/\+/g, ' '))}`;
+        authStatusMessage.style.color = 'var(--color-danger)';
+        if (authModal) {
+          authModal.classList.add('open');
+        }
+        // Clear hash to clean up url address bar
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState(null, null, window.location.pathname + window.location.search);
+        }
+      }
     }
   }
 }

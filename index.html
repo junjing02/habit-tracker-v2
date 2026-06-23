@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aura Habit - Routine & Streak Tracker</title>
   <meta name="description" content="Build habits, grow your virtual tree, and track daily consistency. A gorgeous, simplified multi-view routine manager.">
-  <link rel="stylesheet" href="css/style.css?v=2.4.2">
+  <link rel="stylesheet" href="css/style.css?v=2.4.3">
 </head>
 <body>
 
@@ -1396,6 +1396,33 @@
               </div>
             </div>
 
+            <!-- Avatar Selection Wrapper -->
+            <div id="avatar-selection-wrapper" style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--panel-border); padding-top: 10px; margin-top: 4px;">
+              <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">
+                Select Profile Avatar:
+              </span>
+              <div id="avatar-choices-grid" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; justify-items: center;">
+                <button type="button" class="avatar-choice-btn" data-avatar="👤" title="Default User">👤</button>
+                <button type="button" class="avatar-choice-btn" data-avatar="🐱" title="Cat">🐱</button>
+                <button type="button" class="avatar-choice-btn" data-avatar="🦊" title="Fox">🦊</button>
+                <button type="button" class="avatar-choice-btn" data-avatar="🐨" title="Koala">🐨</button>
+                <button type="button" class="avatar-choice-btn" data-avatar="🐯" title="Tiger">🐯</button>
+                <button type="button" class="avatar-choice-btn" data-avatar="🐼" title="Panda">🐼</button>
+                <button type="button" class="avatar-choice-btn" data-avatar="🦁" title="Lion">🦁</button>
+                <button type="button" class="avatar-choice-btn" data-avatar="🐸" title="Frog">🐸</button>
+                <button type="button" class="avatar-choice-btn" data-avatar="🐙" title="Octopus">🐙</button>
+                <button type="button" class="avatar-choice-btn" data-avatar="🦄" title="Unicorn">🦄</button>
+                <button type="button" class="avatar-choice-btn" data-avatar="🦖" title="T-Rex">🦖</button>
+                <button type="button" class="avatar-choice-btn" data-avatar="🚀" title="Rocket">🚀</button>
+                <button type="button" class="avatar-choice-btn" data-avatar="💻" title="Developer">💻</button>
+                <button type="button" class="avatar-choice-btn" data-avatar="🎨" title="Artist">🎨</button>
+                <button type="button" class="avatar-choice-btn" data-avatar="🧠" title="Mindfulness">🧠</button>
+                <button type="button" class="avatar-choice-btn" data-avatar="🏃" title="Runner">🏃</button>
+                <button type="button" class="avatar-choice-btn" data-avatar="🧘" title="Meditation">🧘</button>
+                <button type="button" class="avatar-choice-btn" data-avatar="🍕" title="Pizza Lover">🍕</button>
+              </div>
+            </div>
+
             <div style="display: flex; gap: 10px; margin-top: 4px; border-top: 1px solid var(--panel-border); padding-top: 10px;">
               <button class="btn-danger" id="btn-logout" style="flex-grow: 1;">
                 Logout
@@ -1412,10 +1439,10 @@
 
   <!-- Supabase Integration -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js?v=2.4.2"></script>
+  <script src="js/supabase.js?v=2.4.3"></script>
 
   <!-- Main JavaScript modules -->
-  <script src="js/db.js?v=2.4.2"></script>
-  <script src="js/app.js?v=2.4.2"></script>
+  <script src="js/db.js?v=2.4.3"></script>
+  <script src="js/app.js?v=2.4.3"></script>
 </body>
 </html>

@@ -242,6 +242,20 @@ class SupabaseManager {
     this.currentUser = data.user;
     return data;
   }
+
+  // Update avatar for currently signed-in user
+  async updateAvatar(avatar) {
+    if (!this.isConfigured()) throw new Error("Supabase is not configured.");
+    
+    const { data, error } = await this.client.auth.updateUser({
+      data: { avatar: avatar }
+    });
+    
+    if (error) throw error;
+    
+    this.currentUser = data.user;
+    return data;
+  }
 }
 
 const supabaseMgr = new SupabaseManager();
