@@ -177,6 +177,34 @@ class AppController {
     this.initRouter();
   }
 
+  openAuthModal() {
+    const authModal = document.getElementById('auth-modal');
+    const authStatusMessage = document.getElementById('auth-status-message');
+    if (authModal) {
+      const isConfigured = window.supabaseMgr && window.supabaseMgr.isConfigured();
+      if (!isConfigured) {
+        const hasDefaults = window.supabaseMgr && window.supabaseMgr.defaultUrl && window.supabaseMgr.defaultAnonKey;
+        if (hasDefaults) {
+          if (authStatusMessage) {
+            authStatusMessage.textContent = '⚠️ Cloud sync is temporarily unavailable. Please try again later.';
+            authStatusMessage.style.color = 'var(--color-danger)';
+          }
+        } else {
+          if (authStatusMessage) {
+            authStatusMessage.textContent = '⚠️ Supabase client failed to initialize. Please check your Connection Settings above.';
+            authStatusMessage.style.color = 'var(--color-danger)';
+          }
+        }
+      } else {
+        if (authStatusMessage) {
+          authStatusMessage.textContent = '';
+        }
+      }
+      authModal.classList.add('open');
+    }
+    this.sound.playClick();
+  }
+
   initElements() {
     this.canvas = document.getElementById('confetti-canvas');
     this.confetti = new ConfettiManager(this.canvas);
@@ -247,19 +275,11 @@ class AppController {
       });
     }
 
-    const openAuthModal = () => {
-      if (authModal) {
-        authStatusMessage.textContent = '';
-        authModal.classList.add('open');
-      }
-      this.sound.playClick();
-    };
-
     if (landingBtnLogin) {
-      landingBtnLogin.addEventListener('click', openAuthModal);
+      landingBtnLogin.addEventListener('click', () => this.openAuthModal());
     }
     if (landingBtnNavLogin) {
-      landingBtnNavLogin.addEventListener('click', openAuthModal);
+      landingBtnNavLogin.addEventListener('click', () => this.openAuthModal());
     }
 
     // Landing Page Mock Tabs Switcher
@@ -2503,20 +2523,12 @@ class AppController {
 
     // Click Blocker to open login modal
     if (blocker) {
-      blocker.addEventListener('click', () => {
-        authStatusMessage.textContent = '';
-        authModal.classList.add('open');
-        this.sound.playClick();
-      });
+      blocker.addEventListener('click', () => this.openAuthModal());
     }
 
     // Click Cloud Pill to open modal
     if (cloudSyncPill) {
-      cloudSyncPill.addEventListener('click', () => {
-        authStatusMessage.textContent = '';
-        authModal.classList.add('open');
-        this.sound.playClick();
-      });
+      cloudSyncPill.addEventListener('click', () => this.openAuthModal());
     }
 
     // Save Supabase config
