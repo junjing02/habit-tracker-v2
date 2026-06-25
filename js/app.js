@@ -2292,12 +2292,19 @@ class AppController {
     const usernameEditWrapper = document.getElementById('username-edit-wrapper');
     const currentUsernameVal = document.getElementById('current-username-val');
 
-    // Hide connection settings if defaults are hardcoded in code
+    // Hide connection settings if defaults are hardcoded in code AND successfully configured
     const configSection = document.getElementById('auth-config-section');
-    if (configSection && window.supabaseMgr && window.supabaseMgr.defaultUrl && window.supabaseMgr.defaultAnonKey) {
-      configSection.style.display = 'none';
-      if (authSectionTitle) {
-        authSectionTitle.textContent = 'Account Login';
+    if (configSection && window.supabaseMgr) {
+      if (window.supabaseMgr.defaultUrl && window.supabaseMgr.defaultAnonKey && window.supabaseMgr.isConfigured()) {
+        configSection.style.display = 'none';
+        if (authSectionTitle) {
+          authSectionTitle.textContent = 'Account Login';
+        }
+      } else {
+        configSection.style.display = 'flex';
+        if (authSectionTitle) {
+          authSectionTitle.textContent = 'Account Login (Setup Needed)';
+        }
       }
     }
 
@@ -2311,6 +2318,16 @@ class AppController {
       }
 
       const isConfigured = window.supabaseMgr && window.supabaseMgr.isConfigured();
+      
+      // Dynamically show/hide Connection Settings based on configuration state
+      if (configSection && window.supabaseMgr) {
+        if (isConfigured && window.supabaseMgr.defaultUrl && window.supabaseMgr.defaultAnonKey) {
+          configSection.style.display = 'none';
+        } else {
+          configSection.style.display = 'flex';
+        }
+      }
+
       if (!isConfigured) {
         authUserSection.style.opacity = '0.5';
         authUserSection.style.pointerEvents = 'none';
@@ -2322,6 +2339,11 @@ class AppController {
         }
         loggedInProfile.style.display = 'none';
         window.db.notifySyncStatus('Offline');
+        
+        if (authStatusMessage) {
+          authStatusMessage.textContent = '⚠️ Supabase client failed to initialize. Please check your Connection Settings above.';
+          authStatusMessage.style.color = 'var(--color-danger)';
+        }
         
         // Show landing page and hide app-container
         const landingEl = document.getElementById('landing-page');
