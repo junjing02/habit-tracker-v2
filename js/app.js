@@ -2292,18 +2292,19 @@ class AppController {
     const usernameEditWrapper = document.getElementById('username-edit-wrapper');
     const currentUsernameVal = document.getElementById('current-username-val');
 
-    // Hide connection settings if defaults are hardcoded in code AND successfully configured
+    // Hide connection settings if defaults are hardcoded in code
     const configSection = document.getElementById('auth-config-section');
-    if (configSection && window.supabaseMgr) {
-      if (window.supabaseMgr.defaultUrl && window.supabaseMgr.defaultAnonKey && window.supabaseMgr.isConfigured()) {
+    const defaultsHardcoded = window.supabaseMgr && window.supabaseMgr.defaultUrl && window.supabaseMgr.defaultAnonKey;
+    if (configSection) {
+      if (defaultsHardcoded) {
         configSection.style.display = 'none';
         if (authSectionTitle) {
           authSectionTitle.textContent = 'Account Login';
         }
       } else {
-        configSection.style.display = 'flex';
+        configSection.style.display = window.supabaseMgr && window.supabaseMgr.isConfigured() ? 'none' : 'flex';
         if (authSectionTitle) {
-          authSectionTitle.textContent = 'Account Login (Setup Needed)';
+          authSectionTitle.textContent = window.supabaseMgr && window.supabaseMgr.isConfigured() ? 'Account Login' : 'Account Login (Setup Needed)';
         }
       }
     }
@@ -2319,19 +2320,35 @@ class AppController {
 
       const isConfigured = window.supabaseMgr && window.supabaseMgr.isConfigured();
       
-      // Dynamically show/hide Connection Settings based on configuration state
+      // Dynamically show/hide Connection Settings based on configuration state (if defaults not hardcoded)
       if (configSection && window.supabaseMgr) {
-        if (isConfigured && window.supabaseMgr.defaultUrl && window.supabaseMgr.defaultAnonKey) {
+        const hasDefaults = window.supabaseMgr.defaultUrl && window.supabaseMgr.defaultAnonKey;
+        if (hasDefaults) {
           configSection.style.display = 'none';
         } else {
-          configSection.style.display = 'flex';
+          configSection.style.display = isConfigured ? 'none' : 'flex';
         }
       }
 
       if (!isConfigured) {
         authUserSection.style.opacity = '0.5';
         authUserSection.style.pointerEvents = 'none';
-        authSectionTitle.textContent = 'Account Login (Setup Needed)';
+        
+        const hasDefaults = window.supabaseMgr && window.supabaseMgr.defaultUrl && window.supabaseMgr.defaultAnonKey;
+        if (hasDefaults) {
+          authSectionTitle.textContent = 'Account Login (Unavailable)';
+          if (authStatusMessage) {
+            authStatusMessage.textContent = '⚠️ Cloud sync is temporarily unavailable. Please try again later.';
+            authStatusMessage.style.color = 'var(--color-danger)';
+          }
+        } else {
+          authSectionTitle.textContent = 'Account Login (Setup Needed)';
+          if (authStatusMessage) {
+            authStatusMessage.textContent = '⚠️ Supabase client failed to initialize. Please check your Connection Settings above.';
+            authStatusMessage.style.color = 'var(--color-danger)';
+          }
+        }
+        
         loginForm.style.display = 'flex';
         if (signupForm) signupForm.style.display = 'none';
         if (this.recoveryForm) {
@@ -2339,11 +2356,6 @@ class AppController {
         }
         loggedInProfile.style.display = 'none';
         window.db.notifySyncStatus('Offline');
-        
-        if (authStatusMessage) {
-          authStatusMessage.textContent = '⚠️ Supabase client failed to initialize. Please check your Connection Settings above.';
-          authStatusMessage.style.color = 'var(--color-danger)';
-        }
         
         // Show landing page and hide app-container
         const landingEl = document.getElementById('landing-page');
