@@ -16,6 +16,7 @@ class SupabaseManager {
     this.currentUser = null;
     this.authCallbacks = [];
     this.initialSessionChecked = false;
+    this.initError = '';
 
     this.loadConfig();
     this.init();
@@ -69,11 +70,13 @@ class SupabaseManager {
     if (this.client && !forceReinit) return true;
     if (forceReinit) {
       this.initialSessionChecked = false;
+      this.initError = '';
     }
 
     if (!this.url || !this.anonKey || this.url.includes('YOUR_') || this.anonKey.includes('YOUR_')) {
       console.warn("Supabase client not initialized: URL or Anon Key is missing/placeholder.");
       this.client = null;
+      this.initError = "Supabase URL or Anon Key is missing/placeholder.";
       return false;
     }
 
@@ -81,6 +84,7 @@ class SupabaseManager {
       // Create Supabase client using CDN global library
       if (typeof supabase !== 'undefined' && supabase.createClient) {
         this.client = supabase.createClient(this.url, this.anonKey);
+        this.initError = '';
         
         // Listen to Auth State Changes
         this.client.auth.onAuthStateChange((event, session) => {
@@ -133,11 +137,13 @@ class SupabaseManager {
         return true;
       } else {
         console.error("Supabase CDN library is not loaded.");
+        this.initError = "Supabase CDN library is not loaded.";
         return false;
       }
     } catch (e) {
       console.error("Failed to initialize Supabase client", e);
       this.client = null;
+      this.initError = e.message;
       return false;
     }
   }

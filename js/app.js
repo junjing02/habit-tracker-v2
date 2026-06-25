@@ -186,12 +186,14 @@ class AppController {
         const hasDefaults = window.supabaseMgr && window.supabaseMgr.defaultUrl && window.supabaseMgr.defaultAnonKey;
         if (hasDefaults) {
           if (authStatusMessage) {
-            authStatusMessage.textContent = '⚠️ Cloud sync is temporarily unavailable. Please try again later.';
+            const reason = window.supabaseMgr && window.supabaseMgr.initError ? ` (${window.supabaseMgr.initError})` : '';
+            authStatusMessage.textContent = `⚠️ Cloud sync is temporarily unavailable. Please try again later.${reason}`;
             authStatusMessage.style.color = 'var(--color-danger)';
           }
         } else {
           if (authStatusMessage) {
-            authStatusMessage.textContent = '⚠️ Supabase client failed to initialize. Please check your Connection Settings above.';
+            const reason = window.supabaseMgr && window.supabaseMgr.initError ? ` (${window.supabaseMgr.initError})` : '';
+            authStatusMessage.textContent = `⚠️ Supabase client failed to initialize. Please check your Connection Settings above.${reason}`;
             authStatusMessage.style.color = 'var(--color-danger)';
           }
         }
@@ -2358,13 +2360,15 @@ class AppController {
         if (hasDefaults) {
           authSectionTitle.textContent = 'Account Login (Unavailable)';
           if (authStatusMessage) {
-            authStatusMessage.textContent = '⚠️ Cloud sync is temporarily unavailable. Please try again later.';
+            const reason = window.supabaseMgr && window.supabaseMgr.initError ? ` (${window.supabaseMgr.initError})` : '';
+            authStatusMessage.textContent = `⚠️ Cloud sync is temporarily unavailable. Please try again later.${reason}`;
             authStatusMessage.style.color = 'var(--color-danger)';
           }
         } else {
           authSectionTitle.textContent = 'Account Login (Setup Needed)';
           if (authStatusMessage) {
-            authStatusMessage.textContent = '⚠️ Supabase client failed to initialize. Please check your Connection Settings above.';
+            const reason = window.supabaseMgr && window.supabaseMgr.initError ? ` (${window.supabaseMgr.initError})` : '';
+            authStatusMessage.textContent = `⚠️ Supabase client failed to initialize. Please check your Connection Settings above.${reason}`;
             authStatusMessage.style.color = 'var(--color-danger)';
           }
         }
